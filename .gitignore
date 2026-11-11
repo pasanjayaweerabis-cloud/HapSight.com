@@ -1,0 +1,47 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets: never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Node / React
+node_modules/
+dist/
+build/
+coverage/
+.next/
+npm-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+
+# Editors
+.vscode/
+.idea/
+
+# Next.js / Vercel
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+/out/
+
+# Claude Code local files
+/.claude/

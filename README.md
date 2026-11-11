@@ -1,0 +1,137 @@
+# Waymark – landing page
+
+Landing page for **Waymark** (working name), a low-cost wearable headband that is being designed
+to help blind and visually impaired people notice obstacles at head height and to the sides.
+Student prototype by ATP Group 14, BEng (Hons) Software Engineering, IIT Sri Lanka
+(affiliated with the University of Westminster).
+
+- Next.js 16 (App Router) · TypeScript strict · Tailwind CSS v4
+- three.js via @react-three/fiber + @react-three/drei (procedural model, no model files)
+- framer-motion (UI motion and scroll progress; GSAP is not needed)
+- Supabase (waitlist) · Vercel Analytics (cookieless)
+
+## Run it
+
+Requires Node.js 20.9 or newer.
+
+```bash
+npm install
+cp .env.example .env.local   # then fill in the Supabase values (see below)
+npm run dev                  # http://localhost:3000
+```
+
+| Command | What it does |
+| --- | --- |
+| `npm run build` | Production build (also type-checks) |
+| `npm start` | Serve the production build on port 3000 |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run stills` | Re-capture the static 3D stills in `public/stills/` (needs Google Chrome and `npm start` running) |
+
+Without Supabase keys the site still runs; the waitlist form shows "the waitlist is not switched on yet".
+
+## Where things are
+
+```
+src/content/site.ts          ALL text: name, tagline, sections, labels, form copy, legal pages
+src/app/                     layout (metadata, skip link, a11y boot script), page, /privacy, /accessibility,
+                             opengraph-image.tsx (1200×630, built from public/stills/hero.png), icon.svg
+src/app/actions/waitlist.ts  Server Action: validation, honeypot, Supabase insert
+src/components/layout/       Navbar, mobile menu, accessibility settings dialog, footer
+src/components/sections/     One file per page section
+src/components/visuals/      Lazy 3D stages, label overlay, static stills
+src/three/deviceConfig.ts    THE 3D config: every part, its assembled placement, explode moves, labels, cameras
+src/three/parts/             Part builders (shell, modules, pods)
+src/three/scenes/            Hero, How it works, Design (exploded) scenes
+supabase/waitlist.sql        Database setup
+scripts/capture-stills.mjs   Stills capture
+```
+
+To rename the product, change `brand.name` in `src/content/site.ts`.
+
+### The 3D model
+
+Front = +Z (where the sensors look), wearer's left = +X, up = +Y. Each part in `PARTS`
+(`src/three/deviceConfig.ts`) has a kind, an assembled position/rotation, explode moves
+(`half` stage = shells open, scroll 0 → 0.5; `full` stage = internals out, 0.5 → 1) and an
+optional label. Move a part or change how it explodes there and every scene follows.
+
+Left/right: no object uses a negative scale. Symmetric parts (ear hooks, sensors, pads, motors,
+pod shells) are generated per side from mirrored inputs with right-handed local frames, so
+lighting, normals and face culling are always correct. The two ear pods are different
+components: right = SOS button + speaker grille + LED, left = pause button + USB-C + LED.
+
+## Supabase setup (waitlist)
+
+1. Go to <https://supabase.com>, sign in, **New project**. Pick a region close to Sri Lanka
+   (for example *Mumbai* or *Singapore*), set a database password and keep it safe.
+2. Open **SQL Editor → New query**, paste the whole of [`supabase/waitlist.sql`](supabase/waitlist.sql)
+   and press **Run**. It creates the `public.waitlist` table with checks, a unique index on
+   `lower(email)`, Row Level Security **on with no policies** (table grants revoked from `anon` and
+   `authenticated`), and `purge_old_waitlist_rows()` for the 12-month retention promise.
+3. **Project Settings → Data API**: copy the **Project URL** → `SUPABASE_URL`.
+4. **Project Settings → API Keys**: create/copy a **Secret key** (`sb_secret_…`) → `SUPABASE_SECRET_KEY`.
+   (A legacy `service_role` key also works as `SUPABASE_SERVICE_ROLE_KEY`.) This key bypasses RLS:
+   only ever put it in server env vars, never prefix it with `NEXT_PUBLIC_`, never commit it.
+5. Put both values in `.env.local`, restart `npm run dev`, submit the form and check
+   **Table Editor → waitlist** for the row.
+6. Retention: run `select public.purge_old_waitlist_rows();` monthly, or enable `pg_cron`
+   (**Database → Extensions**) and run
+   `select cron.schedule('purge-waitlist', '0 3 1 * *', 'select public.purge_old_waitlist_rows()');`
+7. Deletion requests: `delete from public.waitlist where lower(email) = lower('person@example.com');`
+   then reply within 14 days (as the privacy notice says).
+
+Spam protection: hidden honeypot field, minimum fill time, unique email, zod validation and a
+best-effort per-instance rate limit. Duplicate emails show the normal success message, so the
+form does not reveal who is on the list.
+
+## Deploy to Vercel with your own domain (HTTPS)
+
+- [ ] Push this repo to GitHub.
+- [ ] On <https://vercel.com>: **Add New → Project → Import** the repo (Next.js preset, defaults are fine).
+- [ ] **Settings → Environment Variables**: `SUPABASE_URL`, `SUPABASE_SECRET_KEY`,
+      `NEXT_PUBLIC_SITE_URL=https://your-domain`.
+- [ ] Deploy, submit a test sign-up on the `*.vercel.app` URL, then delete the test row in Supabase.
+- [ ] **Settings → Domains → Add** the apex domain and `www`; pick one as primary, redirect the other.
+- [ ] At your registrar's DNS, add exactly the records Vercel shows on the Domains page
+      (an **A** record for the apex `@` and a **CNAME** for `www`). Remove conflicting old records.
+- [ ] When Vercel shows **Valid Configuration** it issues and renews the HTTPS certificate
+      automatically; HTTP redirects to HTTPS.
+- [ ] Update `NEXT_PUBLIC_SITE_URL` to the final https domain and **redeploy**.
+- [ ] **Analytics tab → Enable** Web Analytics (the `<Analytics />` component only loads on Vercel).
+- [ ] Check `/`, `/privacy`, `/accessibility`, `/opengraph-image` on the live site and run Lighthouse.
+- [ ] Replace the placeholder contact email (`brand.contactEmail` in `site.ts`) with a real inbox.
+
+## Accessibility
+
+Target: WCAG 2.2 AA. Built in: one `h1`, ordered headings, landmarks, skip link, visible focus,
+logical tab order, no keyboard traps (3D canvases are `aria-hidden` and not focusable; drag-to-rotate
+is mouse only), accessible accordion, native `<dialog>` for settings, error summary + inline errors,
+reduced motion (OS setting or the settings panel), high contrast, larger text, light/dark themes,
+static stills when WebGL is missing.
+
+### Manual screen reader checks
+
+Test with VoiceOver (macOS and iOS), NVDA (Windows) and TalkBack (Android):
+
+- One h1, section h2s in order, landmarks (banner, Main navigation, main, contentinfo); skip link first.
+- The 3D areas are skipped; the device description under the hero is read.
+- How it works: five steps read in order; the active step is announced as "current step".
+- Design: the numbered parts list is read with names and locations.
+- FAQ buttons announce expanded/collapsed; the settings dialog traps focus, Escape closes it and
+  focus returns to its button.
+- Waitlist: submit empty → focus moves to the error summary, links jump to fields, fields announce
+  "invalid"; a successful sign-up announces the thank-you message.
+- 200% and 400% browser zoom: no sideways scrolling. Keyboard only: everything reachable.
+
+## Known limitations
+
+- The concept renders were not available when the model was built, so the 3D shape follows the
+  written spec. Adjust `BAND`, `DIMS`, `HOOK_LEFT` and `STRAP` in `deviceConfig.ts`, then `npm run stills`.
+- Gallery: crop the bottom-row (on mannequin) views of `device-8-views.png` into
+  `public/gallery/worn-front.png`, `worn-side.png`, `worn-back.png`, check the alt text in `site.ts`,
+  then set `gallery.enabled = true`. Never use the exploded reference images: their labels are wrong.
+- three.js r187 logs a deprecation warning ("THREE.Clock … use THREE.Timer") from inside
+  @react-three/fiber 9. It is a warning, not an error.
+- The retention period, contact address and "planned" claims in the comparison are commitments
+  the team must keep.
