@@ -2,7 +2,8 @@
  * All text on the site lives here: the name, tagline, every section, form copy,
  * labels for the 3D exploded view and the legal pages.
  *
- * "Waymark" is a working name, not final. Change `brand.name` and it updates everywhere.
+ * The product name lives in `brand.name` ("Hapsight"). Every mention of the name below uses it,
+ * so changing it there updates the whole site.
  *
  * Copy rules (keep them when editing):
  * - This is a student prototype in the design stage. Describe planned behaviour
@@ -11,21 +12,20 @@
  */
 
 export const brand = {
-  name: "Waymark",
-  workingNameNote: "Working name",
+  name: "Hapsight",
   tagline: "Feel the path ahead.",
   shortDescription:
     "Low-cost haptic glasses being designed to help blind and visually impaired people notice obstacles at head height, silently and hands-free.",
-  contactEmail: "team@waymark.example",
-  siteUrl: "https://waymark.example",
+  contactEmail: "team@hapsight.example",
+  siteUrl: "https://hapsight.example",
 } as const;
 
 export const meta = {
   title: `${brand.name} – haptic glasses that feel the path ahead`,
   description:
-    "Waymark is a student-designed pair of low-cost haptic glasses for blind and visually impaired people. Three laser sensors in the frame look left, ahead and right, and a gentle vibration behind the matching ear tells you where an obstacle is. It works with the white cane, not instead of it.",
+    `${brand.name} is a student-designed pair of low-cost haptic glasses for blind and visually impaired people. Three laser sensors in the frame look left, ahead and right, and a gentle vibration behind the matching ear tells you where an obstacle is. It works with the white cane, not instead of it.`,
   ogAlt:
-    "The Waymark glasses in matte charcoal on a dark navy background: a flat-topped frame with clear lenses and three small sensors in the top bar.",
+    `The ${brand.name} glasses in matte charcoal on a dark navy background: a flat-topped frame with clear lenses and three small sensors in the top bar.`,
 } as const;
 
 export const skipLink = "Skip to main content";
@@ -82,7 +82,7 @@ export const hero = {
   secondaryCta: { href: "#how-it-works", label: "See how it works" },
   deviceDescriptionTitle: "What the device is like",
   deviceDescription:
-    "Waymark looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.",
+    `${brand.name} looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.`,
   canvasHint: "Drag to turn the 3D model.",
 } as const;
 
@@ -145,7 +145,7 @@ export const features = {
     {
       icon: "directions",
       title: "Three directions",
-      body: "Three sensors look left, straight ahead and right, so Waymark can tell you which side an obstacle is on.",
+      body: `Three sensors look left, straight ahead and right, so ${brand.name} can tell you which side an obstacle is on.`,
     },
     {
       icon: "haptic",
@@ -160,7 +160,7 @@ export const features = {
     {
       icon: "cane",
       title: "Works with the white cane",
-      body: "The cane checks the ground at your feet. Waymark is meant to add a warning about obstacles at head height, not to replace the cane.",
+      body: `The cane checks the ground at your feet. ${brand.name} is meant to add a warning about obstacles at head height, not to replace the cane.`,
     },
     {
       icon: "charge",
@@ -367,8 +367,8 @@ export const comparison = {
   id: "comparison",
   eyebrow: "Comparison",
   title: "How it compares",
-  caption: "Waymark compared with imported smart canes and AI smart glasses",
-  columns: ["Waymark", "Imported smart canes", "AI smart glasses"],
+  caption: `${brand.name} compared with imported smart canes and AI smart glasses`,
+  columns: [`${brand.name}`, "Imported smart canes", "AI smart glasses"],
   rowHeader: "What we compared",
   rows: [
     {
@@ -390,7 +390,7 @@ export const comparison = {
     {
       label: "Sinhala, Tamil and English",
       values: [
-        "Not needed: Waymark uses vibration only, with no spoken words",
+        `Not needed: ${brand.name} uses vibration only, with no spoken words`,
         "Depends on the product. Check the maker's language list",
         "Depends on the product. Check the maker's language list",
       ],
@@ -431,8 +431,8 @@ export const faq = {
     {
       q: "Does it replace the white cane?",
       a: [
-        "No. Waymark is designed to work together with the white cane, not instead of it.",
-        "The cane checks the ground at your feet. Waymark is meant to warn you about obstacles at head height. It does not replace orientation and mobility training, and it does not tell you when it is safe to cross a road.",
+        `No. ${brand.name} is designed to work together with the white cane, not instead of it.`,
+        `The cane checks the ground at your feet. ${brand.name} is meant to warn you about obstacles at head height. It does not replace orientation and mobility training, and it does not tell you when it is safe to cross a road.`,
       ],
     },
     {
@@ -466,7 +466,7 @@ export const faq = {
     {
       q: "Is it available yet?",
       a: [
-        "Not yet. Waymark is a student prototype that is still being designed and tested. It is not for sale.",
+        `Not yet. ${brand.name} is a student prototype that is still being designed and tested. It is not for sale.`,
         "Join the waitlist to hear about our progress and chances to give feedback.",
       ],
     },
@@ -483,7 +483,7 @@ export const waitlist = {
     name: { label: "Your name", autoComplete: "name" },
     email: {
       label: "Email address",
-      hint: "We will only email you about Waymark.",
+      hint: `We will only email you about ${brand.name}.`,
       autoComplete: "email",
     },
     role: {
@@ -497,7 +497,7 @@ export const waitlist = {
     },
     consent: {
       label:
-        "I agree that ATP Group 14 can store my name, email and the option I chose, to contact me about Waymark. I can ask for my details to be deleted at any time.",
+        `I agree that ATP Group 14 can store my name, email and the option I chose, to contact me about ${brand.name}. I can ask for my details to be deleted at any time.`,
       privacyLinkText: "Read the privacy notice",
     },
     honeypot: "Leave this field empty",
@@ -521,7 +521,7 @@ export const waitlist = {
   },
   success: {
     title: "Thank you, you're on the list.",
-    body: "We will email you when there is news about Waymark.",
+    body: `We will email you when there is news about ${brand.name}.`,
   },
 } as const;
 
@@ -542,7 +542,6 @@ export const footer = {
   ],
   credit:
     "ATP Group 14 · BEng (Hons) Software Engineering · IIT Sri Lanka, affiliated with the University of Westminster",
-  nameNote: `${brand.name} is a working name.`,
 } as const;
 
 export const notFound = {
@@ -553,7 +552,7 @@ export const notFound = {
 
 export const privacyPage = {
   title: "Privacy notice",
-  metaDescription: "What the Waymark waitlist collects, why, how long we keep it and how to ask for deletion.",
+  metaDescription: `What the ${brand.name} waitlist collects, why, how long we keep it and how to ask for deletion.`,
   updated: "Last updated: 12 November 2026",
   sections: [
     {
@@ -575,7 +574,7 @@ export const privacyPage = {
     {
       heading: "Why we collect it",
       body: [
-        "Only to email you updates about the Waymark project and, if you want, invitations to give feedback. We use your consent as the basis for this.",
+        `Only to email you updates about the ${brand.name} project and, if you want, invitations to give feedback. We use your consent as the basis for this.`,
         "We will never sell your details or use them for advertising.",
       ],
     },
@@ -604,13 +603,13 @@ export const privacyPage = {
 
 export const accessibilityPage = {
   title: "Accessibility statement",
-  metaDescription: "How we make the Waymark website accessible, and how to report a problem.",
+  metaDescription: `How we make the ${brand.name} website accessible, and how to report a problem.`,
   updated: "Last updated: 12 November 2026",
   sections: [
     {
       heading: "Our goal",
       body: [
-        "Waymark is for blind and visually impaired people, so this website must work well with screen readers and keyboards. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA.",
+        `${brand.name} is for blind and visually impaired people, so this website must work well with screen readers and keyboards. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA.`,
       ],
     },
     {

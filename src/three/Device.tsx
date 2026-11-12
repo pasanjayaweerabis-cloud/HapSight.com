@@ -55,7 +55,7 @@ export function Device({ getExplode, quality = "high", onParts }: DeviceProps) {
 
   return (
     <PartsContext.Provider value={{ mats, quality }}>
-      <group name="waymark-device">
+      <group name="hapsight-device">
         {PARTS.map((part) => (
           <group
             key={part.id}
