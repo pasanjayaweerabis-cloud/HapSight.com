@@ -23,6 +23,8 @@ page.on("console", (m) => {
 await page.goto(base + "/", { waitUntil: "networkidle" });
 // transparent backgrounds so the stills sit on any section colour
 await page.addStyleTag({ content: "html,body,section,.stage,.stage-gradient,main{background:transparent!important}" });
+// keep the pointer hint ("Drag to turn…") out of the hero still and the OG image built from it
+await page.addStyleTag({ content: '#top p[aria-hidden="true"]{display:none!important}' });
 
 async function shot(selector, index, file) {
   const loc = page.locator(selector).nth(index);
