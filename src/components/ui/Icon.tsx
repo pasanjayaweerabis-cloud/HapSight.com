@@ -5,12 +5,12 @@ type IconName = FeatureIcon | "menu" | "close" | "a11y" | "check" | "arrow" | "p
 const paths: Record<IconName, React.ReactNode> = {
   directions: (
     <>
-      <path d="M12 19V6" />
-      <path d="m9 9 3-3 3 3" />
-      <path d="M12 19 5.5 8.5" />
-      <path d="M4.6 12 5.5 8.5l3.4 1" />
-      <path d="M12 19 18.5 8.5" />
-      <path d="M19.4 12l-.9-3.5-3.4 1" />
+      <path d="M12 19V8" />
+      <path d="m12 19-6-8.5" />
+      <path d="m12 19 6-8.5" />
+      <circle cx="12" cy="5.5" r="1.6" />
+      <circle cx="5" cy="8.5" r="1.6" />
+      <circle cx="19" cy="8.5" r="1.6" />
     </>
   ),
   haptic: (

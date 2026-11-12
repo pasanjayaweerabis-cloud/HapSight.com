@@ -31,9 +31,9 @@
 
   /* the "stage" (hero, 3D sections) is always dark navy */
   --stage-bg: #0b1530;
-  --stage-text: #eef4ff; /* 16:1 on stage-bg */
-  --stage-muted: #b4c2dd; /* 9.6:1 on stage-bg */
-  --stage-accent: #22d3ee; /* 9.8:1 on stage-bg */
+  --stage-text: #eef4ff; /* 16.3:1 on stage-bg */
+  --stage-muted: #b4c2dd; /* 10:1 on stage-bg */
+  --stage-accent: #22d3ee; /* 10:1 on stage-bg */
   --stage-border: #2a3a60;
 
   --font-scale: 1;
@@ -45,12 +45,12 @@
   --bg-soft: #0e1730;
   --surface: #121d3a;
   --text: #eef4ff;
-  --text-muted: #b4c2dd; /* 9.9:1 on bg, 8.4:1 on surface */
+  --text-muted: #b4c2dd; /* 10.5:1 on bg, 9.3:1 on surface */
   --border: #2a3a60;
-  --accent: #22d3ee; /* 10:1 on bg, 8.6:1 on surface */
+  --accent: #22d3ee; /* 10.5:1 on bg, 9.2:1 on surface */
   --accent-strong: #67e8f9;
   --accent-contrast: #04222b; /* 9.2:1 on accent */
-  --accent-soft: #0f2c45; /* accent text on it: 7.4:1 */
+  --accent-soft: #0f2c45; /* accent text on it: 7.9:1 */
   --focus: #67e8f9;
   --danger: #ffaaa3;
   --success: #67e8f9;
