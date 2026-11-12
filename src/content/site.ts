@@ -309,7 +309,7 @@ export const design = {
 export const gallery = {
   /**
    * Off until real photos or corrected renders exist in public/gallery/ (see README, "Gallery").
-   * Do not use the concept renders in design-reference/: they show extra sensors on the lenses.
+   * Do not use the concept renders in docs/design-reference/: they show extra sensors on the lenses.
    */
   enabled: false,
   id: "gallery",

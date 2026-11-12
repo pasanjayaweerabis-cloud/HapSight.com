@@ -32,21 +32,34 @@ npm run dev                  # http://localhost:3000
 
 Without Supabase keys the site still runs; the waitlist form shows "the waitlist is not switched on yet".
 
-## Where things are
+## Project structure
 
 ```
-src/content/site.ts          ALL text: name, tagline, sections, labels, form copy, legal pages
-src/app/                     layout (metadata, skip link, a11y boot script), page, /privacy, /accessibility,
-                             opengraph-image.tsx (1200×630, built from public/stills/hero.png), icon.svg
-src/app/actions/waitlist.ts  Server Action: validation, honeypot, Supabase insert
-src/components/layout/       Navbar, mobile menu, accessibility settings dialog, footer
-src/components/sections/     One file per page section
-src/components/visuals/      Lazy 3D stages, label overlay, static stills
-src/three/deviceConfig.ts    THE 3D config: every part, its assembled placement, explode moves, labels, cameras
-src/three/parts/             Part builders (Frame: front, lenses, nose pad · Temples: shells, covers, ear caps, switch · Modules: boards, battery, motors)
-src/three/scenes/            Hero, How it works, Design (exploded) scenes
-supabase/waitlist.sql        Database setup
-scripts/capture-stills.mjs   Stills capture
+.
+├── src/
+│   ├── app/                     Routes: layout (metadata, skip link, a11y boot script), page,
+│   │   │                        /privacy, /accessibility, not-found, icon.svg,
+│   │   │                        opengraph-image.tsx (1200×630, built from public/stills/hero.png)
+│   │   └── actions/waitlist.ts  Server Action: validation, honeypot, Supabase insert
+│   ├── content/site.ts          ALL text: name, tagline, sections, part labels, budget, form copy, legal pages
+│   ├── components/
+│   │   ├── layout/              Navbar, mobile menu, accessibility settings dialog, footer, logo
+│   │   ├── sections/            One file per page section (Hero, HowItWorks, Design, PartsList, BudgetTable, …)
+│   │   ├── ui/                  Small shared pieces: Button, Section, Accordion, Icon
+│   │   └── visuals/             Lazy 3D stages, exploded-view label overlay, static stills
+│   ├── lib/                     Accessibility prefs, WebGL check, media queries, Supabase client, form schema
+│   └── three/
+│       ├── deviceConfig.ts      THE 3D config: every part, placement, explode moves, labels, cameras
+│       ├── geometry.ts          Procedural shape helpers (rounded polygons, sweeps, frames)
+│       ├── materials.ts         All 3D materials
+│       ├── explode.ts           Explode maths shared by the model and the leader lines
+│       ├── parts/               Frame (front, lenses, nose pad) · Temples (shells, covers, caps, switch) · Modules (boards, battery, motors)
+│       ├── effects/             Detection cones, ear-tip pulse rings, dashed leader lines
+│       └── scenes/              Hero, How it works, Design (exploded) scenes
+├── public/stills/               Static 3D stills (reduced motion, no WebGL, OG image) – made by `npm run stills`
+├── scripts/capture-stills.mjs   Stills capture (uses your installed Google Chrome)
+├── supabase/waitlist.sql        Database setup
+└── docs/                        Not shipped with the site: design references, prompts, coursework files
 ```
 
 To rename the product, change `brand.name` in `src/content/site.ts`.
