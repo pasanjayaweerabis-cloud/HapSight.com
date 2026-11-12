@@ -15,7 +15,7 @@ const outDir = process.argv[3] ?? fileURLToPath(new URL("../public/stills", impo
 
 const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--enable-gpu"] });
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1.5 });
-await ctx.addInitScript(() => localStorage.setItem("waymark-a11y", JSON.stringify({ reduceMotion: true, theme: "dark" })));
+await ctx.addInitScript(() => localStorage.setItem("hapsight-a11y", JSON.stringify({ reduceMotion: true, theme: "dark" })));
 const page = await ctx.newPage();
 page.on("console", (m) => {
   if (m.type() === "error") console.log("console error:", m.text());

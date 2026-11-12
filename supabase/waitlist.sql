@@ -1,4 +1,4 @@
--- Waymark waitlist table.
+-- Hapsight waitlist table.
 -- Run once in the Supabase dashboard: SQL Editor -> New query -> paste -> Run.
 
 create table if not exists public.waitlist (

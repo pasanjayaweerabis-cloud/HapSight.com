@@ -11,7 +11,6 @@ export function Footer() {
             <LogoMark /> {brand.name}
           </p>
           <p className="mt-4 max-w-md text-base text-muted">{footer.disclaimer}</p>
-          <p className="mt-3 text-sm text-muted">{footer.nameNote}</p>
         </div>
         <div>
           <h2 className="text-base font-semibold">{footer.contactLabel}</h2>

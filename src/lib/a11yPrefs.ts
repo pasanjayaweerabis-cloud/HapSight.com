@@ -11,7 +11,7 @@ export interface A11yPrefs {
   reduceMotion: boolean;
 }
 
-export const STORAGE_KEY = "waymark-a11y";
+export const STORAGE_KEY = "hapsight-a11y";
 
 export const DEFAULT_PREFS: A11yPrefs = {
   theme: "system",

@@ -1,6 +1,6 @@
-# Waymark – landing page
+# Hapsight – landing page
 
-Landing page for **Waymark** (working name): low-cost haptic smart glasses being designed to help
+Landing page for **Hapsight**: low-cost haptic smart glasses being designed to help
 blind and visually impaired people notice obstacles at head height, silently and hands-free.
 Three VL53L1X laser distance sensors in the frame look left, ahead and right; a coin vibration
 motor in each ear tip tells the wearer which side the obstacle is on.

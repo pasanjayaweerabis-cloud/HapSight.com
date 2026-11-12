@@ -40,4 +40,4 @@ export const initialWaitlistState: WaitlistState = {
 };
 
 /** Version of the consent wording stored with each row, so we know what people agreed to. */
-export const CONSENT_VERSION = "2026-11-11";
+export const CONSENT_VERSION = "2026-11-12";
