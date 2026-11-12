@@ -65,7 +65,7 @@ function ScrollStory({ compact }: { compact: boolean }) {
   );
 }
 
-/** Reduced motion or no WebGL: one still view (cones on, both pads active) and all steps as text. */
+/** Reduced motion or no WebGL: one still view (cones on, left ear vibrating) and all steps as text. */
 function StaticStory({ compact }: { compact: boolean }) {
   const getProgress = useCallback(() => STILL_PROGRESS, []);
   return (
