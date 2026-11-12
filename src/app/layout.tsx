@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: meta.title, description: meta.description },
   alternates: { canonical: "/" },
+  // The site has its own light/dark/high-contrast themes. This asks the Dark Reader extension
+  // not to restyle the page: its injected attributes broke React hydration.
+  other: { "darkreader-lock": "true" },
 };
 
 export const viewport: Viewport = {
