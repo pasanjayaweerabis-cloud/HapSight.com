@@ -375,9 +375,6 @@ export const PARTS: PartConfig[] = [
 
 export const STAGE_WINDOWS: Record<Stage, [number, number]> = { half: [0, 0.5], full: [0.5, 1] };
 
-/** Mirror helper re-exported for parts that build their own geometry. */
-export { mirrorX };
-
 /* ---------- Scene settings ---------- */
 
 export const SCENES = {

@@ -9,39 +9,24 @@ Thumbs.db
 *.pem
 *.key
 
-# Node / React
+# Dependencies and build output
 node_modules/
+.next/
+/out/
 dist/
 build/
 coverage/
-.next/
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+
+# Logs
 npm-debug.log*
 yarn-error.log*
-
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-.pytest_cache/
-.ruff_cache/
-
-# Terraform
-.terraform/
-*.tfstate
-*.tfstate.*
-*.tfvars
-!*.tfvars.example
 
 # Editors
 .vscode/
 .idea/
 
-# Next.js / Vercel
-*.tsbuildinfo
-next-env.d.ts
-.vercel
-/out/
-
-# Claude Code local files
+# Claude Code local files (worktrees, launch config)
 /.claude/
