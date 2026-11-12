@@ -17,7 +17,7 @@ export default function HeroScene({ active, onReady, reducedMotion, compact, tou
   return (
     <StageCanvas active={active} onReady={onReady} camera={s.camera} target={s.target} fitAspect={1.1} fov={s.fov} compact={compact}>
       <Device quality={compact ? "low" : "high"} />
-      <ContactShadows position={[0, -0.72, 0]} opacity={0.45} scale={3.2} blur={2.6} far={1.2} frames={1} resolution={256} />
+      <ContactShadows position={[0, -0.36, -0.1]} opacity={0.5} scale={3.4} blur={2.6} far={1} frames={1} resolution={256} />
       <OrbitControls
         target={s.target as [number, number, number]}
         enablePan={false}

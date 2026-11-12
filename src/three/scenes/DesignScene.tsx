@@ -78,16 +78,23 @@ function Exploded({ getExplode, overlay, labelMode, compact }: DesignSceneProps)
       return;
     }
 
-    const c = projectToScreen(center.current, camera, size.width, size.height);
-    const layout = layoutCallouts(anchors, size.width, size.height, c.x, {
-      gap: compact ? 30 : 38,
-      margin: 12,
-      top: 28,
-      bottom: 28,
-    });
-    // read widths first, then write, to avoid layout thrashing
+    // read sizes first, then write, to avoid layout thrashing
     const widths = new Map<LabelId, number>();
-    for (const a of anchors) widths.set(a.id, h.items.get(a.id)?.label.offsetWidth ?? 0);
+    const heights = new Map<LabelId, number>();
+    for (const a of anchors) {
+      const el = h.items.get(a.id)?.label;
+      widths.set(a.id, el?.offsetWidth ?? 0);
+      heights.set(a.id, el?.offsetHeight ?? 0);
+    }
+    const c = projectToScreen(center.current, camera, size.width, size.height);
+    const layout = layoutCallouts(
+      anchors,
+      size.width,
+      size.height,
+      c.x,
+      { gap: compact ? 30 : 36, margin: 12, top: 28, bottom: 28 },
+      heights,
+    );
     for (const a of anchors) {
       const item = h.items.get(a.id);
       const l = layout.get(a.id);

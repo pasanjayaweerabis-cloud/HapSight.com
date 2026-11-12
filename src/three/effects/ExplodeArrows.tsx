@@ -3,84 +3,95 @@
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { COLORS, PARTS, type Stage } from "../deviceConfig";
-import { offsetBeforeStage, stageProgress } from "../explode";
-import { v3 } from "../geometry";
+import { Line } from "@react-three/drei";
+import type { Line2, LineSegments2 } from "three-stdlib";
+import { COLORS, PARTS, type PartConfig } from "../deviceConfig";
+import { pointAt, travel } from "../explode";
 
-interface Arrow {
-  stage: Stage;
-  start: THREE.Vector3;
-  end: THREE.Vector3;
-  dir: THREE.Vector3;
-}
+const UP = new THREE.Vector3(0, 1, 0);
+const UNIT: [number, number, number][] = [
+  [0, 0, 0],
+  [0, 1, 0],
+];
+/** World length of one dash and one gap. */
+const DASH = 0.026;
 
-/** Thin teal arrows along each part's explode path. They fade in as their stage plays. */
+/**
+ * Cyan dashed leader lines, as in the reference renders: each one runs from where a part sits
+ * in the assembled glasses to where it is now, with a small dot at the empty slot.
+ */
 export function ExplodeArrows({ getExplode }: { getExplode: () => number }) {
-  const arrows = useMemo<Arrow[]>(() => {
-    const out: Arrow[] = [];
-    for (const part of PARTS) {
-      for (const m of part.explode) {
-        if (m.arrow === false || m.distance < 0.1) continue;
-        const dir = v3(m.direction).normalize();
-        const base = v3(part.position).add(offsetBeforeStage(part, m.stage));
-        // start a little away from the part, stop short of where it lands
-        const start = base.clone().addScaledVector(dir, Math.min(0.06, m.distance * 0.2));
-        const end = base.clone().addScaledVector(dir, m.distance * 0.78);
-        out.push({ stage: m.stage, start, end, dir });
-      }
-    }
-    return out;
-  }, []);
-
-  const lineGeo = useMemo(() => {
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 1, 0], 3));
-    return g;
-  }, []);
-  const headGeo = useMemo(() => new THREE.ConeGeometry(0.012, 0.036, 12).translate(0, -0.018, 0), []);
-
-  const groups = useRef<(THREE.Group | null)[]>([]);
+  const parts = useMemo<PartConfig[]>(() => PARTS.filter((p) => p.leader !== false && travel(p) > 0.1), []);
+  const lines = useRef<(THREE.Group | null)[]>([]);
+  const dashes = useRef<(Line2 | LineSegments2 | null)[]>([]);
+  const dots = useRef<(THREE.Mesh | null)[]>([]);
+  const tmp = useMemo(() => ({ a: new THREE.Vector3(), b: new THREE.Vector3(), d: new THREE.Vector3() }), []);
+  const dotGeo = useMemo(() => new THREE.SphereGeometry(0.011, 12, 8), []);
 
   useFrame(() => {
     const e = getExplode();
-    arrows.forEach((a, i) => {
-      const g = groups.current[i];
-      if (!g) return;
-      const k = stageProgress(a.stage, e);
-      // arrows show while their stage plays and stay visible once it has finished
-      const o = Math.min(1, k * 1.6) * 0.95;
-      g.visible = o > 0.01;
-      g.children.forEach((c) => {
-        const mat = (c as THREE.Mesh | THREE.Line).material as THREE.Material;
-        mat.opacity = o;
-      });
+    parts.forEach((p, i) => {
+      const g = lines.current[i];
+      const line = dashes.current[i];
+      const dot = dots.current[i];
+      if (!g || !line || !dot) return;
+      const anchor = p.anchor ?? [0, 0, 0];
+      pointAt(p, anchor, 0, tmp.a);
+      pointAt(p, anchor, e, tmp.b);
+      const len = tmp.d.subVectors(tmp.b, tmp.a).length();
+      const o = Math.min(1, Math.max(0, (len - 0.03) / 0.12)) * 0.9;
+      g.visible = dot.visible = o > 0.01;
+      if (!g.visible) return;
+      g.position.copy(tmp.a);
+      g.quaternion.setFromUnitVectors(UP, tmp.d.divideScalar(len));
+      g.scale.set(1, len, 1);
+      const m = line.material;
+      m.dashScale = len;
+      m.opacity = o;
+      dot.position.copy(tmp.a);
+      (dot.material as THREE.MeshBasicMaterial).opacity = o;
     });
   });
 
   return (
     <group>
-      {arrows.map((a, i) => {
-        const len = a.start.distanceTo(a.end);
-        const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), a.dir);
-        return (
+      {parts.map((p, i) => (
+        <group key={p.id}>
           <group
-            key={i}
             ref={(g) => {
-              groups.current[i] = g;
+              lines.current[i] = g;
             }}
-            position={a.start}
-            quaternion={q}
             visible={false}
           >
-            <lineSegments geometry={lineGeo} scale={[1, len, 1]}>
-              <lineBasicMaterial color={COLORS.arrow} transparent opacity={0} depthWrite={false} toneMapped={false} />
-            </lineSegments>
-            <mesh geometry={headGeo} position={[0, len, 0]}>
-              <meshBasicMaterial color={COLORS.arrow} transparent opacity={0} depthWrite={false} toneMapped={false} />
-            </mesh>
+            <Line
+              ref={(l) => {
+                dashes.current[i] = l;
+              }}
+              points={UNIT}
+              color={COLORS.cyan}
+              lineWidth={1.4}
+              dashed
+              dashSize={DASH}
+              gapSize={DASH * 0.7}
+              transparent
+              opacity={0}
+              depthWrite={false}
+              toneMapped={false}
+              renderOrder={7}
+            />
           </group>
-        );
-      })}
+          <mesh
+            ref={(m) => {
+              dots.current[i] = m;
+            }}
+            geometry={dotGeo}
+            renderOrder={7}
+            visible={false}
+          >
+            <meshBasicMaterial color={COLORS.cyan} transparent opacity={0} depthWrite={false} toneMapped={false} />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }

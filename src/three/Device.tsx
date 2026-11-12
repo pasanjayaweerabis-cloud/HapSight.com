@@ -7,7 +7,7 @@ import { PARTS } from "./deviceConfig";
 import { createMaterials } from "./materials";
 import { PartsContext } from "./parts/context";
 import { PartMesh } from "./parts";
-import { explodeOffset } from "./explode";
+import { explodeOffset, explodeQuaternion } from "./explode";
 
 export interface DeviceProps {
   /** Returns explode progress 0..1. Read every frame, so it never causes React re-renders. */
@@ -17,7 +17,12 @@ export interface DeviceProps {
   onParts?: (parts: Map<string, THREE.Object3D>) => void;
 }
 
-/** The whole headband, built from deviceConfig. */
+/** Assembled orientation of each part, created once so re-renders never reset a turned part. */
+const BASE_QUATS = new Map(
+  PARTS.map((p) => [p.id, p.quaternion ? new THREE.Quaternion(...p.quaternion) : new THREE.Quaternion()]),
+);
+
+/** The whole pair of glasses, built from deviceConfig. */
 export function Device({ getExplode, quality = "high", onParts }: DeviceProps) {
   const mats = useMemo(() => createMaterials(), []);
   const refs = useRef(new Map<string, THREE.Group>());
@@ -30,12 +35,7 @@ export function Device({ getExplode, quality = "high", onParts }: DeviceProps) {
 
   useLayoutEffect(
     () => () => {
-      Object.values(mats).forEach((m) => {
-        const std = m as THREE.MeshStandardMaterial;
-        std.map?.dispose();
-        std.bumpMap?.dispose();
-        m.dispose();
-      });
+      Object.values(mats).forEach((m) => m.dispose());
     },
     [mats],
   );
@@ -49,6 +49,7 @@ export function Device({ getExplode, quality = "high", onParts }: DeviceProps) {
       if (!g) continue;
       explodeOffset(part, e, tmp);
       g.position.set(part.position[0] + tmp.x, part.position[1] + tmp.y, part.position[2] + tmp.z);
+      if (part.turn) explodeQuaternion(part, e, g.quaternion);
     }
   });
 
@@ -64,7 +65,7 @@ export function Device({ getExplode, quality = "high", onParts }: DeviceProps) {
               else refs.current.delete(part.id);
             }}
             position={part.position as [number, number, number]}
-            quaternion={part.quaternion ? new THREE.Quaternion(...part.quaternion) : undefined}
+            quaternion={BASE_QUATS.get(part.id)}
           >
             <PartMesh part={part} />
           </group>

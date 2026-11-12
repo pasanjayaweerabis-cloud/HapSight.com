@@ -10,7 +10,7 @@ import { v3 } from "../geometry";
 const RINGS = 3;
 
 /**
- * Glowing ripple rings that pulse out from one temple pad while it vibrates.
+ * Glowing ripple rings that pulse out from one ear tip while its motor vibrates.
  * `getStrength` 0..1, `getRate` pulses per second. Rings always face the camera.
  */
 export function PulseRings({
@@ -24,14 +24,11 @@ export function PulseRings({
   getRate: () => number;
   animate: boolean;
 }) {
-  const part = PARTS.find((p) => p.id === (side === "left" ? "templePadL" : "templePadR"))!;
-  const position = useMemo(() => {
-    const q = new THREE.Quaternion(...part.quaternion!);
-    return v3(part.position).add(new THREE.Vector3(0, 0, 0.03).applyQuaternion(q));
-  }, [part]);
+  const part = PARTS.find((p) => p.id === (side === "left" ? "motorL" : "motorR"))!;
+  const position = useMemo(() => v3(part.position), [part]);
 
   const ringGeo = useMemo(() => new THREE.RingGeometry(0.085, 0.1, 64), []);
-  const glowGeo = useMemo(() => new THREE.CircleGeometry(0.09, 48), []);
+  const glowGeo = useMemo(() => new THREE.CircleGeometry(0.085, 48), []);
   const makeMat = (color: string) =>
     new THREE.MeshBasicMaterial({
       color,
@@ -42,8 +39,8 @@ export function PulseRings({
       blending: THREE.AdditiveBlending,
       toneMapped: false,
     });
-  const mats = useMemo(() => Array.from({ length: RINGS }, () => makeMat(COLORS.ripple)), []);
-  const glowMat = useMemo(() => makeMat(COLORS.warm), []);
+  const mats = useMemo(() => Array.from({ length: RINGS }, () => makeMat(COLORS.cyanSoft)), []);
+  const glowMat = useMemo(() => makeMat(COLORS.cyan), []);
   const rings = useRef<(THREE.Mesh | null)[]>([]);
   const glow = useRef<THREE.Mesh>(null);
   const phase = useRef(0.35);
@@ -59,7 +56,7 @@ export function PulseRings({
       (m.material as THREE.MeshBasicMaterial).opacity = strength * (1 - t) * 0.9;
     }
     const beat = animate ? 0.55 + 0.45 * Math.sin(phase.current * Math.PI * 2) : 1;
-    if (glow.current) (glow.current.material as THREE.MeshBasicMaterial).opacity = strength * 0.55 * beat;
+    if (glow.current) (glow.current.material as THREE.MeshBasicMaterial).opacity = strength * 0.5 * beat;
   });
 
   return (

@@ -1,72 +1,40 @@
 "use client";
 
 import type { PartConfig, PartKind } from "../deviceConfig";
-import { BandLining, BandShell, EarHook, LedStrip, RibbonCable, SensorMount, Strap } from "./Shell";
-import { HapticBoard, SensorModule, TemplePad, VibrationMotor } from "./Modules";
-import {
-  Battery,
-  Buckle,
-  ChargingBoard,
-  Controller,
-  Led,
-  LightSensor,
-  PauseButton,
-  PodShellInner,
-  PodShellOuterLeft,
-  PodShellOuterRight,
-  SosButton,
-  Speaker,
-} from "./Pods";
+import { Frame, Lens, NosePad } from "./Frame";
+import { EarCap, PowerSwitch, TempleCover, TempleShell } from "./Temples";
+import { Battery, Charger, Controller, Driver, Motor, Sensor } from "./Modules";
 
 /** Which component draws each kind of part. */
 export function PartMesh({ part }: { part: PartConfig }) {
   const k: PartKind = part.kind;
+  const side = part.side ?? "left";
   switch (k) {
-    case "bandShell":
-      return <BandShell />;
-    case "bandLining":
-      return <BandLining />;
-    case "ribbonCable":
-      return <RibbonCable />;
-    case "earHook":
-      return <EarHook side={part.side ?? "left"} />;
-    case "sensorMount":
-      return <SensorMount />;
-    case "sensorModule":
-      return <SensorModule />;
-    case "templePad":
-      return <TemplePad />;
-    case "vibrationMotor":
-      return <VibrationMotor />;
-    case "hapticBoard":
-      return <HapticBoard />;
-    case "podShellInner":
-      return <PodShellInner />;
-    case "podShellOuterLeft":
-      return <PodShellOuterLeft />;
-    case "podShellOuterRight":
-      return <PodShellOuterRight />;
-    case "sosButton":
-      return <SosButton />;
-    case "pauseButton":
-      return <PauseButton />;
-    case "led":
-      return <Led />;
+    case "frame":
+      return <Frame />;
+    case "lens":
+      return <Lens side={side} />;
+    case "nosePad":
+      return <NosePad />;
+    case "sensor":
+      return <Sensor />;
+    case "templeShell":
+      return <TempleShell side={side} origin={part.position} />;
+    case "templeCover":
+      return <TempleCover side={side} origin={part.position} />;
+    case "earCap":
+      return <EarCap />;
+    case "motor":
+      return <Motor side={side} />;
     case "controller":
       return <Controller />;
-    case "speaker":
-      return <Speaker />;
+    case "driver":
+      return <Driver />;
     case "battery":
       return <Battery />;
-    case "chargingBoard":
-      return <ChargingBoard />;
-    case "strap":
-      return <Strap />;
-    case "ledStrip":
-      return <LedStrip />;
-    case "buckle":
-      return <Buckle />;
-    case "lightSensor":
-      return <LightSensor />;
+    case "charger":
+      return <Charger />;
+    case "powerSwitch":
+      return <PowerSwitch />;
   }
 }
