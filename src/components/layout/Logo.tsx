@@ -1,11 +1,19 @@
-/** Brand mark: the forehead band seen from above, with its two sensors. Decorative. */
+/** Brand mark: the glasses from the front, with the three sensors in the top bar. Decorative. */
 export function LogoMark({ className = "size-8" }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={className} aria-hidden="true" focusable="false">
-      <rect width="32" height="32" rx="9" fill="#0F6E56" />
-      <path d="M7 19c2.5-5 6-7 9-7s6.5 2 9 7" fill="none" stroke="#E1F5EE" strokeWidth="2.4" strokeLinecap="round" />
-      <circle cx="12.5" cy="13.6" r="2.1" fill="#FFE2B8" />
-      <circle cx="19.5" cy="13.6" r="2.1" fill="#FFE2B8" />
+      <rect width="32" height="32" rx="8" fill="#0B1530" />
+      <rect x="3.5" y="9" width="25" height="4" rx="1.6" fill="#22D3EE" />
+      <path
+        d="M5.75 12.5v4a3.5 3.5 0 0 0 3.5 3.5h2.25a3 3 0 0 0 3-3v-4.5M17.5 12.5V17a3 3 0 0 0 3 3h2.25a3.5 3.5 0 0 0 3.5-3.5v-4"
+        fill="none"
+        stroke="#22D3EE"
+        strokeWidth="2.2"
+        strokeLinejoin="round"
+      />
+      <circle cx="6.6" cy="11" r="0.95" fill="#0B1530" />
+      <circle cx="16" cy="11" r="0.95" fill="#0B1530" />
+      <circle cx="25.4" cy="11" r="0.95" fill="#0B1530" />
     </svg>
   );
 }

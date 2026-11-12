@@ -4,52 +4,56 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------- Design tokens ---------- */
+/* Navy + cyan. Bright cyan (#22d3ee) is only used as text on dark backgrounds; on white it is
+   decoration only, and text/links use the darker cyan (#0e7490). Ratios below are WCAG contrast. */
 :root {
-  --teal: #0f6e56;
-  --teal-light: #e1f5ee;
-  --charcoal: #2c2c2a;
-  --warm: #ffe2b8;
+  --navy: #0b1530;
+  --navy-deep: #0a1022;
+  --navy-ink: #04222b;
+  --cyan: #22d3ee;
+  --cyan-deep: #0e7490;
+  --cyan-light: #e0f7fb;
 
   /* light theme (default before the boot script runs) */
   --bg: #ffffff;
-  --bg-soft: #f4faf7;
+  --bg-soft: #f3f7fc;
   --surface: #ffffff;
-  --text: #1d1d1b;
-  --text-muted: #4a4a46; /* 8.9:1 on white */
-  --border: #d4e4dd;
-  --accent: #0f6e56; /* 6.2:1 on white */
-  --accent-strong: #0b5843;
+  --text: #0f172a;
+  --text-muted: #475569; /* 7.6:1 on white, 7.0:1 on bg-soft */
+  --border: #d3dceb;
+  --accent: #0e7490; /* 5.4:1 on white, 5.0:1 on bg-soft, 4.8:1 on accent-soft */
+  --accent-strong: #155e75;
   --accent-contrast: #ffffff;
-  --accent-soft: #e1f5ee;
-  --focus: #0b5843;
+  --accent-soft: #e0f7fb;
+  --focus: #155e75;
   --danger: #a3221b;
-  --success: #0b5843;
+  --success: #155e75;
 
-  /* the "stage" (hero, 3D sections) is always dark */
-  --stage-bg: #1b1d1c;
-  --stage-text: #f3f6f4;
-  --stage-muted: #c3cfc9; /* 10:1 on stage-bg */
-  --stage-accent: #7fd9bd; /* 10:1 on stage-bg */
-  --stage-border: #3c4441;
+  /* the "stage" (hero, 3D sections) is always dark navy */
+  --stage-bg: #0b1530;
+  --stage-text: #eef4ff; /* 16:1 on stage-bg */
+  --stage-muted: #b4c2dd; /* 9.6:1 on stage-bg */
+  --stage-accent: #22d3ee; /* 9.8:1 on stage-bg */
+  --stage-border: #2a3a60;
 
   --font-scale: 1;
   color-scheme: light;
 }
 
 .dark {
-  --bg: #1b1d1c;
-  --bg-soft: #232625;
-  --surface: #262a28;
-  --text: #f3f6f4;
-  --text-muted: #c3cfc9;
-  --border: #3c4441;
-  --accent: #7fd9bd;
-  --accent-strong: #a6e8d3;
-  --accent-contrast: #0d2c23;
-  --accent-soft: #1f3a32;
-  --focus: #a6e8d3;
+  --bg: #0a1022;
+  --bg-soft: #0e1730;
+  --surface: #121d3a;
+  --text: #eef4ff;
+  --text-muted: #b4c2dd; /* 9.9:1 on bg, 8.4:1 on surface */
+  --border: #2a3a60;
+  --accent: #22d3ee; /* 10:1 on bg, 8.6:1 on surface */
+  --accent-strong: #67e8f9;
+  --accent-contrast: #04222b; /* 9.2:1 on accent */
+  --accent-soft: #0f2c45; /* accent text on it: 7.4:1 */
+  --focus: #67e8f9;
   --danger: #ffaaa3;
-  --success: #a6e8d3;
+  --success: #67e8f9;
   color-scheme: dark;
 }
 
@@ -61,7 +65,7 @@
   --stage-border: #ffffff;
   --stage-bg: #000000;
   --stage-text: #ffffff;
-  --stage-accent: #8cf5d4;
+  --stage-accent: #67e8f9;
 }
 .hc.light,
 .hc:not(.dark) {
@@ -69,8 +73,8 @@
   --bg-soft: #ffffff;
   --surface: #ffffff;
   --text: #000000;
-  --accent: #064735;
-  --accent-strong: #032a1f;
+  --accent: #0a4a5c;
+  --accent-strong: #062f3b;
   --accent-soft: #ffffff;
   --focus: #000000;
 }
@@ -79,8 +83,8 @@
   --bg-soft: #000000;
   --surface: #000000;
   --text: #ffffff;
-  --accent: #8cf5d4;
-  --accent-strong: #c2ffec;
+  --accent: #67e8f9;
+  --accent-strong: #b9f5fd;
   --accent-soft: #000000;
   --focus: #ffffff;
 }
@@ -107,10 +111,11 @@
   --color-stage-muted: var(--stage-muted);
   --color-stage-accent: var(--stage-accent);
   --color-stage-line: var(--stage-border);
-  --color-teal: var(--teal);
-  --color-teal-light: var(--teal-light);
-  --color-charcoal: var(--charcoal);
-  --color-warm: var(--warm);
+  --color-navy: var(--navy);
+  --color-navy-ink: var(--navy-ink);
+  --color-cyan: var(--cyan);
+  --color-cyan-deep: var(--cyan-deep);
+  --color-cyan-light: var(--cyan-light);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -154,9 +159,10 @@ body {
 }
 .stage-gradient {
   background:
-    radial-gradient(120% 80% at 70% 40%, rgba(15, 110, 86, 0.45) 0%, rgba(15, 110, 86, 0) 60%),
-    linear-gradient(160deg, #232523 0%, #1b1d1c 45%, #0d3a2e 100%);
+    radial-gradient(110% 75% at 68% 42%, rgba(34, 211, 238, 0.13) 0%, rgba(34, 211, 238, 0) 58%),
+    linear-gradient(165deg, #0f1c3d 0%, #0b1530 45%, #0a1022 100%);
 }
+.hc .stage,
 .hc .stage-gradient {
   background: #000;
 }
