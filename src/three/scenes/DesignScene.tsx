@@ -31,7 +31,7 @@ export default function DesignScene({ active, onReady, ...rest }: DesignScenePro
       onReady={onReady}
       camera={s.camera}
       target={s.target}
-      fitAspect={1.1}
+      fitAspect={0.88}
       fov={s.fov}
       compact={rest.compact}
       demand={!rest.animate}

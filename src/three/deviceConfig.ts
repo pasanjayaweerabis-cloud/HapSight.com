@@ -287,7 +287,8 @@ const leftTemple: PartConfig[] = [
     explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
     turn: { stage: "full", faceTo: FACE_UP },
     label: "controller",
-    anchor: [0, 0, 0.02],
+    // front half of the board (local −x points forward on the left side)
+    anchor: [-0.05, 0, 0.022],
   },
   {
     id: "driverA",
@@ -297,8 +298,6 @@ const leftTemple: PartConfig[] = [
     quaternion: facing([1, 0, 0]),
     explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
     turn: { stage: "full", faceTo: FACE_UP },
-    label: "drivers",
-    anchor: [0, 0, 0.012],
   },
   {
     id: "driverB",
@@ -308,6 +307,9 @@ const leftTemple: PartConfig[] = [
     quaternion: facing([1, 0, 0]),
     explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
     turn: { stage: "full", faceTo: FACE_UP },
+    // the label sits on the rear board so its marker stays clear of the controller's
+    label: "drivers",
+    anchor: [0, 0, 0.012],
   },
 ];
 
@@ -322,7 +324,8 @@ const rightTemple: PartConfig[] = [
     explode: [{ stage: "full", direction: OUT_UP("right"), distance: 0.36 }],
     turn: { stage: "full", faceTo: FACE_UP },
     label: "battery",
-    anchor: [0, 0, 0.018],
+    // front half of the pouch (local +x points forward on the right side)
+    anchor: [0.07, 0, 0.018],
   },
   {
     id: "charger",
@@ -333,7 +336,7 @@ const rightTemple: PartConfig[] = [
     explode: [{ stage: "full", direction: OUT_UP("right"), distance: 0.36 }],
     turn: { stage: "full", faceTo: FACE_UP },
     label: "charger",
-    anchor: [0.02, 0, 0.012],
+    anchor: [-0.02, 0, 0.012],
   },
   {
     id: "powerSwitch",
@@ -378,7 +381,7 @@ export { mirrorX };
 /* ---------- Scene settings ---------- */
 
 export const SCENES = {
-  hero: { camera: [-2.2, 1.05, 2.65] as V3, target: [0, -0.03, -0.1] as V3, fov: 30 },
+  hero: { camera: [-2.5, 1.2, 3.05] as V3, target: [0, -0.04, -0.08] as V3, fov: 30 },
   /** Seen from behind and above the wearer, so the wearer's left is on the screen's left. */
   howItWorks: { camera: [0.0, 5.1, -3.0] as V3, target: [0, -0.3, 0.95] as V3, fov: 36 },
   design: { camera: [0.65, 3.05, 4.5] as V3, target: [0.0, -0.1, 0.24] as V3, fov: 30 },

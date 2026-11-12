@@ -53,7 +53,7 @@ function ScrollExplode({ compact }: { compact: boolean }) {
         </div>
         <p
           aria-hidden="true"
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full border border-stage-line bg-stage/80 px-4 py-2 text-sm font-medium text-stage-text backdrop-blur"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-stage-line bg-stage/80 px-4 py-2 text-sm font-medium text-stage-text backdrop-blur"
         >
           {t.currentStageLabel}: {stage}
         </p>
