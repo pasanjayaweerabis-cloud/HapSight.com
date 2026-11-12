@@ -13,19 +13,19 @@
 export const brand = {
   name: "Waymark",
   workingNameNote: "Working name",
-  tagline: "Walk with confidence.",
+  tagline: "Feel the path ahead.",
   shortDescription:
-    "A low-cost wearable headband that is being designed to help blind and visually impaired people notice obstacles at head height and to the sides.",
+    "Low-cost haptic glasses being designed to help blind and visually impaired people notice obstacles at head height, silently and hands-free.",
   contactEmail: "team@waymark.example",
   siteUrl: "https://waymark.example",
 } as const;
 
 export const meta = {
-  title: `${brand.name} – a wearable that feels the path ahead`,
+  title: `${brand.name} – haptic glasses that feel the path ahead`,
   description:
-    "Waymark is a student-designed, low-cost headband for blind and visually impaired people. Two sensors look ahead and gentle vibrations at each temple tell you where an obstacle is. It works with the white cane, not instead of it.",
+    "Waymark is a student-designed pair of low-cost haptic glasses for blind and visually impaired people. Three laser sensors in the frame look left, ahead and right, and a gentle vibration behind the matching ear tells you where an obstacle is. It works with the white cane, not instead of it.",
   ogAlt:
-    "The Waymark headband in dark teal on a dark background, with two round sensors on the forehead band.",
+    "The Waymark glasses in matte charcoal on a dark navy background: a flat-topped frame with clear lenses and three small sensors in the top bar.",
 } as const;
 
 export const skipLink = "Skip to main content";
@@ -76,13 +76,13 @@ export const a11yPanel = {
 
 export const hero = {
   eyebrow: "Student prototype · in design",
-  headline: "Walk with confidence.",
-  sub: "A wearable that feels the path ahead, so you don't have to guess.",
+  headline: brand.tagline,
+  sub: brand.shortDescription,
   primaryCta: { href: "#waitlist", label: "Join the waitlist" },
   secondaryCta: { href: "#how-it-works", label: "See how it works" },
   deviceDescriptionTitle: "What the device is like",
   deviceDescription:
-    "Waymark is a slim, dark teal headband. Two round distance sensors sit on the forehead and face forward. From each end of the band, a hook curves over and behind the ear without covering it, and ends in a small rounded pod. A soft vibration pad rests on the inside at each temple. The right pod has a large red SOS button with raised dots. The left pod has a small pause button with one raised ridge and a USB-C charging port. A fabric strap with a sliding buckle closes the band at the back of the head.",
+    "Waymark looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.",
   canvasHint: "Drag to turn the 3D model.",
 } as const;
 
@@ -107,55 +107,34 @@ export const problem = {
 export const howItWorks = {
   id: "how-it-works",
   eyebrow: "How it works",
-  title: "Sense. Feel. Move.",
+  title: "Sense. Decide. Feel.",
   intro:
-    "Two sensors look ahead. Small vibrations at your temples tell you which side an obstacle is on. You decide how to move.",
+    "Three laser sensors in the frame look ahead. A small vibration behind the matching ear tells you which side an obstacle is on. You decide how to move.",
   steps: [
     {
       id: "sense",
       number: "1",
       title: "Sense",
-      body: "Two distance sensors on the forehead look forward. The left sensor points slightly left and the right sensor slightly right. Their views overlap in the middle, so Waymark can tell left, right and straight ahead apart.",
+      body: "Three laser sensors scan left, ahead and right. They sit in open windows in the top bar of the frame, not behind the lenses, and are designed to measure how far away things are at head height.",
     },
     {
-      id: "feel-left",
+      id: "decide",
       number: "2",
-      title: "Feel: obstacle on the left",
-      body: "When something is ahead on your left, only the LEFT temple pad vibrates.",
+      title: "Decide",
+      body: "The controller works out how close the obstacle is and which side it's on, from which of the three sensors sees it.",
     },
     {
-      id: "feel-right",
+      id: "feel",
       number: "3",
-      title: "Feel: obstacle on the right",
-      body: "When something is ahead on your right, only the RIGHT temple pad vibrates.",
-    },
-    {
-      id: "feel-ahead",
-      number: "4",
-      title: "Feel: obstacle straight ahead",
-      body: "When something is straight ahead, BOTH pads vibrate. The closer it is, the faster the pulses.",
-    },
-    {
-      id: "move",
-      number: "5",
-      title: "Move",
-      body: "You choose how to step around it, keeping your cane on the ground as usual. When the way is clear, the vibrations stop.",
+      title: "Feel",
+      body: "The matching ear vibrates, faster as you get closer. Both ears vibrate together when the obstacle is straight ahead. You choose how to step around it, keeping your cane on the ground as usual.",
     },
   ],
   activeStepLabel: "Showing step",
   reducedMotionNote: "Animation is off. Each step is described in the text.",
 } as const;
 
-export type FeatureIcon =
-  | "direction"
-  | "distance"
-  | "approach"
-  | "range"
-  | "filter"
-  | "pause"
-  | "sos"
-  | "light"
-  | "voice";
+export type FeatureIcon = "directions" | "haptic" | "handsFree" | "cane" | "charge" | "parts" | "glasses";
 
 export const features = {
   id: "features",
@@ -164,162 +143,191 @@ export const features = {
   intro: "These are the features in the current design. The final prototype may change as we test with users.",
   items: [
     {
-      icon: "direction",
-      title: "Left and right guidance",
-      body: "The pad on the side of the obstacle vibrates. Both pads vibrate when it is straight ahead.",
+      icon: "directions",
+      title: "Three directions",
+      body: "Three sensors look left, straight ahead and right, so Waymark can tell you which side an obstacle is on.",
     },
     {
-      icon: "distance",
-      title: "Distance you can feel",
-      body: "Slow pulses when an obstacle is far away, faster pulses as it gets closer.",
+      icon: "haptic",
+      title: "Silent haptic feedback",
+      body: "Gentle vibrations behind the ears, faster as an obstacle gets closer. There is no sound, so it is designed not to cover the traffic sounds you listen for.",
     },
     {
-      icon: "approach",
-      title: "Approaching-object warning",
-      body: "A different vibration pattern when something is moving towards you, such as a cyclist or a person walking fast.",
+      icon: "handsFree",
+      title: "Hands-free",
+      body: "Nothing to hold. Your hands stay free for the cane, a railing or a bag.",
     },
     {
-      icon: "range",
-      title: "Adjustable range",
-      body: "Choose how far ahead it checks: 1, 2 or 3 metres. A short range suits crowded places.",
+      icon: "cane",
+      title: "Works with the white cane",
+      body: "The cane checks the ground at your feet. Waymark is meant to add a warning about obstacles at head height, not to replace the cane.",
     },
     {
-      icon: "filter",
-      title: "Rain and crowd filtering",
-      body: "Designed to ignore raindrops and brief movements in a crowd, so you get fewer false alerts.",
+      icon: "charge",
+      title: "USB-C rechargeable",
+      body: "Charges with an ordinary USB-C cable. A slide switch turns it fully off so the battery doesn't drain.",
     },
     {
-      icon: "pause",
-      title: "Pause with auto-resume",
-      body: "Press the pause button on the left pod to stop vibrations, for example in a queue. It turns back on by itself after a short time.",
+      icon: "parts",
+      title: "Low cost, local parts",
+      body: "Built from common parts available in Sri Lanka and a 3D-printed frame, so it can be made and repaired locally.",
     },
     {
-      icon: "sos",
-      title: "SOS button",
-      body: "Press the large red button on the right pod for a loud alarm sound and flashing lights, so people nearby notice you need help.",
-    },
-    {
-      icon: "light",
-      title: "Automatic night lights",
-      body: "A light sensor switches on the warm white lights on the back strap and pods when it gets dark, so drivers and cyclists can see you.",
-    },
-    {
-      icon: "voice",
-      title: "Short voice messages",
-      body: "Brief spoken status messages, such as battery level, range or paused, in Sinhala, Tamil or English.",
+      icon: "glasses",
+      title: "Looks like ordinary glasses",
+      body: "A familiar shape that doesn't draw attention, with clear non-prescription lenses.",
     },
   ] satisfies { icon: FeatureIcon; title: string; body: string }[],
 } as const;
 
 /** Labels for the exploded view. Order here = order in the accessible list. */
 export type LabelId =
-  | "sensorLeft"
-  | "sensorRight"
+  | "tofFront"
+  | "tofLeft"
+  | "tofRight"
+  | "controller"
   | "motorLeft"
   | "motorRight"
-  | "controller"
-  | "sos"
-  | "speaker"
+  | "drivers"
   | "battery"
-  | "usbc"
-  | "pause"
-  | "ledStrip"
-  | "lightSensor";
+  | "charger"
+  | "frame"
+  | "lenses"
+  | "wiring";
+
+export interface PartLabel {
+  name: string;
+  where: string;
+  description: string;
+}
+
+const TOF_DESCRIPTION =
+  "Measures distance with an invisible, eye-safe (Class 1) laser, from about 4 cm up to about 4 m indoors. Range is shorter in bright sunlight. Three directions tell left, ahead and right apart.";
+const MOTOR_DESCRIPTION =
+  "Vibrates on the side the obstacle is on. Both vibrate together for straight ahead. The closer the obstacle, the faster the pulses.";
 
 export const design = {
   id: "design",
   eyebrow: "Design",
   title: "What's inside",
   intro:
-    "Scroll to take the headband apart. Each part moves out in the direction of its arrow. Scroll back up to put it together again.",
+    "Scroll to take the glasses apart. First the temple covers, lenses, nose pad and ear caps come off, then the sensors, boards, battery and motors come out. Dashed lines show where each part sits. Scroll back up to put it together again.",
   stages: {
     assembled: "Assembled",
-    half: "Shells open",
+    half: "Covers off",
     full: "Fully exploded",
   },
   currentStageLabel: "Current view",
   listTitle: "Parts and where they are",
   labels: {
-    sensorLeft: {
-      name: "Left distance sensor",
-      where: "Front of the band, left side. Looks forward and slightly left.",
+    tofFront: {
+      name: "Front distance sensor (VL53L1X)",
+      where: "Centre of the top bar, above the bridge, facing straight ahead",
+      description: TOF_DESCRIPTION,
     },
-    sensorRight: {
-      name: "Right distance sensor",
-      where: "Front of the band, right side. Looks forward and slightly right.",
+    tofLeft: {
+      name: "Left distance sensor (VL53L1X)",
+      where: "Left corner of the top bar, angled left-forward",
+      description: TOF_DESCRIPTION,
+    },
+    tofRight: {
+      name: "Right distance sensor (VL53L1X)",
+      where: "Right corner of the top bar, angled right-forward",
+      description: TOF_DESCRIPTION,
+    },
+    controller: {
+      name: "Controller (ESP32-C3 SuperMini)",
+      where: "Inside the left temple, next to the hinge",
+      description: "Reads the three sensors and sets how fast each motor pulses.",
     },
     motorLeft: {
       name: "Left vibration motor",
-      where: "Behind the left temple pad, with its small driver board.",
+      where: "Left ear tip, behind the ear",
+      description: MOTOR_DESCRIPTION,
     },
     motorRight: {
       name: "Right vibration motor",
-      where: "Behind the right temple pad, with its small driver board.",
+      where: "Right ear tip, behind the ear",
+      description: MOTOR_DESCRIPTION,
     },
-    controller: {
-      name: "Controller and Bluetooth",
-      where: "Inside the right ear pod. Reads the sensors and drives the motors.",
-    },
-    sos: {
-      name: "SOS button",
-      where: "Outer face of the right ear pod. Large, red, with raised dots.",
-    },
-    speaker: {
-      name: "Speaker and buzzer",
-      where: "Right ear pod, behind the small grille. Plays voice messages and the alarm.",
+    drivers: {
+      name: "Motor drivers (2 MOSFET switches)",
+      where: "Inside the left temple, behind the controller",
+      description:
+        "Switches battery power to the motors, because the controller's pins can't drive them directly. A small diode protects the circuit.",
     },
     battery: {
-      name: "Battery",
-      where: "Inside the left ear pod. Flat and rechargeable.",
+      name: "Battery (LiPo 3.7 V, 500 mAh)",
+      where: "Inside the right temple",
+      description: "Powers everything without a cable.",
     },
-    usbc: {
-      name: "USB-C charging",
-      where: "Left ear pod. Charging board and port.",
+    charger: {
+      name: "USB-C charging (TP4056 with protection)",
+      where: "Inside the right temple, port on the outside",
+      description:
+        "Charges the battery over USB-C and protects it from overcharging, over-discharging and short circuits.",
     },
-    pause: {
-      name: "Pause button",
-      where: "Outer face of the left ear pod. Small, grey, with one raised ridge.",
+    frame: {
+      name: "3D-printed frame (PLA/PETG)",
+      where: "The whole body: front, temples, covers",
+      description: "Holds every part at the right angle. It can be printed on an ordinary 3D printer.",
     },
-    ledStrip: {
-      name: "Night LED strip",
-      where: "Along the back strap. Warm white light so others can see you.",
+    lenses: {
+      name: "Clear lenses",
+      where: "Front frame",
+      description:
+        "Non-prescription, mainly so the device looks and feels like ordinary glasses. The sensors are not behind the lenses.",
     },
-    lightSensor: {
-      name: "Light sensor",
-      where: "On the back strap. Turns the night lights on when it gets dark.",
+    wiring: {
+      name: "Wiring and power switch",
+      where: "Wires run through the frame and temples; switch on the right temple",
+      description: "Connects every part. The switch turns the glasses fully off so the battery doesn't drain.",
     },
-  } satisfies Record<LabelId, { name: string; where: string }>,
+  } satisfies Record<LabelId, PartLabel>,
   otherPartsTitle: "Also inside",
-  otherParts: [
-    "A thin flexible ribbon cable inside the band connects the front sensors to both ear pods.",
-    "The band has a hard outer shell and a soft black silicone lining that touches the skin.",
-    "Each ear pod is made of two shell halves that close around the electronics.",
-  ],
+  otherParts: ["Flyback diodes", "Resistors", "Perfboard", "Heat-shrink tubing", "JST connectors"],
+  budget: {
+    title: "Prototype parts cost",
+    caption: "Approximate cost of the parts for one prototype, in Sri Lankan rupees",
+    columns: { part: "Part", qty: "Qty", cost: "LKR" },
+    rows: [
+      { part: "VL53L1X ToF sensor", qty: "3", cost: "5,250" },
+      { part: "ESP32-C3 SuperMini", qty: "1", cost: "800" },
+      { part: "LiPo 3.7 V 500 mAh", qty: "1", cost: "950" },
+      { part: "TP4056 USB-C charger (with protection)", qty: "1", cost: "120" },
+      { part: "Coin vibration motor", qty: "2", cost: "240" },
+      { part: "MOSFET drivers + diodes/resistors", qty: "2", cost: "300" },
+      { part: "3D-printed frame", qty: "1", cost: "3,000" },
+      { part: "Wiring, switch, perfboard", qty: "—", cost: "500" },
+    ],
+    total: { label: "Total", cost: "≈ 11,160" },
+    footnote: "Approximate Sri Lankan retail prices, November 2026. Some are estimates.",
+  },
   note: "Concept design – the final prototype may differ.",
 } as const;
 
 export const gallery = {
   /**
-   * Off until the cropped renders exist in public/gallery/ (see README, "Gallery").
-   * Use only the bottom-row (on mannequin) views from device-8-views.png.
+   * Off until real photos or corrected renders exist in public/gallery/ (see README, "Gallery").
+   * Do not use the concept renders in design-reference/: they show extra sensors on the lenses.
    */
   enabled: false,
   id: "gallery",
   eyebrow: "Gallery",
-  title: "On the head",
-  intro: "Concept renders of the headband worn on a mannequin.",
+  title: "The glasses",
+  intro: "Concept renders of the glasses from the front, the side and at an angle.",
   items: [
     {
-      src: "/gallery/worn-front.png",
-      alt: "Front view on a mannequin head: the dark teal band crosses the forehead with two round sensors above the eyebrows, and the ear hooks pass over the ears.",
+      src: "/gallery/front.png",
+      alt: "Front view: a flat-topped charcoal frame with clear lenses, three small sensor windows in the thick top bar and a rubber nose pad under the bridge.",
     },
     {
-      src: "/gallery/worn-side.png",
-      alt: "Side view on a mannequin head: the ear hook curves over the ear, leaving it uncovered, and ends in a rounded pod behind the ear.",
+      src: "/gallery/side.png",
+      alt: "Side view: the arm is wide near the frame, where the electronics sit, then slims and curves down into a rubber-capped ear tip.",
     },
     {
-      src: "/gallery/worn-back.png",
-      alt: "Back view on a mannequin head: a black fabric strap with a buckle and a thin warm white light strip joins the two ear pods.",
+      src: "/gallery/three-quarter.png",
+      alt: "Three-quarter view: the frame from the front left, with both arms reaching back and the small slide switch on top of the right arm.",
     },
   ],
   note: "Concept renders. The final prototype may differ.",
@@ -366,7 +374,7 @@ export const comparison = {
     {
       label: "Approximate price",
       values: [
-        "Target price not set yet",
+        "Target build cost ≈ LKR 11,200 (prototype parts)",
         "About US$600–850 (for example, WeWALK Smart Cane 2), before shipping and import duty",
         "About US$1,900–3,500 (for example, Envision Glasses), before shipping and import duty",
       ],
@@ -382,7 +390,7 @@ export const comparison = {
     {
       label: "Sinhala, Tamil and English",
       values: [
-        "Planned: short voice messages in all three",
+        "Not needed: Waymark uses vibration only, with no spoken words",
         "Depends on the product. Check the maker's language list",
         "Depends on the product. Check the maker's language list",
       ],
@@ -424,28 +432,35 @@ export const faq = {
       q: "Does it replace the white cane?",
       a: [
         "No. Waymark is designed to work together with the white cane, not instead of it.",
-        "The cane checks the ground at your feet. Waymark is meant to warn you about obstacles higher up and to the sides. It does not replace orientation and mobility training, and it does not tell you when it is safe to cross a road.",
+        "The cane checks the ground at your feet. Waymark is meant to warn you about obstacles at head height. It does not replace orientation and mobility training, and it does not tell you when it is safe to cross a road.",
       ],
     },
     {
-      q: "How does it tell me where the obstacle is?",
+      q: "How do the glasses tell me where the obstacle is?",
       a: [
-        "Two sensors on the forehead look forward, one slightly left and one slightly right.",
-        "If the obstacle is on your left, the left temple pad vibrates. If it is on your right, the right pad vibrates. If it is straight ahead, both vibrate. The closer it is, the faster the pulses.",
+        "Three laser sensors in the top bar of the frame look left, straight ahead and right.",
+        "If the obstacle is on your left, the motor behind your left ear vibrates. If it is on your right, the right one vibrates. If it is straight ahead, both vibrate. The closer it is, the faster the pulses.",
       ],
     },
     {
-      q: "Can I pause it?",
+      q: "Do I need a prescription?",
       a: [
-        "Yes. Press the small grey pause button on the left ear pod. You can find it by touch: it has one raised ridge.",
-        "Vibrations stop, for example while you wait in a queue or talk to someone. Waymark turns back on by itself after a short time, or when you press the button again.",
+        "No. The prototype uses clear, non-prescription lenses. The lenses are mainly there so the device looks and feels like ordinary glasses; the sensors do not look through them.",
+        "A version that takes prescription lenses is a possible future idea.",
       ],
     },
     {
-      q: "What happens when I press SOS?",
+      q: "How long does the battery last?",
       a: [
-        "Press the large red button on the right ear pod. You can find it by touch: it has raised dots.",
-        "Waymark plays a loud alarm sound and flashes its lights, so people nearby notice that you need help. In the current design it does not call or message anyone.",
+        "Our early estimate is about 3–5 hours of continuous use with the prototype's 500 mAh battery. We'll measure it properly during testing.",
+        "It charges with an ordinary USB-C cable.",
+      ],
+    },
+    {
+      q: "How do I turn it off?",
+      a: [
+        "Slide the small switch on top of the right arm. You can find it by touch, just behind the wide part of the arm.",
+        "The switch turns the glasses fully off, so the battery doesn't drain while you are not wearing them.",
       ],
     },
     {

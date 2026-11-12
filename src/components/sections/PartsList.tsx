@@ -7,7 +7,7 @@ export function PartsList() {
     <div className="mt-14 grid gap-10 lg:grid-cols-[2fr_1fr]">
       <div>
         <h3 className="text-xl font-semibold">{t.listTitle}</h3>
-        <ol className="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+        <ol className="mt-5 grid gap-x-8 gap-y-6 sm:grid-cols-2">
           {ids.map((id, i) => (
             <li key={id} className="flex gap-4">
               <span
@@ -19,6 +19,7 @@ export function PartsList() {
               <span>
                 <span className="block font-semibold">{t.labels[id].name}</span>
                 <span className="block text-base text-stage-muted">{t.labels[id].where}</span>
+                <span className="mt-1.5 block text-base text-stage-text/90">{t.labels[id].description}</span>
               </span>
             </li>
           ))}
@@ -28,7 +29,10 @@ export function PartsList() {
         <h3 className="text-xl font-semibold">{t.otherPartsTitle}</h3>
         <ul className="mt-5 grid gap-3 text-base text-stage-muted">
           {t.otherParts.map((p) => (
-            <li key={p}>{p}</li>
+            <li key={p} className="flex items-start gap-3">
+              <span aria-hidden="true" className="mt-2.5 size-1.5 shrink-0 rounded-full bg-stage-accent" />
+              {p}
+            </li>
           ))}
         </ul>
         <p className="mt-8 rounded-2xl border border-stage-line p-4 text-base font-medium">{t.note}</p>

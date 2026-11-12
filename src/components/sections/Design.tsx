@@ -9,8 +9,9 @@ import { useReducedMotion } from "@/lib/a11yPrefs";
 import { useWebGLSupport } from "@/lib/webgl";
 import { useIsCompact } from "@/lib/useMediaQuery";
 import { PartsList } from "./PartsList";
+import { BudgetTable } from "./BudgetTable";
 
-/** Scroll → explode: hold assembled briefly, then 0 → 0.5 (shells open) → 1 (fully exploded). */
+/** Scroll → explode: hold assembled briefly, then 0 → 0.5 (covers off) → 1 (fully exploded). */
 const toExplode = (p: number) => Math.min(1, Math.max(0, (p - 0.06) / 0.8));
 
 export function Design() {
@@ -25,6 +26,7 @@ export function Design() {
       {reduced || !webgl ? <StaticViews compact={compact} /> : <ScrollExplode compact={compact} />}
       <Container className="pb-24 sm:pb-32">
         <PartsList />
+        <BudgetTable />
       </Container>
     </section>
   );
@@ -51,7 +53,7 @@ function ScrollExplode({ compact }: { compact: boolean }) {
         </div>
         <p
           aria-hidden="true"
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full border border-stage-line bg-stage/80 px-4 py-2 text-sm font-medium text-stage-text backdrop-blur"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-stage-line bg-stage/80 px-4 py-2 text-sm font-medium text-stage-text backdrop-blur"
         >
           {t.currentStageLabel}: {stage}
         </p>

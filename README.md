@@ -1,7 +1,9 @@
 # Waymark – landing page
 
-Landing page for **Waymark** (working name), a low-cost wearable headband that is being designed
-to help blind and visually impaired people notice obstacles at head height and to the sides.
+Landing page for **Waymark** (working name): low-cost haptic smart glasses being designed to help
+blind and visually impaired people notice obstacles at head height, silently and hands-free.
+Three VL53L1X laser distance sensors in the frame look left, ahead and right; a coin vibration
+motor in each ear tip tells the wearer which side the obstacle is on.
 Student prototype by ATP Group 14, BEng (Hons) Software Engineering, IIT Sri Lanka
 (affiliated with the University of Westminster).
 
@@ -41,7 +43,7 @@ src/components/layout/       Navbar, mobile menu, accessibility settings dialog,
 src/components/sections/     One file per page section
 src/components/visuals/      Lazy 3D stages, label overlay, static stills
 src/three/deviceConfig.ts    THE 3D config: every part, its assembled placement, explode moves, labels, cameras
-src/three/parts/             Part builders (shell, modules, pods)
+src/three/parts/             Part builders (Frame: front, lenses, nose pad · Temples: shells, covers, ear caps, switch · Modules: boards, battery, motors)
 src/three/scenes/            Hero, How it works, Design (exploded) scenes
 supabase/waitlist.sql        Database setup
 scripts/capture-stills.mjs   Stills capture
@@ -53,13 +55,24 @@ To rename the product, change `brand.name` in `src/content/site.ts`.
 
 Front = +Z (where the sensors look), wearer's left = +X, up = +Y. Each part in `PARTS`
 (`src/three/deviceConfig.ts`) has a kind, an assembled position/rotation, explode moves
-(`half` stage = shells open, scroll 0 → 0.5; `full` stage = internals out, 0.5 → 1) and an
-optional label. Move a part or change how it explodes there and every scene follows.
+(`half` stage = temple covers, lenses, nose pad and ear caps come off, scroll 0 → 0.5; `full`
+stage = sensors, boards, battery and motors come out, 0.5 → 1), an optional `turn` (pulled-out
+boards lie face up) and an optional label. Move a part or change how it explodes there and every
+scene follows, including the cyan dashed leader lines.
 
-Left/right: no object uses a negative scale. Symmetric parts (ear hooks, sensors, pads, motors,
-pod shells) are generated per side from mirrored inputs with right-handed local frames, so
-lighting, normals and face culling are always correct. The two ear pods are different
-components: right = SOS button + speaker grille + LED, left = pause button + USB-C + LED.
+The parts: a front frame with three open sensor windows in the top bar (left corner, centre,
+right corner; the corner sensors turn 27° outward and are **not** behind the lenses), two clear
+lenses, a rubber nose pad, and two hollow temples with removable outer covers. Left temple:
+ESP32-C3 SuperMini + two MOSFET driver boards. Right temple: LiPo 3.7 V 500 mAh + TP4056 USB-C
+charger (port through the back wall of the bay) and a slide power switch on top of the arm. Each
+ear tip holds a coin vibration motor under a rubber cap. There is no 3.3 V regulator: the
+SuperMini's onboard regulator runs from the battery through its 5V pin. The cyan strips on the
+top bar are decoration (an emissive material), not a part.
+
+Left/right: no object uses a negative scale. Symmetric parts (lenses, corner sensors, temples,
+covers, ear caps, motors) are generated per side from mirrored inputs with right-handed local
+frames, so lighting, normals and face culling are always correct. The two temples hold different
+electronics, so their insides are separate parts, not mirrored copies.
 
 ## Supabase setup (waitlist)
 
@@ -116,8 +129,9 @@ Test with VoiceOver (macOS and iOS), NVDA (Windows) and TalkBack (Android):
 
 - One h1, section h2s in order, landmarks (banner, Main navigation, main, contentinfo); skip link first.
 - The 3D areas are skipped; the device description under the hero is read.
-- How it works: five steps read in order; the active step is announced as "current step".
-- Design: the numbered parts list is read with names and locations.
+- How it works: three steps read in order; the active step is announced as "current step".
+- Design: the numbered parts list is read with names, locations and descriptions, then the
+  prototype parts cost table (caption, column and row headers).
 - FAQ buttons announce expanded/collapsed; the settings dialog traps focus, Escape closes it and
   focus returns to its button.
 - Waitlist: submit empty → focus moves to the error summary, links jump to fields, fields announce
@@ -126,11 +140,13 @@ Test with VoiceOver (macOS and iOS), NVDA (Windows) and TalkBack (Android):
 
 ## Known limitations
 
-- The concept renders were not available when the model was built, so the 3D shape follows the
-  written spec. Adjust `BAND`, `DIMS`, `HOOK_LEFT` and `STRAP` in `deviceConfig.ts`, then `npm run stills`.
-- Gallery: crop the bottom-row (on mannequin) views of `device-8-views.png` into
-  `public/gallery/worn-front.png`, `worn-side.png`, `worn-back.png`, check the alt text in `site.ts`,
-  then set `gallery.enabled = true`. Never use the exploded reference images: their labels are wrong.
+- The 3D model is procedural and follows the concept renders loosely. Adjust `FRAME`,
+  `LENS_LEFT`, `TEMPLE`, `BAY_PROFILE` and `ARM_LEFT` in `deviceConfig.ts`, then `npm run stills`.
+- Gallery: off. The concept renders show extra sensor modules on the lower lens corners, which the
+  device does not have, so do not crop them for the site. Add real photos (or corrected renders)
+  as `public/gallery/front.png`, `side.png`, `three-quarter.png`, check the alt text in `site.ts`,
+  then set `gallery.enabled = true`.
+- Battery life (3–5 hours) and the parts prices are early estimates; update `site.ts` after testing.
 - three.js r187 logs a deprecation warning ("THREE.Clock … use THREE.Timer") from inside
   @react-three/fiber 9. It is a warning, not an error.
 - The retention period, contact address and "planned" claims in the comparison are commitments

@@ -33,23 +33,33 @@ const frag = /* glsl */ `
   }
 `;
 
-/** Direction each sensor looks in: straight ahead, turned slightly outward, overlapping in the middle. */
+/** The three sensors in the order left, ahead, right. */
+export const SENSOR_IDS = ["sensorL", "sensorFront", "sensorR"] as const;
+
+/** Where each sensor looks from and in which direction: left-forward, straight ahead, right-forward. */
 export function sensorDirections() {
-  const out = SCENES.sensing.outwardDeg * (Math.PI / 180);
-  return (["sensorModuleL", "sensorModuleR"] as const).map((id) => {
+  return SENSOR_IDS.map((id) => {
     const part = PARTS.find((p) => p.id === id)!;
     const q = new THREE.Quaternion(...part.quaternion!);
-    const facing = new THREE.Vector3(0, 0, 1).applyQuaternion(q);
-    // left sensor a little left (+x), right sensor a little right (−x)
-    const sign = id === "sensorModuleL" ? 1 : -1;
-    const dir = new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0, 1, 0), sign * out);
-    const origin = v3(part.position).addScaledVector(facing, 0.07);
+    const dir = new THREE.Vector3(0, 0, 1).applyQuaternion(q);
+    const origin = v3(part.position).addScaledVector(dir, 0.025);
     return { origin, dir };
   });
 }
 
-export function SensorCones({ getOpacity }: { getOpacity: () => number }) {
-  const { length, radius } = SCENES.sensing;
+/**
+ * Translucent detection cones, one per sensor. `getOpacity` sets all three; `getHighlight`
+ * (optional) brightens individual cones, e.g. the one that sees an obstacle.
+ */
+export function SensorCones({
+  getOpacity,
+  getHighlight,
+}: {
+  getOpacity: () => number;
+  getHighlight?: () => readonly [number, number, number];
+}) {
+  const { length, halfAngleDeg } = SCENES.sensing;
+  const radius = length * Math.tan((halfAngleDeg * Math.PI) / 180);
   const geo = useMemo(() => {
     const g = new THREE.ConeGeometry(radius, length, 48, 1, true);
     g.translate(0, -length / 2, 0); // apex at origin, opening along -Y
@@ -66,7 +76,7 @@ export function SensorCones({ getOpacity }: { getOpacity: () => number }) {
             vertexShader: vert,
             fragmentShader: frag,
             uniforms: {
-              uColor: { value: new THREE.Color(COLORS.cone) },
+              uColor: { value: new THREE.Color(COLORS.cyan) },
               uOpacity: { value: 0 },
               uLength: { value: length },
             },
@@ -81,8 +91,9 @@ export function SensorCones({ getOpacity }: { getOpacity: () => number }) {
   const group = useRef<THREE.Group>(null);
 
   useFrame(() => {
-    const o = getOpacity() * 0.55;
-    mats.forEach((m) => (m.uniforms.uOpacity.value = o));
+    const o = getOpacity() * 0.42;
+    const h = getHighlight?.();
+    mats.forEach((m, i) => (m.uniforms.uOpacity.value = o * (1 + 1.3 * (h ? h[i] : 0))));
     if (group.current) group.current.visible = o > 0.002;
   });
 

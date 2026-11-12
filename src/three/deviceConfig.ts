@@ -1,112 +1,165 @@
 import * as THREE from "three";
 import type { LabelId } from "@/content/site";
-import { bandFrame, frameQuaternion, mirrorX, type BandShape, type V3 } from "./geometry";
+import { frameQuaternion, mirrorCorners, mirrorX, rectCorners, v3, type Corner, type V3 } from "./geometry";
 
 /**
- * THE single source of truth for the 3D headband.
+ * THE single source of truth for the 3D glasses.
  *
  * Coordinates (units ≈ decimetres): the wearer faces +Z (front = where the sensors look),
- * wearer's LEFT = +X, up = +Y, origin ≈ centre of the head at band height.
+ * wearer's LEFT = +X, up = +Y. The front frame sits at z ≈ 0.6 and the temples run back to
+ * z ≈ −0.9, so the origin is roughly the middle of the head.
  *
  * Every part is a separately named object with:
  *  - `position` / `quaternion`: where it sits when assembled
  *  - `explode`: one or more moves. Each move belongs to a stage:
- *      "half" runs while explode progress goes 0 → 0.5 (outer shells open),
- *      "full" runs while it goes 0.5 → 1 (internals come out).
- *    Moves add up, so a button can travel with its shell and then further on its own.
+ *      "half" runs while explode progress goes 0 → 0.5 (covers, lenses, nose pad and ear caps come off),
+ *      "full" runs while it goes 0.5 → 1 (sensors, boards, battery and motors come out).
+ *  - `turn` (optional): during its stage the part also turns so its face points along `faceTo`,
+ *    so boards that stand upright inside a temple lie face-up when they are pulled out.
  *  - `label`: one of the 12 labels in site.ts (only on parts that get a label)
  *
  * LEFT and RIGHT symmetric parts are generated from mirrored inputs, never with a negative
- * scale. The two ear pods are NOT mirror copies: the right pod carries the SOS button and
- * speaker, the left pod carries the pause button and USB-C port (see `kind`).
+ * scale. The two temples are NOT mirror copies inside: the left temple holds the controller and
+ * the two motor drivers, the right temple holds the battery, the charger and the power switch.
  */
 
 export const COLORS = {
-  teal: "#0F6E56",
-  tealDark: "#0b5843",
-  tealLight: "#E1F5EE",
-  charcoal: "#2C2C2A",
-  silicone: "#141615",
-  silver: "#c7ceca",
-  sos: "#c2362a",
-  pause: "#8c9390",
-  warm: "#ffd9a6",
-  pcb: "#1f6b3c",
-  ribbon: "#b37a2e",
-  arrow: "#5fd3ad",
-  cone: "#3fbf98",
-  ripple: "#9be8cf",
+  frame: "#2C2E33",
+  frameInside: "#24262b",
+  rubber: "#18191c",
+  cyan: "#22D3EE",
+  cyanSoft: "#7ae6f6",
+  lens: "#a9d6ff",
+  pcbBlack: "#15161a",
+  pcbGreen: "#1d7a3e",
+  pcbBlue: "#1f4fae",
+  chip: "#0f1013",
+  gold: "#d2a54a",
+  silver: "#c9ced4",
+  pouch: "#b9bfc5",
+  kapton: "#e1a515",
+  wireRed: "#c62a2a",
+  wireBlack: "#141414",
+  connector: "#ece9e1",
+  sensorLens: "#4a1f73",
+  port: "#08090b",
+  screw: "#3b3e45",
+  smd: "#cfc6b4",
 } as const;
 
-export const BAND: BandShape = { a: 0.74, b: 0.9, zShift: 0.06, thetaMax: 1.28, y: 0 };
+/* ---------- Front frame ---------- */
 
-export const DIMS = {
-  band: { thickness: 0.05, height: 0.19, radius: 0.02, taper: 0.42 },
-  lining: { offset: -0.036, thickness: 0.022, height: 0.165, radius: 0.01, thetaMax: 1.22 },
-  ribbon: { offset: -0.004, thickness: 0.004, height: 0.03, thetaMax: 1.24 },
-  hook: { thickness: 0.042, width: 0.078 },
-  sensorTheta: 0.3,
-  /** 0 = sensors face along the band's normal, 1 = straight ahead. */
-  sensorForwardBlend: 0.6,
-  padTheta: 1.05,
-  pod: { center: [0.79, -0.52, -0.22] as V3, half: 0.038, height: 0.26, depth: 0.15, radius: 0.018 },
-  strap: { thickness: 0.012, width: 0.08 },
+export const FRAME = {
+  /** World z of the back of the front plate. */
+  z: 0.62,
+  halfWidth: 0.705,
+  top: 0.225,
+  /** Bottom of the thick top bar (= top of the lenses). */
+  barBottom: 0.07,
+  barCenterY: 0.1475,
+  plateDepth: 0.03,
+  bevel: 0.008,
+  /** The top bar is deeper than the rims: a body behind the plate holds the sensors and wiring. */
+  browDepth: 0.085,
 } as const;
 
-/** Ear hook path for the LEFT side, from the band end over the ear to the top of the pod. */
-export const HOOK_LEFT: V3[] = [
-  [0.709, 0.0, 0.318],
-  [0.745, -0.005, 0.17],
-  [0.775, -0.04, 0.03],
-  [0.79, -0.14, -0.1],
-  [0.79, -0.28, -0.19],
-  [0.787, -0.42, -0.22],
+/** Lens opening on the wearer's LEFT (+x), counter-clockwise. The right one is mirrored. */
+export const LENS_LEFT: Corner[] = [
+  [0.16, -0.245, 0.09],
+  [0.6, -0.245, 0.09],
+  [0.625, 0.07, 0.03],
+  [0.08, 0.07, 0.03],
+];
+export const LENS_CENTER: readonly [number, number] = [0.352, -0.0875];
+
+/** Front frame outline for x ≥ 0, counter-clockwise from the bottom of the bridge to the top centre. */
+const FRAME_HALF: Corner[] = [
+  [0, -0.04, 0],
+  [0.055, -0.04, 0.04],
+  [0.115, -0.29, 0.12],
+  [0.645, -0.29, 0.12],
+  [0.705, 0.0, 0.06],
+  [0.705, 0.225, 0.045],
+  [0, 0.225, 0],
+];
+/** Whole outline, built from the left half and its mirror image. */
+export const FRAME_OUTLINE: Corner[] = [...FRAME_HALF, ...mirrorCorners(FRAME_HALF.slice(1, -1))];
+
+/** The three open sensor windows in the top bar: wearer's left corner, centre, right corner. */
+export const SENSOR_WINDOW = { x: 0.53, w: 0.14, h: 0.085, r: 0.02 } as const;
+export const sensorWindows = (): Corner[][] =>
+  [SENSOR_WINDOW.x, 0, -SENSOR_WINDOW.x].map((x) =>
+    rectCorners(x, FRAME.barCenterY, SENSOR_WINDOW.w, SENSOR_WINDOW.h, SENSOR_WINDOW.r),
+  );
+/** The corner sensors turn outward by this much; the centre one looks straight ahead. */
+export const SENSOR_OUTWARD_DEG = 27;
+
+/* ---------- Temples ---------- */
+
+export const TEMPLE = {
+  /** World z where the temples start (back of the top bar). */
+  hingeZ: 0.535,
+  /** Side profile of the electronics bay: u = distance back from the hinge, v = height. */
+  bay: { length: 0.62, top: 0.222, bottomFront: 0.03, bottomRear: 0.04 },
+  /** x of the head-side face of the shell. */
+  innerX: 0.645,
+  /** Thickness of the shell's inner wall and rim. */
+  wall: 0.012,
+  rimDepth: 0.046,
+  cover: { depth: 0.014, bevel: 0.005 },
+  arm: { thickness: 0.062, height: 0.072, radius: 0.022 },
+} as const;
+
+/** Bay side profile in (u, v), counter-clockwise. */
+export const BAY_PROFILE: Corner[] = [
+  [0, TEMPLE.bay.bottomFront, 0.03],
+  [TEMPLE.bay.length, TEMPLE.bay.bottomRear, 0.06],
+  [TEMPLE.bay.length, TEMPLE.bay.top, 0.03],
+  [0, TEMPLE.bay.top, 0.025],
 ];
 
-/** Back strap path, wearer's left pod → round the back of the head → right pod. */
-export const STRAP: V3[] = [
-  [0.79, -0.55, -0.3],
-  [0.66, -0.56, -0.66],
-  [0.36, -0.55, -0.93],
-  [0, -0.54, -1.01],
-  [-0.36, -0.55, -0.93],
-  [-0.66, -0.56, -0.66],
-  [-0.79, -0.55, -0.3],
+/** Centre line of the LEFT arm, from inside the bay back to where the ear tip starts. */
+export const ARM_LEFT: V3[] = [
+  [0.69, 0.186, 0.035],
+  [0.69, 0.186, -0.25],
+  [0.69, 0.181, -0.48],
+  [0.69, 0.16, -0.61],
+  [0.69, 0.115, -0.71],
+  [0.69, 0.075, -0.775],
 ];
+
+/** Where the ear tip starts and the direction it points (straight on along the arm). */
+export function earTip(s: Side) {
+  const pts = s === "left" ? ARM_LEFT : ARM_LEFT.map(mirrorX);
+  const end = v3(pts[pts.length - 1]);
+  const dir = end.clone().sub(v3(pts[pts.length - 2])).normalize();
+  return { end, dir };
+}
+
+/** USB-C opening in the back wall of the right temple's bay. */
+export const USB_PORT = { u: TEMPLE.bay.length, v: 0.128, x: -0.686, width: 0.046, height: 0.022 } as const;
 
 export type Stage = "half" | "full";
 export interface ExplodeMove {
   stage: Stage;
   direction: V3; // normalised at runtime
   distance: number;
-  /** Set false when this move just follows a parent part (no extra arrow). */
-  arrow?: boolean;
 }
 
 export type PartKind =
-  | "bandShell"
-  | "bandLining"
-  | "earHook"
-  | "sensorMount"
-  | "sensorModule"
-  | "templePad"
-  | "vibrationMotor"
-  | "hapticBoard"
-  | "ribbonCable"
-  | "podShellOuterLeft"
-  | "podShellOuterRight"
-  | "podShellInner"
-  | "sosButton"
-  | "speaker"
+  | "frame"
+  | "lens"
+  | "nosePad"
+  | "sensor"
+  | "templeShell"
+  | "templeCover"
+  | "earCap"
+  | "motor"
   | "controller"
-  | "led"
-  | "pauseButton"
+  | "driver"
   | "battery"
-  | "chargingBoard"
-  | "strap"
-  | "ledStrip"
-  | "buckle"
-  | "lightSensor";
+  | "charger"
+  | "powerSwitch";
 
 export type Side = "left" | "right";
 
@@ -117,267 +170,207 @@ export interface PartConfig {
   position: V3;
   quaternion?: readonly [number, number, number, number];
   explode: ExplodeMove[];
+  /** Optional turn during a stage: the part's local +z ends up pointing along `faceTo`. */
+  turn?: { stage: Stage; faceTo: V3 };
   label?: LabelId;
   /** Where the label's leader line touches the part, in the part's local space. */
   anchor?: V3;
+  /** False: no dashed leader line from where the part sits to where it moves. */
+  leader?: boolean;
 }
 
 /* ---------- helpers used to compute assembled placements ---------- */
 
 const q = (quat: THREE.Quaternion) => [quat.x, quat.y, quat.z, quat.w] as const;
 const p = (v: THREE.Vector3): V3 => [v.x, v.y, v.z];
-const sideSign = (s: Side) => (s === "left" ? 1 : -1);
+export const sideSign = (s: Side) => (s === "left" ? 1 : -1);
+const facing = (dir: V3) => q(frameQuaternion(v3(dir)));
 
-/** On the band, with the part's +z turned towards straight ahead (forward-facing sensors). */
-function onBandFacingForward(theta: number, offset: number, blend: number) {
-  const f = bandFrame(BAND, theta, offset);
-  const n = new THREE.Vector3(0, 0, 1).applyQuaternion(f.quaternion);
-  const facing = n.lerp(new THREE.Vector3(0, 0, 1), blend).normalize();
-  return { position: p(f.position), quaternion: q(frameQuaternion(facing)), facing: p(facing) };
+/** A point inside a temple bay: u back from the hinge, v up, `lift` out from the inner wall. */
+const inBay = (s: Side, u: number, v: number, lift: number): V3 => [
+  sideSign(s) * (TEMPLE.innerX + TEMPLE.wall + lift),
+  v,
+  TEMPLE.hingeZ - u,
+];
+
+/** Pulled-out boards lie face up, tilted a little towards the front. */
+const FACE_UP: V3 = [0, 1, 0.45];
+const BOARD_V = 0.126;
+
+function sensorPart(id: string, x: number, yawDeg: number, label: LabelId, side?: Side): PartConfig {
+  const yaw = (yawDeg * Math.PI) / 180;
+  const look: V3 = [Math.sin(yaw), 0, Math.cos(yaw)];
+  return {
+    id,
+    kind: "sensor",
+    side,
+    position: [x, FRAME.barCenterY, FRAME.z + 0.012],
+    quaternion: facing(look),
+    explode: [{ stage: "full", direction: [look[0], 0.12, look[2]], distance: 0.42 }],
+    label,
+    anchor: [0, 0, 0.018],
+  };
 }
-function inwardOnBand(theta: number, offset: number) {
-  const f = bandFrame(BAND, theta, offset);
-  const inward = new THREE.Vector3(f.position.x, 0, f.position.z - BAND.zShift).normalize().negate();
-  return { position: p(f.position), quaternion: q(frameQuaternion(inward)), inward: p(inward) };
-}
-/** Pod placement: local +z faces OUT of the pod (away from the head) on both sides. */
-const podQuat = (s: Side) => q(frameQuaternion(new THREE.Vector3(sideSign(s), 0, 0)));
-const podPoint = (s: Side, outward: number, up: number, forward: number): V3 => {
-  const c = DIMS.pod.center;
-  return [sideSign(s) * (c[0] + outward), c[1] + up, c[2] + forward];
-};
 
-const OUT = (s: Side): V3 => [sideSign(s), 0, 0];
-const SHELL_OPEN = 0.34;
-
-function symmetricParts(s: Side): PartConfig[] {
+function sideParts(s: Side): PartConfig[] {
   const sg = sideSign(s);
   const L = s === "left" ? "L" : "R";
-  const sensorT = sg * DIMS.sensorTheta;
-  const sensorMount = onBandFacingForward(sensorT, 0.03, DIMS.sensorForwardBlend);
-  const sensorModule = onBandFacingForward(sensorT, 0.035, DIMS.sensorForwardBlend);
-  const padT = sg * DIMS.padTheta;
-  const pad = inwardOnBand(padT, DIMS.lining.offset - DIMS.lining.thickness / 2 - 0.007);
-  const motor = inwardOnBand(padT, -0.006);
-  const board = inwardOnBand(sg * 0.92, -0.006);
+  const tip = earTip(s);
+  const tipDir = p(tip.dir);
+  const inward: V3 = [-sg, 0, 0];
 
   return [
-    { id: `earHook${L}`, kind: "earHook", side: s, position: [0, 0, 0], explode: [] },
     {
-      id: `sensorMount${L}`,
-      kind: "sensorMount",
+      id: `lens${L}`,
+      kind: "lens",
       side: s,
-      position: sensorMount.position,
-      quaternion: sensorMount.quaternion,
+      position: [sg * LENS_CENTER[0], LENS_CENTER[1], FRAME.z + FRAME.plateDepth / 2],
+      explode: [{ stage: "half", direction: [sg * 0.14, -0.55, 1], distance: 0.58 }],
+      label: s === "left" ? "lenses" : undefined,
+      anchor: [sg * 0.1, -0.09, 0.006],
+    },
+    sensorPart(
+      `sensor${L}`,
+      sg * SENSOR_WINDOW.x,
+      sg * SENSOR_OUTWARD_DEG,
+      s === "left" ? "tofLeft" : "tofRight",
+      s,
+    ),
+    {
+      id: `templeShell${L}`,
+      kind: "templeShell",
+      side: s,
+      position: [sg * 0.68, BOARD_V, TEMPLE.hingeZ - 0.31],
       explode: [],
     },
     {
-      id: `sensorModule${L}`,
-      kind: "sensorModule",
+      id: `templeCover${L}`,
+      kind: "templeCover",
       side: s,
-      position: sensorModule.position,
-      quaternion: sensorModule.quaternion,
-      explode: [{ stage: "full", direction: sensorModule.facing, distance: 0.36 }],
-      label: s === "left" ? "sensorLeft" : "sensorRight",
-      anchor: [0, 0, 0.03],
+      position: [sg * (TEMPLE.innerX + TEMPLE.wall + TEMPLE.rimDepth + 0.007), BOARD_V, TEMPLE.hingeZ - 0.31],
+      explode: [{ stage: "half", direction: [sg, 0.15, 0], distance: 0.64 }],
     },
     {
-      id: `templePad${L}`,
-      kind: "templePad",
+      id: `earCap${L}`,
+      kind: "earCap",
       side: s,
-      position: pad.position,
-      quaternion: pad.quaternion,
-      explode: [
-        { stage: "half", direction: [0, -1, 0], distance: 0.38, arrow: false },
-        { stage: "full", direction: pad.inward, distance: 0.12 },
-      ],
+      position: p(tip.end.clone().addScaledVector(tip.dir, 0.05)),
+      quaternion: facing(tipDir),
+      explode: [{ stage: "half", direction: tipDir, distance: 0.5 }],
     },
     {
-      id: `vibrationMotor${L}`,
-      kind: "vibrationMotor",
+      id: `motor${L}`,
+      kind: "motor",
       side: s,
-      position: motor.position,
-      quaternion: motor.quaternion,
-      explode: [{ stage: "full", direction: motor.inward, distance: 0.24 }],
+      position: p(tip.end.clone().addScaledVector(tip.dir, 0.065)),
+      // the flat face of the coin motor presses towards the head, behind the ear
+      quaternion: facing(inward),
+      explode: [{ stage: "full", direction: tipDir, distance: 0.27 }],
+      turn: { stage: "full", faceTo: FACE_UP },
       label: s === "left" ? "motorLeft" : "motorRight",
-    },
-    {
-      id: `hapticBoard${L}`,
-      kind: "hapticBoard",
-      side: s,
-      position: board.position,
-      quaternion: board.quaternion,
-      explode: [{ stage: "full", direction: board.inward, distance: 0.24 }],
-    },
-    {
-      id: `podShellInner${L}`,
-      kind: "podShellInner",
-      side: s,
-      position: podPoint(s, -DIMS.pod.half / 2 - 0.001, 0, 0),
-      quaternion: podQuat(s),
-      explode: [],
-    },
-    {
-      id: `podLed${L}`,
-      kind: "led",
-      side: s,
-      position: podPoint(s, DIMS.pod.half + 0.001, 0.1, 0.05),
-      quaternion: podQuat(s),
-      explode: [
-        { stage: "half", direction: OUT(s), distance: SHELL_OPEN, arrow: false },
-        { stage: "full", direction: [0, 1, 0], distance: 0.14 },
-      ],
+      anchor: [0, 0, 0.013],
     },
   ];
 }
 
-const leftPod: PartConfig[] = [
-  {
-    id: "podShellOuterL",
-    kind: "podShellOuterLeft",
-    side: "left",
-    position: podPoint("left", DIMS.pod.half / 2 + 0.001, 0, 0),
-    quaternion: podQuat("left"),
-    explode: [{ stage: "half", direction: OUT("left"), distance: SHELL_OPEN }],
-  },
-  {
-    id: "pauseButton",
-    kind: "pauseButton",
-    side: "left",
-    position: podPoint("left", DIMS.pod.half + 0.004, 0.03, 0.005),
-    quaternion: podQuat("left"),
-    explode: [
-      { stage: "half", direction: OUT("left"), distance: SHELL_OPEN, arrow: false },
-      { stage: "full", direction: OUT("left"), distance: 0.16 },
-    ],
-    label: "pause",
-  },
-  {
-    id: "battery",
-    kind: "battery",
-    side: "left",
-    position: podPoint("left", -0.001, 0.02, 0),
-    quaternion: podQuat("left"),
-    explode: [{ stage: "full", direction: OUT("left"), distance: 0.2 }],
-    label: "battery",
-  },
-  {
-    id: "chargingBoard",
-    kind: "chargingBoard",
-    side: "left",
-    position: podPoint("left", 0.02, -0.08, 0),
-    quaternion: podQuat("left"),
-    explode: [{ stage: "full", direction: [0.7, -0.7, 0], distance: 0.27 }],
-    label: "usbc",
-  },
-];
+/** Boards come out sideways, between the temple and its cover. */
+const OUT_UP = (s: Side): V3 => [sideSign(s), 0.3, 0];
 
-const rightPod: PartConfig[] = [
-  {
-    id: "podShellOuterR",
-    kind: "podShellOuterRight",
-    side: "right",
-    position: podPoint("right", DIMS.pod.half / 2 + 0.001, 0, 0),
-    quaternion: podQuat("right"),
-    explode: [{ stage: "half", direction: OUT("right"), distance: SHELL_OPEN }],
-  },
-  {
-    id: "sosButton",
-    kind: "sosButton",
-    side: "right",
-    position: podPoint("right", DIMS.pod.half + 0.006, 0.02, 0),
-    quaternion: podQuat("right"),
-    explode: [
-      { stage: "half", direction: OUT("right"), distance: SHELL_OPEN, arrow: false },
-      { stage: "full", direction: OUT("right"), distance: 0.16 },
-    ],
-    label: "sos",
-  },
+/** Left temple: controller next to the hinge, then the two motor driver boards. */
+const leftTemple: PartConfig[] = [
   {
     id: "controller",
     kind: "controller",
-    side: "right",
-    position: podPoint("right", 0, 0.01, 0),
-    quaternion: podQuat("right"),
-    explode: [{ stage: "full", direction: OUT("right"), distance: 0.2 }],
+    side: "left",
+    position: inBay("left", 0.145, BOARD_V, 0.004 + 0.006),
+    quaternion: facing([1, 0, 0]),
+    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
+    turn: { stage: "full", faceTo: FACE_UP },
     label: "controller",
+    // front half of the board (local −x points forward on the left side)
+    anchor: [-0.05, 0, 0.022],
   },
   {
-    id: "speaker",
-    kind: "speaker",
-    side: "right",
-    position: podPoint("right", 0.02, -0.085, 0),
-    quaternion: podQuat("right"),
-    explode: [{ stage: "full", direction: [-0.7, -0.7, 0], distance: 0.27 }],
-    label: "speaker",
+    id: "driverA",
+    kind: "driver",
+    side: "left",
+    position: inBay("left", 0.33, BOARD_V, 0.004 + 0.005),
+    quaternion: facing([1, 0, 0]),
+    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
+    turn: { stage: "full", faceTo: FACE_UP },
+  },
+  {
+    id: "driverB",
+    kind: "driver",
+    side: "left",
+    position: inBay("left", 0.455, BOARD_V, 0.004 + 0.005),
+    quaternion: facing([1, 0, 0]),
+    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
+    turn: { stage: "full", faceTo: FACE_UP },
+    // the label sits on the rear board so its marker stays clear of the controller's
+    label: "drivers",
+    anchor: [0, 0, 0.012],
   },
 ];
 
-/** Strap placements. */
-const strapOutward = (x: number, z: number) => new THREE.Vector3(x, 0, z + 0.05).normalize();
-const buckleAt: V3 = [-0.37, -0.562, -0.935];
-const buckleOut = strapOutward(buckleAt[0], buckleAt[2]);
-
-const backParts: PartConfig[] = [
+/** Right temple: battery, USB-C charger (port out through the back wall) and the slide switch on top. */
+const rightTemple: PartConfig[] = [
   {
-    id: "strap",
-    kind: "strap",
-    position: [0, 0, 0],
-    explode: [{ stage: "half", direction: [0, 0, -1], distance: 0.3 }],
+    id: "battery",
+    kind: "battery",
+    side: "right",
+    position: inBay("right", 0.17, BOARD_V, 0.002 + 0.0175),
+    quaternion: facing([-1, 0, 0]),
+    explode: [{ stage: "full", direction: OUT_UP("right"), distance: 0.36 }],
+    turn: { stage: "full", faceTo: FACE_UP },
+    label: "battery",
+    // front half of the pouch (local +x points forward on the right side)
+    anchor: [0.07, 0, 0.018],
   },
   {
-    id: "ledStrip",
-    kind: "ledStrip",
-    position: [0, 0, 0],
-    explode: [
-      { stage: "half", direction: [0, 0, -1], distance: 0.3, arrow: false },
-      { stage: "full", direction: [0, 0, -1], distance: 0.17 },
-    ],
-    label: "ledStrip",
-    anchor: [0.36, -0.52, -0.95],
+    id: "charger",
+    kind: "charger",
+    side: "right",
+    position: inBay("right", 0.45, BOARD_V, 0.004 + 0.005),
+    quaternion: facing([-1, 0, 0]),
+    explode: [{ stage: "full", direction: OUT_UP("right"), distance: 0.36 }],
+    turn: { stage: "full", faceTo: FACE_UP },
+    label: "charger",
+    anchor: [-0.02, 0, 0.012],
   },
   {
-    id: "buckle",
-    kind: "buckle",
-    position: [buckleAt[0] + buckleOut.x * 0.014, buckleAt[1], buckleAt[2] + buckleOut.z * 0.014],
-    quaternion: q(frameQuaternion(buckleOut)),
-    explode: [
-      { stage: "half", direction: [0, 0, -1], distance: 0.3, arrow: false },
-      { stage: "full", direction: [0, -1, 0], distance: 0.14 },
-    ],
-  },
-  {
-    id: "lightSensor",
-    kind: "lightSensor",
-    position: [0, -0.552, -1.017],
-    quaternion: q(frameQuaternion(new THREE.Vector3(0, 0, -1))),
-    explode: [
-      { stage: "half", direction: [0, 0, -1], distance: 0.3, arrow: false },
-      { stage: "full", direction: [0, 1, 0], distance: 0.17 },
-    ],
-    label: "lightSensor",
+    id: "powerSwitch",
+    kind: "powerSwitch",
+    side: "right",
+    // on top of the right arm, just behind the bay
+    position: [-0.69, TEMPLE.bay.top + 0.001, TEMPLE.hingeZ - 0.76],
+    quaternion: q(frameQuaternion(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1))),
+    explode: [],
+    label: "wiring",
+    anchor: [0, 0, 0.008],
   },
 ];
 
 export const PARTS: PartConfig[] = [
-  { id: "bandShell", kind: "bandShell", position: [0, 0, 0], explode: [] },
   {
-    id: "bandLining",
-    kind: "bandLining",
-    position: [0, 0, 0],
-    explode: [{ stage: "half", direction: [0, -1, 0], distance: 0.38 }],
+    id: "frame",
+    kind: "frame",
+    position: [0, 0, FRAME.z],
+    explode: [],
+    label: "frame",
+    anchor: [-0.3, FRAME.top, -0.02],
   },
   {
-    id: "ribbonCable",
-    kind: "ribbonCable",
-    position: [0, 0, 0],
-    explode: [{ stage: "full", direction: [0, 1, 0], distance: 0.3 }],
+    id: "nosePad",
+    kind: "nosePad",
+    position: [0, -0.055, FRAME.z - 0.03],
+    explode: [{ stage: "half", direction: [0, -0.8, 0.6], distance: 0.5 }],
   },
-  ...symmetricParts("left"),
-  ...symmetricParts("right"),
-  ...leftPod,
-  ...rightPod,
-  ...backParts,
+  sensorPart("sensorFront", 0, 0, "tofFront"),
+  ...sideParts("left"),
+  ...sideParts("right"),
+  ...leftTemple,
+  ...rightTemple,
 ];
 
 export const STAGE_WINDOWS: Record<Stage, [number, number]> = { half: [0, 0.5], full: [0.5, 1] };
@@ -388,10 +381,10 @@ export { mirrorX };
 /* ---------- Scene settings ---------- */
 
 export const SCENES = {
-  hero: { camera: [-2.6, 1.05, 3.3] as V3, target: [0, -0.22, 0] as V3, fov: 30 },
+  hero: { camera: [-2.5, 1.2, 3.05] as V3, target: [0, -0.04, -0.08] as V3, fov: 30 },
   /** Seen from behind and above the wearer, so the wearer's left is on the screen's left. */
-  howItWorks: { camera: [0.0, 4.3, -4.3] as V3, target: [0, -0.25, 1.25] as V3, fov: 34 },
-  design: { camera: [0.85, 2.1, 4.5] as V3, target: [0, -0.3, 0] as V3, fov: 29 },
-  /** Sensor field of view used for the translucent cones in How it works. */
-  sensing: { length: 2.3, radius: 0.7, outwardDeg: 7 },
+  howItWorks: { camera: [0.0, 5.1, -3.0] as V3, target: [0, -0.3, 0.95] as V3, fov: 36 },
+  design: { camera: [0.65, 3.05, 4.5] as V3, target: [0.0, -0.1, 0.24] as V3, fov: 30 },
+  /** VL53L1X field of view (about 27° wide) used for the translucent cones in How it works. */
+  sensing: { length: 2.3, halfAngleDeg: 13.5 },
 } as const;

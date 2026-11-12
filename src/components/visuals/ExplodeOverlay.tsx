@@ -55,8 +55,9 @@ export function ExplodeOverlay({ ref, mode }: { ref: React.Ref<LabelOverlayHandl
             ref={(el) => register(id, "line", el)}
             fill="none"
             stroke="var(--stage-accent)"
-            strokeWidth={1}
-            strokeOpacity={0.75}
+            strokeWidth={1.25}
+            strokeOpacity={0.85}
+            strokeDasharray="4 3"
             className={mode === "dots" ? "hidden" : ""}
           />
         ))}
@@ -71,16 +72,17 @@ export function ExplodeOverlay({ ref, mode }: { ref: React.Ref<LabelOverlayHandl
           >
             {mode === "dots" ? i + 1 : null}
           </span>
+          {/* narrow, wrapping labels keep the side columns clear of the parts they point at */}
           <span
             ref={(el) => register(id, "label", el)}
-            className={`absolute left-0 top-0 items-center gap-2 whitespace-nowrap rounded-full border border-stage-line bg-stage/85 py-1 pl-1 pr-3 text-sm font-medium text-stage-text backdrop-blur ${
+            className={`absolute left-0 top-0 w-max max-w-[14.5rem] items-center gap-2 rounded-2xl border border-stage-line bg-stage/85 py-1 pl-1 pr-3 text-sm font-medium leading-snug text-stage-text backdrop-blur ${
               mode === "dots" ? "hidden" : "flex"
             }`}
           >
-            <span className="inline-flex size-6 items-center justify-center rounded-full bg-stage-accent text-xs font-semibold tabular-nums text-stage">
+            <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-stage-accent text-xs font-semibold tabular-nums text-stage">
               {i + 1}
             </span>
-            {design.labels[id].name}
+            <span>{design.labels[id].name}</span>
           </span>
         </div>
       ))}

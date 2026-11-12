@@ -9,10 +9,10 @@ export function Team() {
         <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {t.members.map((m) => (
             <li key={m.name} className="card rounded-3xl border border-line p-6">
-              {/* Placeholder avatar: initial on a teal disc. Decorative; the name is the text below. */}
+              {/* Placeholder avatar: initial on a cyan disc. Decorative; the name is the text below. */}
               <span
                 aria-hidden="true"
-                className="flex size-16 items-center justify-center rounded-full bg-teal text-2xl font-semibold text-teal-light"
+                className="flex size-16 items-center justify-center rounded-full bg-cyan-deep text-2xl font-semibold text-white"
               >
                 {m.name.charAt(0)}
               </span>

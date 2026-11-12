@@ -3,66 +3,55 @@ import type { FeatureIcon } from "@/content/site";
 type IconName = FeatureIcon | "menu" | "close" | "a11y" | "check" | "arrow" | "plus" | "alert";
 
 const paths: Record<IconName, React.ReactNode> = {
-  direction: (
+  directions: (
     <>
-      <path d="M9 7 4 12l5 5" />
-      <path d="m15 7 5 5-5 5" />
-      <circle cx="12" cy="12" r="1.5" />
+      <path d="M12 19V8" />
+      <path d="m12 19-6-8.5" />
+      <path d="m12 19 6-8.5" />
+      <circle cx="12" cy="5.5" r="1.6" />
+      <circle cx="5" cy="8.5" r="1.6" />
+      <circle cx="19" cy="8.5" r="1.6" />
     </>
   ),
-  distance: (
+  haptic: (
     <>
-      <path d="M4 12h2" />
-      <path d="M9 9v6" />
-      <path d="M13 7v10" />
-      <path d="M17 5v14" />
+      <rect x="9" y="7" width="6" height="10" rx="2" />
+      <path d="M6 9.5v5" />
+      <path d="M3 8v8" />
+      <path d="M18 9.5v5" />
+      <path d="M21 8v8" />
     </>
   ),
-  approach: (
+  handsFree: (
     <>
-      <path d="M3 12h11" />
-      <path d="m10 8 4 4-4 4" />
-      <path d="M18 6v12" />
-      <path d="M21 9v6" />
+      <path d="M8 12V6.5a1.5 1.5 0 0 1 3 0V11" />
+      <path d="M11 10V5a1.5 1.5 0 0 1 3 0v6" />
+      <path d="M14 10.5V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.4-1.8L8 14.5" />
     </>
   ),
-  range: (
+  cane: (
     <>
-      <path d="M4 18a8 8 0 0 1 16 0" />
-      <path d="M7.5 18a4.5 4.5 0 0 1 9 0" />
-      <path d="M12 18v-1" />
+      <path d="M9 4a3 3 0 0 1 6 0v.5" />
+      <path d="M15 4.5 10 21" />
+      <path d="M7 21h6" />
     </>
   ),
-  filter: (
+  charge: (
     <>
-      <path d="M7 4c0 2-2 3-2 5a2 2 0 0 0 4 0c0-2-2-3-2-5Z" />
-      <path d="M4 20 20 4" />
-      <path d="M14 13c0 2-2 3-2 5a2 2 0 0 0 4 0c0-2-2-3-2-5Z" />
+      <rect x="3" y="7" width="16" height="10" rx="2.5" />
+      <path d="M21 10.5v3" />
+      <path d="m11.5 9-2 3h3l-2 3" />
     </>
   ),
-  pause: (
+  parts: (
     <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M10 9v6" />
-      <path d="M14 9v6" />
+      <path d="M14.5 6.5a3.5 3.5 0 0 0-4.6 4.4L4 16.8 7.2 20l5.9-5.9a3.5 3.5 0 0 0 4.4-4.6l-2.2 2.2-2.6-.6-.6-2.6Z" />
     </>
   ),
-  sos: (
+  glasses: (
     <>
-      <circle cx="12" cy="12" r="9" />
-      <circle cx="9" cy="10" r="0.8" />
-      <circle cx="12" cy="10" r="0.8" />
-      <circle cx="15" cy="10" r="0.8" />
-      <circle cx="10.5" cy="13.5" r="0.8" />
-      <circle cx="13.5" cy="13.5" r="0.8" />
-    </>
-  ),
-  light: <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />,
-  voice: (
-    <>
-      <path d="M4 15V9h3l5-4v14l-5-4H4Z" />
-      <path d="M16 9a4 4 0 0 1 0 6" />
-      <path d="M19 6.5a7.5 7.5 0 0 1 0 11" />
+      <path d="M2.5 8.5h19" />
+      <path d="M4 8.5v4.5a2.5 2.5 0 0 0 2.5 2.5h2.5a2 2 0 0 0 2-2v-2a1 1 0 0 1 2 0v2a2 2 0 0 0 2 2h2.5a2.5 2.5 0 0 0 2.5-2.5V8.5" />
     </>
   ),
   menu: (
