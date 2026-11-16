@@ -705,9 +705,9 @@ export const accessibilityPage = {
       body: [
         "Every section has a clear heading, and you can skip straight to the main content.",
         "You can use the whole site with a keyboard alone, and focus is always visible.",
-        "The 3D models are decoration only. Everything they show is also written as text.",
+        "The 3D model is decoration only. Everything it shows is also written as text.",
         "The accessibility settings let you choose high contrast, larger text and reduced motion. The site also follows your device's reduced motion setting.",
-        "We check the site with the VoiceOver, NVDA and TalkBack screen readers as we build it.",
+        "We are testing the site with the VoiceOver, NVDA and TalkBack screen readers. The results so far are in the table below.",
       ],
     },
     {
@@ -723,4 +723,39 @@ export const accessibilityPage = {
       ],
     },
   ],
+  results: {
+    heading: "Test results",
+    caption: "Accessibility checks on this website and their results",
+    tested: "Checked on 16 November 2026 on the development version of the site.",
+    columns: { check: "What we checked", result: "Result", notes: "Details" },
+    rows: [
+      {
+        check: "Colour contrast (WCAG 1.4.3, 1.4.11)",
+        result: "Pass",
+        notes: "Every text colour pair in the light, dark and high-contrast themes is at least 4.5:1.",
+      },
+      {
+        check: "Zoom to 200% and 400% (WCAG 1.4.10)",
+        result: "Pass",
+        notes: "No sideways scrolling at 640 px and 320 px wide on the home, privacy and accessibility pages.",
+      },
+      {
+        check: "Headings (WCAG 1.3.1, 2.4.6)",
+        result: "Pass",
+        notes: "One main heading per page and no skipped heading levels.",
+      },
+      {
+        check: "Text alternatives (WCAG 1.1.1)",
+        result: "Pass",
+        notes: "Every image has alt text. The 3D view and its still pictures are decorative and described in text.",
+      },
+      {
+        check: "Reduced motion (WCAG 2.3.3)",
+        result: "Pass",
+        notes: "With reduced motion on, there is no 3D animation: still pictures and every step as text.",
+      },
+      { check: "Keyboard only (WCAG 2.1.1, 2.4.7)", result: "Not tested yet", notes: "Manual test planned." },
+      { check: "Screen readers (VoiceOver, NVDA, TalkBack)", result: "Not tested yet", notes: "Manual test planned." },
+    ],
+  },
 } as const;

@@ -4,10 +4,12 @@ export function LegalPage({
   title,
   updated,
   sections,
+  children,
 }: {
   title: string;
   updated: string;
   sections: readonly { heading: string; body: readonly string[] }[];
+  children?: React.ReactNode;
 }) {
   return (
     <Container className="py-20 sm:py-28">
@@ -22,6 +24,7 @@ export function LegalPage({
             ))}
           </section>
         ))}
+        {children}
       </article>
     </Container>
   );
