@@ -457,20 +457,39 @@ export const comparison = {
   sourcesLabel: "Price sources",
 } as const;
 
+export interface TeamMember {
+  name: string;
+  /** Edit freely: the Scrum Master role rotates every sprint. */
+  role: string;
+  /** Square photo in public/team/ (see public/team/README.md). Leave out until it exists. */
+  photo?: string;
+  /** Only real profile URLs. Icons are hidden when these are missing. */
+  linkedin?: string;
+  github?: string;
+}
+
 export const team = {
   id: "team",
   eyebrow: "Team",
-  title: "Group 14",
-  intro:
-    "We are a student team on the Agile Team Project (ATP) module, BEng (Hons) Software Engineering at the Informatics Institute of Technology (IIT), Sri Lanka, affiliated with the University of Westminster.",
+  title: "Meet the team",
+  intro: "Five software engineering students building HapSight together.",
   members: [
-    { name: "Vidurath", role: "Product Owner" },
-    { name: "Haziq", role: "Scrum Master" },
-    { name: "Krishan", role: "Developer – requirements lead" },
-    { name: "Vinod", role: "Developer – UX and ethics lead" },
-    { name: "Pasan", role: "Team Leader, Developer – technical lead" },
-  ],
-  avatarNote: "Placeholder avatar",
+    {
+      name: "Pasan Jayaweera",
+      role: "Team Leader · Technical Lead · Developer (design & web implementation)",
+    },
+    { name: "Vidurath Jayaweera", role: "Product Owner · Developer (hardware)" },
+    { name: "Haziq Shafie", role: "Scrum Master (Sprint 1) · Developer" },
+    { name: "Krishan Wijeyesekera", role: "Developer · Requirements lead" },
+    { name: "Aynkaran Selvarajan (Vinod)", role: "Developer · UX & ethics lead" },
+  ] satisfies TeamMember[] as TeamMember[],
+  photoComingSoon: "Photo coming soon",
+  photoAlt: (name: string) => `Photo of ${name}`,
+  linkedinLabel: (name: string) => `${name} on LinkedIn`,
+  githubLabel: (name: string) => `${name} on GitHub`,
+  course:
+    "Group 14 · ATP SE-14 · Agile Team Project (5COSC021C) · BEng (Hons) Software Engineering · Informatics Institute of Technology (IIT), Sri Lanka · University of Westminster",
+  supervisor: "Supervisor: Nipuna Senanayake",
 } as const;
 
 export const faq = {
