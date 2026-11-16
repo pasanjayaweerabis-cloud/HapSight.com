@@ -4,7 +4,7 @@ import { useImperativeHandle, useRef } from "react";
 import { design, type LabelId } from "@/content/site";
 import type { LabelOverlayHandles } from "@/three/labelProjection";
 
-export const LABEL_ORDER = Object.keys(design.labels) as LabelId[];
+const LABEL_ORDER = Object.keys(design.labels) as LabelId[];
 
 /**
  * Floating part labels for the exploded view. The 3D scene writes their positions directly.

@@ -4,6 +4,11 @@ import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Features } from "@/components/sections/Features";
 import { Design } from "@/components/sections/Design";
 import { Gallery } from "@/components/sections/Gallery";
+import { Demo } from "@/components/sections/Demo";
+import { InsideArms } from "@/components/sections/InsideArms";
+import { StageHost } from "@/components/visuals/StageHost";
+import { JsonLd } from "@/components/layout/JsonLd";
+import { Roadmap } from "@/components/sections/Roadmap";
 import { Audience } from "@/components/sections/Audience";
 import { Comparison } from "@/components/sections/Comparison";
 import { Team } from "@/components/sections/Team";
@@ -13,14 +18,19 @@ import { Waitlist } from "@/components/sections/Waitlist";
 export default function Home() {
   return (
     <>
+      <JsonLd />
+      <StageHost />
       <Hero />
       <Problem />
       <HowItWorks />
       <Features />
       <Design />
+      <InsideArms />
       <Gallery />
+      <Demo />
       <Audience />
       <Comparison />
+      <Roadmap />
       <Team />
       <Faq />
       <Waitlist />

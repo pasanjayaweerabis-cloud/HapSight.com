@@ -2,7 +2,7 @@
  * All text on the site lives here: the name, tagline, every section, form copy,
  * labels for the 3D exploded view and the legal pages.
  *
- * The product name lives in `brand.name` ("Hapsight"). Every mention of the name below uses it,
+ * The product name lives in `brand.name` ("HapSight"). Every mention of the name below uses it,
  * so changing it there updates the whole site.
  *
  * Copy rules (keep them when editing):
@@ -12,13 +12,22 @@
  */
 
 export const brand = {
-  name: "Hapsight",
+  name: "HapSight",
   tagline: "Feel the path ahead.",
   shortDescription:
     "Low-cost haptic glasses being designed to help blind and visually impaired people notice obstacles at head height, silently and hands-free.",
-  contactEmail: "team@hapsight.example",
-  siteUrl: "https://hapsight.example",
+  /**
+   * TODO(Pasan): add the real team inbox. While this is null the site shows "coming soon" text
+   * instead of a fake address, and the legal pages say where it will be published.
+   */
+  contactEmail: null as string | null,
+  siteUrl: "https://hapsight.com",
 } as const;
+
+/** How to reach the team, in words, for the legal pages (works with or without an email yet). */
+export const contactHow = brand.contactEmail
+  ? `email ${brand.contactEmail}`
+  : "use the contact email that will be published in the footer of this site before the waitlist opens";
 
 export const meta = {
   title: `${brand.name} – haptic glasses that feel the path ahead`,
@@ -83,7 +92,6 @@ export const hero = {
   deviceDescriptionTitle: "What the device is like",
   deviceDescription:
     `${brand.name} looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.`,
-  canvasHint: "Drag to turn the 3D model.",
 } as const;
 
 export const problem = {
@@ -286,24 +294,30 @@ export const design = {
   } satisfies Record<LabelId, PartLabel>,
   otherPartsTitle: "Also inside",
   otherParts: ["Flyback diodes", "Resistors", "Perfboard", "Heat-shrink tubing", "JST connectors"],
-  budget: {
-    title: "Prototype parts cost",
-    caption: "Approximate cost of the parts for one prototype, in Sri Lankan rupees",
-    columns: { part: "Part", qty: "Qty", cost: "LKR" },
-    rows: [
-      { part: "VL53L1X ToF sensor", qty: "3", cost: "5,250" },
-      { part: "ESP32-C3 SuperMini", qty: "1", cost: "800" },
-      { part: "LiPo 3.7 V 500 mAh", qty: "1", cost: "950" },
-      { part: "TP4056 USB-C charger (with protection)", qty: "1", cost: "120" },
-      { part: "Coin vibration motor", qty: "2", cost: "240" },
-      { part: "MOSFET drivers + diodes/resistors", qty: "2", cost: "300" },
-      { part: "3D-printed frame", qty: "1", cost: "3,000" },
-      { part: "Wiring, switch, perfboard", qty: "—", cost: "500" },
-    ],
-    total: { label: "Total", cost: "≈ 11,160" },
-    footnote: "Approximate Sri Lankan retail prices, November 2026. Some are estimates.",
-  },
   note: "Concept design – the final prototype may differ.",
+} as const;
+
+export const insideArms = {
+  id: "inside",
+  eyebrow: "Inside the arms",
+  title: "What each arm carries",
+  intro: "The two arms hold different electronics. Here is what is inside each one, and how a warning travels.",
+  sides: [
+    {
+      id: "left",
+      title: "Left arm",
+      parts: ["ESP32-C3 SuperMini controller", "2 MOSFET motor drivers"],
+      body: "The controller reads the three sensors and decides which motor to pulse. The two driver boards switch battery power to the motors.",
+    },
+    {
+      id: "right",
+      title: "Right arm",
+      parts: ["LiPo 3.7 V, 500 mAh battery", "TP4056 USB-C charger with protection", "Slide power switch"],
+      body: "The battery powers everything. The charger tops it up over USB-C and protects it, and the switch turns the glasses fully off.",
+    },
+  ],
+  signal: "Sensor → controller → MOSFET driver → vibration motor",
+  signalLabel: "How a warning travels",
 } as const;
 
 export const gallery = {
@@ -339,18 +353,67 @@ export const audience = {
   title: "Made with the people who will use it",
   items: [
     {
+      illustration: "cane",
       title: "People born blind",
       body: "For confident cane users who want an extra warning about obstacles above the ground and to the sides.",
     },
     {
+      illustration: "street",
       title: "People who lost their sight later in life",
       body: "For people still building confidence with a cane, who want more information about what is around them.",
     },
     {
+      illustration: "family",
       title: "Families and carers",
       body: "For the people who support them, and want a simple, affordable tool they can help set up and look after.",
     },
   ],
+} as const;
+
+export const demo = {
+  id: "demo",
+  eyebrow: "Demo",
+  title: "See it working",
+  intro: "We will add a short video of the prototype here once it is built and safely tested.",
+  placeholder: "Prototype demo coming soon",
+  placeholderNote: "No video yet. This space is kept for the real prototype, not a mock-up.",
+} as const;
+
+export type RoadmapStatus = "done" | "now" | "next";
+
+export const roadmap = {
+  id: "roadmap",
+  eyebrow: "Project status",
+  title: "Where we are",
+  intro: "HapSight is a student project. This is where it stands today.",
+  statusLabels: { done: "Done", now: "In progress", next: "Planned" } satisfies Record<RoadmapStatus, string>,
+  steps: [
+    {
+      status: "done",
+      title: "Research",
+      body: "We looked at what white cane users find hard on Sri Lankan streets and which low-cost parts could help.",
+    },
+    {
+      status: "now",
+      title: "Prototype",
+      body: "We are building the first pair of glasses from the parts on this page and testing that each part works.",
+    },
+    {
+      status: "next",
+      title: "User testing",
+      body: "Testing with blind and visually impaired people will only start after our university's ethics approval.",
+    },
+    {
+      status: "next",
+      title: "Refinement",
+      body: "We will change the design based on what testers tell us, for comfort, fit and how clear the vibrations are.",
+    },
+    {
+      status: "next",
+      title: "Future",
+      body: "Ideas we may explore later, such as a version for prescription lenses or a companion app. Nothing is promised yet.",
+    },
+  ] satisfies { status: RoadmapStatus; title: string; body: string }[],
 } as const;
 
 /**
@@ -374,7 +437,7 @@ export const comparison = {
     {
       label: "Approximate price",
       values: [
-        "Target build cost ≈ LKR 11,200 (prototype parts)",
+        "Low-cost goal, built from parts sold in Sri Lanka. No price set yet: it is a student prototype",
         "About US$600–850 (for example, WeWALK Smart Cane 2), before shipping and import duty",
         "About US$1,900–3,500 (for example, Envision Glasses), before shipping and import duty",
       ],
@@ -404,23 +467,51 @@ export const comparison = {
       ],
     },
   ],
-  footnote: "Approximate public list prices; may change.",
+  footnote: "Approximate public list prices, checked 11 November 2026; may change.",
+  sources: [
+    { label: "WeWALK Smart Cane 2 (Florida Reading)", href: "https://floridareading.com/products/wewalk-smart-cane-2" },
+    {
+      label: "WeWALK Smart Cane 2 (Sight and Sound)",
+      href: "https://www.sightandsound.co.uk/product/wewalk-smart-cane-2-smart-cane-2-ai-smart-navigation-cane-for-blind-visually-impaired-users/",
+    },
+    { label: "Envision Glasses (official store)", href: "https://shop.letsenvision.com/collections/envision-glasses" },
+  ],
+  sourcesLabel: "Price sources",
 } as const;
+
+export interface TeamMember {
+  name: string;
+  /** Edit freely: the Scrum Master role rotates every sprint. */
+  role: string;
+  /** Square photo in public/team/ (see public/team/README.md). Leave out until it exists. */
+  photo?: string;
+  /** Only real profile URLs. Icons are hidden when these are missing. */
+  linkedin?: string;
+  github?: string;
+}
 
 export const team = {
   id: "team",
   eyebrow: "Team",
-  title: "Group 14",
-  intro:
-    "We are a student team on the Agile Team Project (ATP) module, BEng (Hons) Software Engineering at the Informatics Institute of Technology (IIT), Sri Lanka, affiliated with the University of Westminster.",
+  title: "Meet the team",
+  intro: "Five software engineering students building HapSight together.",
   members: [
-    { name: "Vidurath", role: "Product Owner" },
-    { name: "Haziq", role: "Scrum Master" },
-    { name: "Krishan", role: "Developer – requirements lead" },
-    { name: "Vinod", role: "Developer – UX and ethics lead" },
-    { name: "Pasan", role: "Team Leader, Developer – technical lead" },
-  ],
-  avatarNote: "Placeholder avatar",
+    {
+      name: "Pasan Jayaweera",
+      role: "Team Leader · Technical Lead · Developer (design & web implementation)",
+    },
+    { name: "Vidurath Jayaweera", role: "Product Owner · Developer (hardware)" },
+    { name: "Haziq Shafie", role: "Scrum Master (Sprint 1) · Developer" },
+    { name: "Krishan Wijeyesekera", role: "Developer · Requirements lead" },
+    { name: "Aynkaran Selvarajan (Vinod)", role: "Developer · UX & ethics lead" },
+  ] satisfies TeamMember[] as TeamMember[],
+  photoComingSoon: "Photo coming soon",
+  photoAlt: (name: string) => `Photo of ${name}`,
+  linkedinLabel: (name: string) => `${name} on LinkedIn`,
+  githubLabel: (name: string) => `${name} on GitHub`,
+  course:
+    "Group 14 · ATP SE-14 · Agile Team Project (5COSC021C) · BEng (Hons) Software Engineering · Informatics Institute of Technology (IIT), Sri Lanka · University of Westminster",
+  supervisor: "Supervisor: Nipuna Senanayake",
 } as const;
 
 export const faq = {
@@ -527,21 +618,18 @@ export const waitlist = {
 
 export const footer = {
   disclaimer:
-    "Student prototype. It does not replace the white cane, orientation and mobility training, or safe road-crossing judgement.",
+    "Student prototype in development. It is not a medical device, and it does not replace the white cane, orientation and mobility training, or safe road-crossing judgement.",
   contactLabel: "Contact",
+  contactComingSoon: "Team email coming soon",
   socialLabel: "Social",
-  socials: [
-    { label: "Instagram", note: "coming soon" },
-    { label: "LinkedIn", note: "coming soon" },
-    { label: "YouTube", note: "coming soon" },
-  ],
+  /** Only real profiles. The column is hidden while this list is empty (no dead links). */
+  socials: [] as { label: string; href: string }[],
   legalLabel: "Legal",
   links: [
     { href: "/privacy", label: "Privacy notice" },
     { href: "/accessibility", label: "Accessibility statement" },
   ],
-  credit:
-    "ATP Group 14 · BEng (Hons) Software Engineering · IIT Sri Lanka, affiliated with the University of Westminster",
+  credit: `© 2026 ${brand.name} · ATP Group 14 (SE-14) · IIT Sri Lanka`,
 } as const;
 
 export const notFound = {
@@ -559,7 +647,7 @@ export const privacyPage = {
       heading: "Who we are",
       body: [
         `${brand.name} is a student project by ATP Group 14 (BEng (Hons) Software Engineering, Informatics Institute of Technology, Sri Lanka, affiliated with the University of Westminster). For this website and its waitlist, the team is responsible for your personal data.`,
-        `Contact: ${brand.contactEmail}`,
+        brand.contactEmail ? `Contact: ${brand.contactEmail}` : "Contact: our team email will be published in the footer of this site before the waitlist opens.",
       ],
     },
     {
@@ -594,7 +682,7 @@ export const privacyPage = {
       heading: "Your rights",
       body: [
         "Under Sri Lanka's Personal Data Protection Act, No. 9 of 2022, you can ask to see the data we hold about you, ask us to correct it, withdraw your consent, and ask us to delete it.",
-        `To ask for deletion, or anything else about your data, email ${brand.contactEmail} from the address you signed up with, with the subject "Delete my data". We will confirm within 14 days.`,
+        `To ask for deletion, or anything else about your data, ${contactHow}. Write from the address you signed up with, with the subject "Delete my data". We will confirm within 14 days.`,
         "If you are not happy with how we handled your request, you can contact the Data Protection Authority of Sri Lanka.",
       ],
     },
@@ -617,9 +705,9 @@ export const accessibilityPage = {
       body: [
         "Every section has a clear heading, and you can skip straight to the main content.",
         "You can use the whole site with a keyboard alone, and focus is always visible.",
-        "The 3D models are decoration only. Everything they show is also written as text.",
+        "The 3D model is decoration only. Everything it shows is also written as text.",
         "The accessibility settings let you choose high contrast, larger text and reduced motion. The site also follows your device's reduced motion setting.",
-        "We check the site with the VoiceOver, NVDA and TalkBack screen readers as we build it.",
+        "We are testing the site with the VoiceOver, NVDA and TalkBack screen readers. The results so far are in the table below.",
       ],
     },
     {
@@ -631,8 +719,43 @@ export const accessibilityPage = {
     {
       heading: "Report a problem",
       body: [
-        `If something does not work for you, please email ${brand.contactEmail} with the page, what you were trying to do, and the device, browser and screen reader you use. We aim to reply within 5 working days.`,
+        `If something does not work for you, please ${contactHow}. Tell us the page, what you were trying to do, and the device, browser and screen reader you use. We aim to reply within 5 working days.`,
       ],
     },
   ],
+  results: {
+    heading: "Test results",
+    caption: "Accessibility checks on this website and their results",
+    tested: "Checked on 16 November 2026 on the development version of the site.",
+    columns: { check: "What we checked", result: "Result", notes: "Details" },
+    rows: [
+      {
+        check: "Colour contrast (WCAG 1.4.3, 1.4.11)",
+        result: "Pass",
+        notes: "Every text colour pair in the light, dark and high-contrast themes is at least 4.5:1.",
+      },
+      {
+        check: "Zoom to 200% and 400% (WCAG 1.4.10)",
+        result: "Pass",
+        notes: "No sideways scrolling at 640 px and 320 px wide on the home, privacy and accessibility pages.",
+      },
+      {
+        check: "Headings (WCAG 1.3.1, 2.4.6)",
+        result: "Pass",
+        notes: "One main heading per page and no skipped heading levels.",
+      },
+      {
+        check: "Text alternatives (WCAG 1.1.1)",
+        result: "Pass",
+        notes: "Every image has alt text. The 3D view and its still pictures are decorative and described in text.",
+      },
+      {
+        check: "Reduced motion (WCAG 2.3.3)",
+        result: "Pass",
+        notes: "With reduced motion on, there is no 3D animation: still pictures and every step as text.",
+      },
+      { check: "Keyboard only (WCAG 2.1.1, 2.4.7)", result: "Not tested yet", notes: "Manual test planned." },
+      { check: "Screen readers (VoiceOver, NVDA, TalkBack)", result: "Not tested yet", notes: "Manual test planned." },
+    ],
+  },
 } as const;

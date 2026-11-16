@@ -15,10 +15,10 @@ export function SectionHeading({
 }) {
   return (
     <div className={`max-w-3xl ${className}`}>
-      <p className={`text-sm font-semibold uppercase tracking-[0.14em] ${stage ? "text-stage-accent" : "text-accent"}`}>
+      <p className={`kicker ${stage ? "text-stage-accent" : "text-accent"}`}>
         {eyebrow}
       </p>
-      <h2 id={`${id}-title`} className="mt-3 text-balance text-4xl font-semibold leading-[1.1] tracking-[-0.02em] sm:text-5xl">
+      <h2 id={`${id}-title`} className="mt-4 text-balance text-4xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-5xl">
         {title}
       </h2>
       {intro ? (
@@ -29,5 +29,5 @@ export function SectionHeading({
 }
 
 export function Container({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-7xl px-5 sm:px-8 ${className}`}>{children}</div>;
+  return <div className={`mx-auto w-full max-w-[1160px] px-5 sm:px-8 ${className}`}>{children}</div>;
 }

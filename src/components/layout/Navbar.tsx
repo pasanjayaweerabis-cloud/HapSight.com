@@ -30,7 +30,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-bg/85 backdrop-blur-xl supports-[backdrop-filter]:bg-bg/75">
-      <div className="mx-auto flex h-18 max-w-7xl items-center gap-4 px-5 sm:px-8">
+      <div className="mx-auto flex h-18 max-w-[1160px] items-center gap-4 px-5 sm:px-8">
         <a href={onHome ? "#top" : "/"} className="flex min-h-12 items-center gap-3 rounded-lg font-semibold tracking-tight">
           <LogoMark />
           <span className="text-xl">{brand.name}</span>
@@ -74,7 +74,7 @@ export function Navbar() {
       </div>
 
       <div id="mobile-menu" hidden={!open} className="border-t border-line bg-bg lg:hidden">
-        <nav aria-label={nav.menuTitle} className="mx-auto max-w-7xl px-5 py-4 sm:px-8">
+        <nav aria-label={nav.menuTitle} className="mx-auto max-w-[1160px] px-5 py-4 sm:px-8">
           <ul className="grid gap-1">
             {nav.links.map((l) => (
               <li key={l.href}>

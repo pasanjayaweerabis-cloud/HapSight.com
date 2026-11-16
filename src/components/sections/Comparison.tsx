@@ -69,6 +69,17 @@ export function Comparison() {
         </div>
 
         <p className="mt-6 text-sm text-muted">{t.footnote}</p>
+        <p className="mt-2 text-sm text-muted">
+          {t.sourcesLabel}:{" "}
+          {t.sources.map((src, i) => (
+            <span key={src.href}>
+              {i > 0 ? " · " : null}
+              <a href={src.href} className="text-accent underline underline-offset-4" rel="noopener noreferrer">
+                {src.label}
+              </a>
+            </span>
+          ))}
+        </p>
       </Container>
     </section>
   );

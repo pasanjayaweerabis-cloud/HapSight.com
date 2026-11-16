@@ -68,7 +68,7 @@ export function ExplodeArrows({ getExplode }: { getExplode: () => number }) {
                 dashes.current[i] = l;
               }}
               points={UNIT}
-              color={COLORS.cyan}
+              color={COLORS.teal}
               lineWidth={1.4}
               dashed
               dashSize={DASH}
@@ -88,7 +88,7 @@ export function ExplodeArrows({ getExplode }: { getExplode: () => number }) {
             renderOrder={7}
             visible={false}
           >
-            <meshBasicMaterial color={COLORS.cyan} transparent opacity={0} depthWrite={false} toneMapped={false} />
+            <meshBasicMaterial color={COLORS.teal} transparent opacity={0} depthWrite={false} toneMapped={false} />
           </mesh>
         </group>
       ))}

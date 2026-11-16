@@ -65,7 +65,7 @@ export function Frame() {
           <boxGeometry args={[SENSOR_WINDOW.w - 0.01, SENSOR_WINDOW.h - 0.01, 0.004]} />
         </mesh>
       ))}
-      {/* decorative cyan accent strips between the windows (emissive material, not a part) */}
+      {/* decorative teal accent strips between the windows (emissive material, not a part) */}
       {[stripX, -stripX].map((x) => (
         <mesh key={x} position={[x, FRAME.barCenterY + 0.004, front + 0.0015]} material={mats.accent}>
           <boxGeometry args={[stripW, 0.011, 0.003]} />
@@ -86,7 +86,7 @@ export function Frame() {
   );
 }
 
-/** Clear lens with a soft cyan edge glow. Local origin = centre of the lens opening. */
+/** Clear lens with a soft teal edge glow. Local origin = centre of the lens opening. */
 export function Lens({ side }: { side: Side }) {
   const { mats, quality } = useParts();
   const seg = quality === "high" ? 10 : 5;
