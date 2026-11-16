@@ -4,6 +4,8 @@ import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Features } from "@/components/sections/Features";
 import { Design } from "@/components/sections/Design";
 import { Gallery } from "@/components/sections/Gallery";
+import { Demo } from "@/components/sections/Demo";
+import { Roadmap } from "@/components/sections/Roadmap";
 import { Audience } from "@/components/sections/Audience";
 import { Comparison } from "@/components/sections/Comparison";
 import { Team } from "@/components/sections/Team";
@@ -19,8 +21,10 @@ export default function Home() {
       <Features />
       <Design />
       <Gallery />
+      <Demo />
       <Audience />
       <Comparison />
+      <Roadmap />
       <Team />
       <Faq />
       <Waitlist />
