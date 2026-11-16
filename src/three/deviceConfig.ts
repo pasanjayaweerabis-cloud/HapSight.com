@@ -146,6 +146,8 @@ export interface ExplodeMove {
   stage: Stage;
   direction: V3; // normalised at runtime
   distance: number;
+  /** Optional slice of the stage (0..1) this move uses, so parts come out one group at a time. */
+  window?: [number, number];
 }
 
 export type PartKind =
@@ -208,7 +210,8 @@ function sensorPart(id: string, x: number, yawDeg: number, label: LabelId, side?
     side,
     position: [x, FRAME.barCenterY, FRAME.z + 0.012],
     quaternion: facing(look),
-    explode: [{ stage: "full", direction: [look[0], 0.12, look[2]], distance: 0.42 }],
+    // first out in the full stage: straight forward, a little down, into the space the lenses left
+    explode: [{ stage: "full", direction: [look[0], -0.22, look[2]], distance: 0.55, window: [0, 0.5] }],
     label,
     anchor: [0, 0, 0.018],
   };
@@ -227,7 +230,7 @@ function sideParts(s: Side): PartConfig[] {
       kind: "lens",
       side: s,
       position: [sg * LENS_CENTER[0], LENS_CENTER[1], FRAME.z + FRAME.plateDepth / 2],
-      explode: [{ stage: "half", direction: [sg * 0.14, -0.55, 1], distance: 0.58 }],
+      explode: [{ stage: "half", direction: [sg * 0.12, -0.95, 1], distance: 0.85, window: [0.15, 1] }],
       label: s === "left" ? "lenses" : undefined,
       anchor: [sg * 0.1, -0.09, 0.006],
     },
@@ -250,7 +253,8 @@ function sideParts(s: Side): PartConfig[] {
       kind: "templeCover",
       side: s,
       position: [sg * (TEMPLE.innerX + TEMPLE.wall + TEMPLE.rimDepth + 0.007), BOARD_V, TEMPLE.hingeZ - 0.31],
-      explode: [{ stage: "half", direction: [sg, 0.15, 0], distance: 0.64 }],
+      // covers lift up and out, above the boards, so they stay clear of the label columns
+      explode: [{ stage: "half", direction: [sg * 0.8, 1.2, 0], distance: 0.85, window: [0, 0.75] }],
     },
     {
       id: `earCap${L}`,
@@ -258,7 +262,7 @@ function sideParts(s: Side): PartConfig[] {
       side: s,
       position: p(tip.end.clone().addScaledVector(tip.dir, 0.05)),
       quaternion: facing(tipDir),
-      explode: [{ stage: "half", direction: tipDir, distance: 0.5 }],
+      explode: [{ stage: "half", direction: tipDir, distance: 0.7, window: [0.25, 1] }],
     },
     {
       id: `motor${L}`,
@@ -267,7 +271,7 @@ function sideParts(s: Side): PartConfig[] {
       position: p(tip.end.clone().addScaledVector(tip.dir, 0.065)),
       // the flat face of the coin motor presses towards the head, behind the ear
       quaternion: facing(inward),
-      explode: [{ stage: "full", direction: tipDir, distance: 0.27 }],
+      explode: [{ stage: "full", direction: tipDir, distance: 0.42, window: [0.5, 1] }],
       turn: { stage: "full", faceTo: FACE_UP },
       label: s === "left" ? "motorLeft" : "motorRight",
       anchor: [0, 0, 0.013],
@@ -275,8 +279,8 @@ function sideParts(s: Side): PartConfig[] {
   ];
 }
 
-/** Boards come out sideways, between the temple and its cover. */
-const OUT_UP = (s: Side): V3 => [sideSign(s), 0.3, 0];
+/** Boards come out sideways and up, between the temple and its lifted cover. */
+const OUT_UP = (s: Side): V3 => [sideSign(s), 0.7, 0];
 
 /** Left temple: controller next to the hinge, then the two motor driver boards. */
 const leftTemple: PartConfig[] = [
@@ -286,7 +290,7 @@ const leftTemple: PartConfig[] = [
     side: "left",
     position: inBay("left", 0.145, BOARD_V, 0.004 + 0.006),
     quaternion: facing([1, 0, 0]),
-    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
+    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.5, window: [0.2, 0.7] }],
     turn: { stage: "full", faceTo: FACE_UP },
     label: "controller",
     // front half of the board (local −x points forward on the left side)
@@ -298,7 +302,7 @@ const leftTemple: PartConfig[] = [
     side: "left",
     position: inBay("left", 0.33, BOARD_V, 0.004 + 0.005),
     quaternion: facing([1, 0, 0]),
-    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
+    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.5, window: [0.3, 0.8] }],
     turn: { stage: "full", faceTo: FACE_UP },
   },
   {
@@ -307,7 +311,7 @@ const leftTemple: PartConfig[] = [
     side: "left",
     position: inBay("left", 0.455, BOARD_V, 0.004 + 0.005),
     quaternion: facing([1, 0, 0]),
-    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.36 }],
+    explode: [{ stage: "full", direction: OUT_UP("left"), distance: 0.5, window: [0.35, 0.85] }],
     turn: { stage: "full", faceTo: FACE_UP },
     // the label sits on the rear board so its marker stays clear of the controller's
     label: "drivers",
@@ -323,7 +327,7 @@ const rightTemple: PartConfig[] = [
     side: "right",
     position: inBay("right", 0.17, BOARD_V, 0.002 + 0.0175),
     quaternion: facing([-1, 0, 0]),
-    explode: [{ stage: "full", direction: OUT_UP("right"), distance: 0.36 }],
+    explode: [{ stage: "full", direction: OUT_UP("right"), distance: 0.5, window: [0.2, 0.7] }],
     turn: { stage: "full", faceTo: FACE_UP },
     label: "battery",
     // front half of the pouch (local +x points forward on the right side)
@@ -335,7 +339,7 @@ const rightTemple: PartConfig[] = [
     side: "right",
     position: inBay("right", 0.45, BOARD_V, 0.004 + 0.005),
     quaternion: facing([-1, 0, 0]),
-    explode: [{ stage: "full", direction: OUT_UP("right"), distance: 0.36 }],
+    explode: [{ stage: "full", direction: OUT_UP("right"), distance: 0.5, window: [0.3, 0.8] }],
     turn: { stage: "full", faceTo: FACE_UP },
     label: "charger",
     anchor: [-0.02, 0, 0.012],
@@ -366,7 +370,7 @@ export const PARTS: PartConfig[] = [
     id: "nosePad",
     kind: "nosePad",
     position: [0, -0.055, FRAME.z - 0.03],
-    explode: [{ stage: "half", direction: [0, -0.8, 0.6], distance: 0.5 }],
+    explode: [{ stage: "half", direction: [0, -1, 0.55], distance: 0.8, window: [0.2, 1] }],
   },
   sensorPart("sensorFront", 0, 0, "tofFront"),
   ...sideParts("left"),
