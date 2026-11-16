@@ -76,7 +76,7 @@ export function SensorCones({
             vertexShader: vert,
             fragmentShader: frag,
             uniforms: {
-              uColor: { value: new THREE.Color(COLORS.cyan) },
+              uColor: { value: new THREE.Color(COLORS.teal) },
               uOpacity: { value: 0 },
               uLength: { value: length },
             },

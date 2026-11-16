@@ -51,19 +51,19 @@ export function createMaterials(): Record<MaterialKey, THREE.Material> {
       depthWrite: false,
       side: THREE.DoubleSide,
     }),
-    // soft cyan glow along each lens edge (decoration only)
+    // soft teal glow along each lens edge (decoration only)
     lensEdge: new THREE.MeshBasicMaterial({
-      color: COLORS.cyanSoft,
+      color: COLORS.teal2,
       transparent: true,
       opacity: 0.5,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
       toneMapped: false,
     }),
-    // thin decorative accent strips on the top bar: an emissive material, not a real LED part
+    // thin decorative teal accent strips on the top bar: an emissive material, not a real LED part
     accent: new THREE.MeshStandardMaterial({
-      color: COLORS.cyan,
-      emissive: new THREE.Color(COLORS.cyan),
+      color: COLORS.teal,
+      emissive: new THREE.Color(COLORS.teal),
       emissiveIntensity: 2,
       toneMapped: false,
     }),

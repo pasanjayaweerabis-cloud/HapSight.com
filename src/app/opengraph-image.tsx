@@ -18,15 +18,16 @@ export default async function OpenGraphImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "linear-gradient(165deg, #0f1c3d 0%, #0b1530 45%, #0a1022 100%)",
-          color: "#eef4ff",
+          backgroundColor: "#080f1d",
+          backgroundImage: "radial-gradient(circle at 78% 48%, rgba(20,224,200,0.14), rgba(20,224,200,0) 45%)",
+          color: "#f2f7fa",
           fontFamily: "sans-serif",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 0 0 72px", width: 560 }}>
-          <div style={{ fontSize: 26, letterSpacing: 4, color: "#22d3ee", textTransform: "uppercase" }}>{brand.name}</div>
-          <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 1.02, marginTop: 20, letterSpacing: -2 }}>{hero.headline}</div>
-          <div style={{ fontSize: 28, color: "#b4c2dd", marginTop: 24, lineHeight: 1.3 }}>{hero.sub}</div>
+          <div style={{ fontSize: 26, letterSpacing: 4, color: "#14e0c8", textTransform: "uppercase" }}>{brand.name}</div>
+          <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 0.98, marginTop: 20, letterSpacing: -4 }}>{hero.headline}</div>
+          <div style={{ fontSize: 28, color: "#a1afbd", marginTop: 24, lineHeight: 1.3 }}>{hero.sub}</div>
         </div>
         <img src={src} width={640} height={640} alt="" style={{ marginTop: -5 }} />
       </div>

@@ -4,68 +4,82 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------- Design tokens ---------- */
-/* Navy + cyan. Bright cyan (#22d3ee) is only used as text on dark backgrounds; on white it is
-   decoration only, and text/links use the darker cyan (#0e7490). Ratios below are WCAG contrast. */
+/* Deep navy + teal (from the HapSight design file). Bright teal (#14e0c8) is text only on the dark
+   backgrounds; on white it fails contrast (1.7:1), so the light theme uses a dark teal (#0a6b60)
+   for text and links and keeps bright teal for decoration. Orange (--haptic) is ONLY for vibration:
+   motors, pulses and haptic ripples. Ratios below are WCAG 2.2 contrast ratios. */
 :root {
-  --navy: #0b1530;
-  --navy-deep: #0a1022;
-  --navy-ink: #04222b;
-  --cyan: #22d3ee;
-  --cyan-deep: #0e7490;
-  --cyan-light: #e0f7fb;
+  --navy: #080f1d;
+  --navy-ink: #041411; /* text on bright teal buttons: 11.3:1 */
+  --teal: #14e0c8;
+  --teal-2: #8af5e7;
+  --teal-deep: #0a6b60;
+  --teal-light: #dcf5f1;
+  --haptic: #ffcb8a; /* 12.9:1 on stage-bg */
+  --radius: 24px;
 
   /* light theme (default before the boot script runs) */
   --bg: #ffffff;
-  --bg-soft: #f3f7fc;
+  --bg-soft: #f1f6f6;
   --surface: #ffffff;
-  --text: #0f172a;
+  --text: #0b1422; /* 18.5:1 on white */
   --text-muted: #475569; /* 7.6:1 on white, 7.0:1 on bg-soft */
-  --border: #d3dceb;
-  --accent: #0e7490; /* 5.4:1 on white, 5.0:1 on bg-soft, 4.8:1 on accent-soft */
-  --accent-strong: #155e75;
-  --accent-contrast: #ffffff;
-  --accent-soft: #e0f7fb;
-  --focus: #155e75;
+  --border: #d3e0de;
+  --accent: #0a6b60; /* 6.4:1 on white, 5.9:1 on bg-soft, 5.6:1 on accent-soft */
+  --accent-strong: #07544b;
+  --accent-contrast: #ffffff; /* 6.4:1 on accent */
+  --accent-soft: #dcf5f1;
+  --focus: #07544b;
   --danger: #a3221b;
-  --success: #155e75;
+  --success: #07544b;
 
-  /* the "stage" (hero, 3D sections) is always dark navy */
-  --stage-bg: #0b1530;
-  --stage-text: #eef4ff; /* 16.3:1 on stage-bg */
-  --stage-muted: #b4c2dd; /* 10:1 on stage-bg */
-  --stage-accent: #22d3ee; /* 10:1 on stage-bg */
-  --stage-border: #2a3a60;
+  /* the "stage" (hero and 3D sections) is always dark */
+  --stage-bg: #080f1d;
+  --stage-surface: #0d1727;
+  --stage-surface-2: #111f31;
+  --stage-text: #f2f7fa; /* 17.8:1 on stage-bg */
+  --stage-muted: #a1afbd; /* 8.6:1 on stage-bg, 7.4:1 on stage-surface-2 */
+  --stage-soft: #708194; /* 4.8:1 on stage-bg, but 4.2:1 on cards: decoration only, never body text */
+  --stage-accent: #14e0c8; /* 11.4:1 on stage-bg, 9.9:1 on stage-surface-2 */
+  --stage-accent-2: #8af5e7;
+  --stage-border: rgba(176, 205, 222, 0.13);
+  --stage-glass: rgba(13, 23, 39, 0.62);
 
   --font-scale: 1;
   color-scheme: light;
 }
 
 .dark {
-  --bg: #0a1022;
-  --bg-soft: #0e1730;
-  --surface: #121d3a;
-  --text: #eef4ff;
-  --text-muted: #b4c2dd; /* 10.5:1 on bg, 9.3:1 on surface */
-  --border: #2a3a60;
-  --accent: #22d3ee; /* 10.5:1 on bg, 9.2:1 on surface */
-  --accent-strong: #67e8f9;
-  --accent-contrast: #04222b; /* 9.2:1 on accent */
-  --accent-soft: #0f2c45; /* accent text on it: 7.9:1 */
-  --focus: #67e8f9;
+  --bg: #080f1d;
+  --bg-soft: #0d1727;
+  --surface: #111f31;
+  --text: #f2f7fa; /* 17.8:1 on bg */
+  --text-muted: #a1afbd; /* 8.6:1 on bg, 8.0:1 on bg-soft, 7.4:1 on surface */
+  --border: rgba(176, 205, 222, 0.16);
+  --accent: #14e0c8; /* 11.4:1 on bg, 9.9:1 on surface, 9.1:1 on accent-soft */
+  --accent-strong: #8af5e7;
+  --accent-contrast: #041411; /* 11.3:1 on accent */
+  --accent-soft: #0b2a2d;
+  --focus: #8af5e7;
   --danger: #ffaaa3;
-  --success: #67e8f9;
+  --success: #8af5e7;
   color-scheme: dark;
 }
 
-/* High contrast: pure black/white, thicker borders, no soft greys. */
+/* High contrast: pure black/white, solid borders, no soft greys or glass. */
 .hc {
   --text-muted: var(--text);
   --border: currentColor;
   --stage-muted: #ffffff;
+  --stage-soft: #ffffff;
   --stage-border: #ffffff;
   --stage-bg: #000000;
+  --stage-surface: #000000;
+  --stage-surface-2: #000000;
+  --stage-glass: #000000;
   --stage-text: #ffffff;
-  --stage-accent: #67e8f9;
+  --stage-accent: #5ff5e1; /* 15.6:1 on black */
+  --stage-accent-2: #5ff5e1;
 }
 .hc.light,
 .hc:not(.dark) {
@@ -73,8 +87,8 @@
   --bg-soft: #ffffff;
   --surface: #ffffff;
   --text: #000000;
-  --accent: #0a4a5c;
-  --accent-strong: #062f3b;
+  --accent: #064a42; /* 10.2:1 on white */
+  --accent-strong: #03302a;
   --accent-soft: #ffffff;
   --focus: #000000;
 }
@@ -83,8 +97,8 @@
   --bg-soft: #000000;
   --surface: #000000;
   --text: #ffffff;
-  --accent: #67e8f9;
-  --accent-strong: #b9f5fd;
+  --accent: #5ff5e1;
+  --accent-strong: #b8fbf2;
   --accent-soft: #000000;
   --focus: #ffffff;
 }
@@ -111,11 +125,18 @@
   --color-stage-muted: var(--stage-muted);
   --color-stage-accent: var(--stage-accent);
   --color-stage-line: var(--stage-border);
+  --color-stage-surface: var(--stage-surface);
+  --color-stage-surface-2: var(--stage-surface-2);
+  --color-stage-soft: var(--stage-soft);
+  --color-stage-accent-2: var(--stage-accent-2);
   --color-navy: var(--navy);
   --color-navy-ink: var(--navy-ink);
-  --color-cyan: var(--cyan);
-  --color-cyan-deep: var(--cyan-deep);
-  --color-cyan-light: var(--cyan-light);
+  --color-teal: var(--teal);
+  --color-teal-2: var(--teal-2);
+  --color-teal-deep: var(--teal-deep);
+  --color-teal-light: var(--teal-light);
+  --color-haptic: var(--haptic);
+  --radius-card: var(--radius);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -157,14 +178,42 @@ body {
   color: var(--stage-text);
   color-scheme: dark;
 }
+/* Soft teal glow behind the device, as in the design file. */
 .stage-gradient {
   background:
-    radial-gradient(110% 75% at 68% 42%, rgba(34, 211, 238, 0.13) 0%, rgba(34, 211, 238, 0) 58%),
-    linear-gradient(165deg, #0f1c3d 0%, #0b1530 45%, #0a1022 100%);
+    radial-gradient(48% 58% at 78% 44%, rgba(20, 224, 200, 0.1) 0%, rgba(20, 224, 200, 0) 70%),
+    radial-gradient(70% 70% at 15% 0%, rgba(32, 53, 82, 0.28) 0%, rgba(32, 53, 82, 0) 65%),
+    var(--stage-bg);
 }
 .hc .stage,
 .hc .stage-gradient {
   background: #000;
+}
+
+/* Glass cards on the dark stage: translucent surface, 1px soft border. */
+.glass {
+  background: var(--stage-glass);
+  border: 1px solid var(--stage-border);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* Section kicker: small uppercase label with a short teal line before it. */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.kicker::before {
+  content: "";
+  width: 1.4rem;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
 }
 
 .hc .card,

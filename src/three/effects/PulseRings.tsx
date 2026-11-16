@@ -39,8 +39,8 @@ export function PulseRings({
       blending: THREE.AdditiveBlending,
       toneMapped: false,
     });
-  const mats = useMemo(() => Array.from({ length: RINGS }, () => makeMat(COLORS.cyanSoft)), []);
-  const glowMat = useMemo(() => makeMat(COLORS.cyan), []);
+  const mats = useMemo(() => Array.from({ length: RINGS }, () => makeMat(COLORS.haptic)), []);
+  const glowMat = useMemo(() => makeMat(COLORS.haptic), []);
   const rings = useRef<(THREE.Mesh | null)[]>([]);
   const glow = useRef<THREE.Mesh>(null);
   const phase = useRef(0.35);

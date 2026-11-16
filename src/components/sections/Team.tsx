@@ -12,7 +12,7 @@ export function Team() {
               {/* Placeholder avatar: initial on a cyan disc. Decorative; the name is the text below. */}
               <span
                 aria-hidden="true"
-                className="flex size-16 items-center justify-center rounded-full bg-cyan-deep text-2xl font-semibold text-white"
+                className="flex size-16 items-center justify-center rounded-full bg-teal-deep text-2xl font-semibold text-white"
               >
                 {m.name.charAt(0)}
               </span>

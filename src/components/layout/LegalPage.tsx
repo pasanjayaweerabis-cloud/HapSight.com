@@ -12,7 +12,7 @@ export function LegalPage({
   return (
     <Container className="py-20 sm:py-28">
       <article className="prose-legal max-w-3xl">
-        <h1 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{title}</h1>
+        <h1 className="text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">{title}</h1>
         <p className="mt-4 text-base text-muted">{updated}</p>
         {sections.map((s) => (
           <section key={s.heading}>

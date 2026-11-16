@@ -27,8 +27,10 @@ export const COLORS = {
   frame: "#2C2E33",
   frameInside: "#24262b",
   rubber: "#18191c",
-  cyan: "#22D3EE",
-  cyanSoft: "#7ae6f6",
+  teal: "#14E0C8",
+  teal2: "#8AF5E7",
+  /** Only for vibration: motors, pulses, haptic ripples. */
+  haptic: "#FFCB8A",
   lens: "#a9d6ff",
   pcbBlack: "#15161a",
   pcbGreen: "#1d7a3e",

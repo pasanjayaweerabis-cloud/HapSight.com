@@ -8,10 +8,10 @@ export function Hero() {
     <section id="top" aria-labelledby="hero-title" className="stage stage-gradient relative overflow-hidden">
       <Container className="grid items-center gap-8 pb-16 pt-14 sm:pt-20 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[1fr_1.15fr] lg:gap-4 lg:py-10">
         <div className="relative z-10 max-w-xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-stage-accent">{t.eyebrow}</p>
+          <p className="kicker text-stage-accent">{t.eyebrow}</p>
           <h1
             id="hero-title"
-            className="mt-5 text-balance text-5xl font-semibold leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-7xl"
+            className="mt-5 text-balance text-5xl font-semibold leading-[0.97] tracking-[-0.06em] sm:text-6xl lg:text-7xl"
           >
             {t.headline}
           </h1>
