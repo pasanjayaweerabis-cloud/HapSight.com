@@ -1,4 +1,4 @@
-# Hapsight – landing page
+# HapSight – landing page
 
 Landing page for **Hapsight**: low-cost haptic smart glasses being designed to help
 blind and visually impaired people notice obstacles at head height, silently and hands-free.
@@ -41,12 +41,12 @@ Without Supabase keys the site still runs; the waitlist form shows "the waitlist
 │   │   │                        /privacy, /accessibility, not-found, icon.svg,
 │   │   │                        opengraph-image.tsx (1200×630, built from public/stills/hero.png)
 │   │   └── actions/waitlist.ts  Server Action: validation, honeypot, Supabase insert
-│   ├── content/site.ts          ALL text: name, tagline, sections, part labels, budget, form copy, legal pages
+│   ├── content/site.ts          ALL text: name, tagline, sections, part labels, team, roadmap, form copy, legal pages
 │   ├── components/
 │   │   ├── layout/              Navbar, mobile menu, accessibility settings dialog, footer, logo
-│   │   ├── sections/            One file per page section (Hero, HowItWorks, Design, PartsList, BudgetTable, …)
+│   │   ├── sections/            One file per page section (Hero, Problem, HowItWorks, Features, Design, InsideArms, …)
 │   │   ├── ui/                  Small shared pieces: Button, Section, Accordion, Icon
-│   │   └── visuals/             Lazy 3D stages, exploded-view label overlay, static stills
+│   │   └── visuals/             StageHost (the one canvas), StageSlot (where the device sits), label overlay, stills
 │   ├── lib/                     Accessibility prefs, WebGL check, media queries, Supabase client, form schema
 │   └── three/
 │       ├── deviceConfig.ts      THE 3D config: every part, placement, explode moves, labels, cameras
@@ -55,7 +55,9 @@ Without Supabase keys the site still runs; the waitlist form shows "the waitlist
 │       ├── explode.ts           Explode maths shared by the model and the leader lines
 │       ├── parts/               Frame (front, lenses, nose pad) · Temples (shells, covers, caps, switch) · Modules (boards, battery, motors)
 │       ├── effects/             Detection cones, ear-tip pulse rings, dashed leader lines
-│       └── scenes/              Hero, How it works, Design (exploded) scenes
+│       ├── PersistentStage.tsx  The ONE WebGL canvas for the whole page (camera follows the section slots)
+│       ├── pageTimeline.ts      Pure function: page scroll → device state (camera, explode, highlights, cones, motors…)
+│       └── stageBus.ts          Registry: sections' scroll ranges, slots, label overlay, waitlist pulse
 ├── public/stills/               Static 3D stills (reduced motion, no WebGL, OG image) – made by `npm run stills`
 ├── scripts/capture-stills.mjs   Stills capture (uses your installed Google Chrome)
 ├── supabase/waitlist.sql        Database setup
@@ -71,7 +73,7 @@ Front = +Z (where the sensors look), wearer's left = +X, up = +Y. Each part in `
 (`half` stage = temple covers, lenses, nose pad and ear caps come off, scroll 0 → 0.5; `full`
 stage = sensors, boards, battery and motors come out, 0.5 → 1), an optional `turn` (pulled-out
 boards lie face up) and an optional label. Move a part or change how it explodes there and every
-scene follows, including the cyan dashed leader lines.
+scene follows, including the teal dashed leader lines.
 
 The parts: a front frame with three open sensor windows in the top bar (left corner, centre,
 right corner; the corner sensors turn 27° outward and are **not** behind the lenses), two clear
@@ -79,13 +81,43 @@ lenses, a rubber nose pad, and two hollow temples with removable outer covers. L
 ESP32-C3 SuperMini + two MOSFET driver boards. Right temple: LiPo 3.7 V 500 mAh + TP4056 USB-C
 charger (port through the back wall of the bay) and a slide power switch on top of the arm. Each
 ear tip holds a coin vibration motor under a rubber cap. There is no 3.3 V regulator: the
-SuperMini's onboard regulator runs from the battery through its 5V pin. The cyan strips on the
+SuperMini's onboard regulator runs from the battery through its 5V pin. The teal strips on the
 top bar are decoration (an emissive material), not a part.
 
 Left/right: no object uses a negative scale. Symmetric parts (lenses, corner sensors, temples,
 covers, ear caps, motors) are generated per side from mirrored inputs with right-handed local
 frames, so lighting, normals and face culling are always correct. The two temples hold different
 electronics, so their insides are separate parts, not mirrored copies.
+
+### One device across the page
+
+There is a single fixed, click-through canvas (`src/three/PersistentStage.tsx`, loaded lazily by
+`StageHost` through `LazyStage`). Each dark section marks a box with `<StageSlot id="…">`; the camera
+is aimed every frame so the device appears inside the current section's slot, and it glides from
+one slot to the next as you scroll. Light sections have no slot, so the device fades out and the
+canvas stops rendering.
+
+`src/three/pageTimeline.ts` is the story: `pageTimeline(p, ranges)` turns page progress into a
+`DeviceState`. Each section's range comes from the DOM (`useStageSection` / `RangeMarker`,
+re-measured on resize), and the section's text uses the same range, so text and 3D never
+disagree. To change what happens in a section, edit its function in `SECTIONS`.
+
+Reduced motion or no WebGL: no canvas at all. Every slot shows its still and every step is text.
+On phones (`front` slots in How it works and Features) the canvas draws above the page while the
+device is in that slot, so the cards slide underneath it.
+
+### Colours
+
+Deep navy + teal, from `docs/design/pasan/hapSight-landing-page.html` (colours and style only).
+Tokens and WCAG contrast ratios are in `src/app/globals.css`. Bright teal `#14e0c8` is text only on
+dark backgrounds; the light theme uses `#0a6b60` for text and links. Orange `--haptic` is only for
+vibration (motors and pulses).
+
+### Team photos
+
+See `public/team/README.md`: add `public/team/<name>.jpg` (square, ≥ 400 px, < 150 KB) and set
+`photo` for that member in `team.members` in `site.ts`. The Scrum Master role rotates each sprint:
+edit `role` there.
 
 ## Supabase setup (waitlist)
 
@@ -125,7 +157,7 @@ form does not reveal who is on the list.
       automatically; HTTP redirects to HTTPS.
 - [ ] Update `NEXT_PUBLIC_SITE_URL` to the final https domain and **redeploy**.
 - [ ] **Analytics tab → Enable** Web Analytics (the `<Analytics />` component only loads on Vercel).
-- [ ] Check `/`, `/privacy`, `/accessibility`, `/opengraph-image` on the live site and run Lighthouse.
+- [ ] Check `/`, `/privacy`, `/accessibility`, `/opengraph-image`, `/sitemap.xml`, `/robots.txt` on the live site and run Lighthouse (local before/after results: `docs/evidence/lighthouse/`).
 - [ ] Replace the placeholder contact email (`brand.contactEmail` in `site.ts`) with a real inbox.
 
 ## Accessibility
@@ -143,6 +175,7 @@ Test with VoiceOver (macOS and iOS), NVDA (Windows) and TalkBack (Android):
 - One h1, section h2s in order, landmarks (banner, Main navigation, main, contentinfo); skip link first.
 - The 3D areas are skipped; the device description under the hero is read.
 - How it works: three steps read in order; the active step is announced as "current step".
+- Features and Inside the arms: every card is in the DOM in reading order; the active one is marked.
 - Design: the numbered parts list is read with names, locations and descriptions, then the
   prototype parts cost table (caption, column and row headers).
 - FAQ buttons announce expanded/collapsed; the settings dialog traps focus, Escape closes it and
