@@ -92,7 +92,6 @@ export const hero = {
   deviceDescriptionTitle: "What the device is like",
   deviceDescription:
     `${brand.name} looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.`,
-  canvasHint: "Drag to turn the 3D model.",
 } as const;
 
 export const problem = {
@@ -296,6 +295,29 @@ export const design = {
   otherPartsTitle: "Also inside",
   otherParts: ["Flyback diodes", "Resistors", "Perfboard", "Heat-shrink tubing", "JST connectors"],
   note: "Concept design – the final prototype may differ.",
+} as const;
+
+export const insideArms = {
+  id: "inside",
+  eyebrow: "Inside the arms",
+  title: "What each arm carries",
+  intro: "The two arms hold different electronics. Here is what is inside each one, and how a warning travels.",
+  sides: [
+    {
+      id: "left",
+      title: "Left arm",
+      parts: ["ESP32-C3 SuperMini controller", "2 MOSFET motor drivers"],
+      body: "The controller reads the three sensors and decides which motor to pulse. The two driver boards switch battery power to the motors.",
+    },
+    {
+      id: "right",
+      title: "Right arm",
+      parts: ["LiPo 3.7 V, 500 mAh battery", "TP4056 USB-C charger with protection", "Slide power switch"],
+      body: "The battery powers everything. The charger tops it up over USB-C and protects it, and the switch turns the glasses fully off.",
+    },
+  ],
+  signal: "Sensor → controller → MOSFET driver → vibration motor",
+  signalLabel: "How a warning travels",
 } as const;
 
 export const gallery = {

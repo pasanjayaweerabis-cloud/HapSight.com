@@ -1,12 +1,18 @@
 import { roadmap as t } from "@/content/site";
 import { Container, SectionHeading } from "@/components/ui/Section";
+import { RangeMarker, StageSlot } from "@/components/visuals/StageSlot";
 
 /** Project status in plain words: an ordered list, so screen readers hear the sequence. */
 export function Roadmap() {
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} data-stage-section className="stage py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative py-24 sm:py-32">
+      <RangeMarker id="roadmap" />
       <Container>
-        <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} stage />
+        <div className="flex items-end justify-between gap-8">
+          <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} stage />
+          {/* the device parks here, small and slowly turning (desktop only) */}
+          <StageSlot id="roadmap" className="hidden h-44 w-72 shrink-0 lg:block" />
+        </div>
         <ol className="mt-14 grid gap-4 md:grid-cols-5">
           {t.steps.map((s) => (
             <li

@@ -377,13 +377,9 @@ export const PARTS: PartConfig[] = [
 
 export const STAGE_WINDOWS: Record<Stage, [number, number]> = { half: [0, 0.5], full: [0.5, 1] };
 
-/* ---------- Scene settings ---------- */
+/* ---------- Scene settings (cameras live in pageTimeline.ts) ---------- */
 
 export const SCENES = {
-  hero: { camera: [-2.5, 1.2, 3.05] as V3, target: [0, -0.04, -0.08] as V3, fov: 30 },
-  /** Seen from behind and above the wearer, so the wearer's left is on the screen's left. */
-  howItWorks: { camera: [0.0, 5.1, -3.0] as V3, target: [0, -0.3, 0.95] as V3, fov: 36 },
-  design: { camera: [0.65, 3.05, 4.5] as V3, target: [0.0, -0.1, 0.24] as V3, fov: 30 },
-  /** VL53L1X field of view (about 27° wide) used for the translucent cones in How it works. */
+  /** VL53L1X field of view (about 27° wide) used for the translucent detection cones. */
   sensing: { length: 2.3, halfAngleDeg: 13.5 },
 } as const;

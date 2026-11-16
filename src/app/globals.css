@@ -171,6 +171,16 @@ body {
 .stage :focus-visible {
   outline-color: var(--stage-accent);
 }
+/* light cards inside a dark stage (the waitlist form) keep the normal focus colour */
+.stage .on-surface {
+  color-scheme: light;
+}
+.dark .stage .on-surface {
+  color-scheme: dark;
+}
+.stage .on-surface :focus-visible {
+  outline-color: var(--focus);
+}
 
 /* The 3D stage sections */
 .stage {
@@ -188,6 +198,15 @@ body {
 .hc .stage,
 .hc .stage-gradient {
   background: #000;
+}
+
+/* The one 3D canvas is fixed behind the page (z-index 1). Section content sits above it;
+   section backgrounds stay below it. In the base layer, so utilities (absolute, sticky) win. */
+@layer base {
+  :where(main section) > * {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 /* Glass cards on the dark stage: translucent surface, 1px soft border. */

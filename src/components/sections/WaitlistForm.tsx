@@ -7,6 +7,7 @@ import { joinWaitlist } from "@/app/actions/waitlist";
 import { initialWaitlistState, type FieldName } from "@/lib/waitlistSchema";
 import { Icon } from "@/components/ui/Icon";
 import { buttonClass } from "@/components/ui/Button";
+import { stageBus } from "@/three/stageBus";
 
 const FIELD_ORDER: FieldName[] = ["name", "email", "role", "consent"];
 const FIELD_TARGET: Record<FieldName, string> = {
@@ -32,7 +33,10 @@ export function WaitlistForm() {
   // Move focus to the result so screen reader users hear it straight away.
   useEffect(() => {
     if (state.status === "error") summaryRef.current?.focus();
-    if (state.status === "success") successRef.current?.focus();
+    if (state.status === "success") {
+      successRef.current?.focus();
+      stageBus.pulse(); // one haptic pulse on the 3D device (decorative)
+    }
   }, [state]);
 
   if (state.status === "success") {

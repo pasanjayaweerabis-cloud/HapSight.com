@@ -1,12 +1,18 @@
 import { demo as t } from "@/content/site";
 import { Container, SectionHeading } from "@/components/ui/Section";
+import { RangeMarker, StageSlot } from "@/components/visuals/StageSlot";
 
 /** Clearly labelled space for the real prototype video. No fake footage. */
 export function Demo() {
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} data-stage-section className="stage py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative py-24 sm:py-32">
+      <RangeMarker id="demo" />
       <Container>
-        <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} stage />
+        <div className="flex items-end justify-between gap-8">
+          <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} stage />
+          {/* the device parks here, small and slowly turning (desktop only) */}
+          <StageSlot id="demo" className="hidden h-44 w-72 shrink-0 lg:block" />
+        </div>
         <div className="glass mt-12 flex aspect-video w-full flex-col items-center justify-center gap-4 rounded-3xl p-8 text-center">
           <span
             aria-hidden="true"

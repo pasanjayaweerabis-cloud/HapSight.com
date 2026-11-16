@@ -5,6 +5,8 @@ import { Features } from "@/components/sections/Features";
 import { Design } from "@/components/sections/Design";
 import { Gallery } from "@/components/sections/Gallery";
 import { Demo } from "@/components/sections/Demo";
+import { InsideArms } from "@/components/sections/InsideArms";
+import { StageHost } from "@/components/visuals/StageHost";
 import { Roadmap } from "@/components/sections/Roadmap";
 import { Audience } from "@/components/sections/Audience";
 import { Comparison } from "@/components/sections/Comparison";
@@ -15,11 +17,13 @@ import { Waitlist } from "@/components/sections/Waitlist";
 export default function Home() {
   return (
     <>
+      <StageHost />
       <Hero />
       <Problem />
       <HowItWorks />
       <Features />
       <Design />
+      <InsideArms />
       <Gallery />
       <Demo />
       <Audience />
