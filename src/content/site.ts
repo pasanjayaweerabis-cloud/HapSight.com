@@ -483,7 +483,9 @@ export interface TeamMember {
   name: string;
   /** Edit freely: the Scrum Master role rotates every sprint. */
   role: string;
-  /** Square photo in public/team/ (see public/team/README.md). Leave out until it exists. */
+  /** Photo file name in public/team/, without extension. Picked up automatically as .jpg/.jpeg/.webp/.png. */
+  file: string;
+  /** Optional override path, e.g. "/team/other-name.jpg". Normally leave out. */
   photo?: string;
   /** Only real profile URLs. Icons are hidden when these are missing. */
   linkedin?: string;
@@ -498,12 +500,13 @@ export const team = {
   members: [
     {
       name: "Pasan Jayaweera",
+      file: "pasan",
       role: "Team Leader · Technical Lead · Developer (design & web implementation)",
     },
-    { name: "Vidurath Jayaweera", role: "Product Owner · Developer (hardware)" },
-    { name: "Haziq Shafie", role: "Scrum Master (Sprint 1) · Developer" },
-    { name: "Krishan Wijeyesekera", role: "Developer · Requirements lead" },
-    { name: "Aynkaran Selvarajan (Vinod)", role: "Developer · UX & ethics lead" },
+    { name: "Vidurath Jayaweera", file: "vidurath", role: "Product Owner · Developer (hardware)" },
+    { name: "Haziq Shafie", file: "haziq", role: "Scrum Master (Sprint 1) · Developer" },
+    { name: "Krishan Wijeyesekera", file: "krishan", role: "Developer · Requirements lead" },
+    { name: "Aynkaran Selvarajan (Vinod)", file: "aynkaran", role: "Developer · UX & ethics lead" },
   ] satisfies TeamMember[] as TeamMember[],
   photoComingSoon: "Photo coming soon",
   photoAlt: (name: string) => `Photo of ${name}`,
