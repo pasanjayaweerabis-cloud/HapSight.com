@@ -1,5 +1,19 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import Image from "next/image";
 import { team as t, type TeamMember } from "@/content/site";
+
+const PHOTO_EXTS = [".jpg", ".jpeg", ".webp", ".png"];
+
+/** Explicit `photo` wins; otherwise use public/team/<file>.<jpg|jpeg|webp|png> if it exists. */
+function photoSrc(m: TeamMember): string | undefined {
+  if (m.photo) return m.photo;
+  const dir = path.join(process.cwd(), "public", "team");
+  for (const ext of PHOTO_EXTS) {
+    if (existsSync(path.join(dir, m.file + ext))) return `/team/${m.file}${ext}`;
+  }
+  return undefined;
+}
 import { Container, SectionHeading } from "@/components/ui/Section";
 
 const initials = (name: string) =>
@@ -13,10 +27,11 @@ const initials = (name: string) =>
     .toUpperCase();
 
 function Photo({ m }: { m: TeamMember }) {
-  if (m.photo) {
+  const src = photoSrc(m);
+  if (src) {
     return (
       <Image
-        src={m.photo}
+        src={src}
         alt={t.photoAlt(m.name)}
         width={400}
         height={400}
