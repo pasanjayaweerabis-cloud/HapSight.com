@@ -1,0 +1,28 @@
+%% HapSight – Controller firmware and integration (UC-P1) – Pasan
+sequenceDiagram
+    actor User as Blind / VI user
+    participant P as PowerUnit
+    participant C as Controller (ESP32-C3)
+    participant S as DistanceSensor x3 (L, C, R)
+    participant M as HapticMotor x2 (L, R)
+
+    User->>P: Slide switch on
+    P->>C: Power on
+    C->>S: Wake each sensor (XSHUT) and give it its own I2C address
+    S-->>C: Ready
+    C->>M: One short pulse on both motors (ready)
+
+    loop About 10 times per second
+        C->>S: Read distance
+        S-->>C: Left, centre and right distances (cm)
+        C->>C: Decide side and closeness
+        alt Obstacle within 200 cm
+            C->>M: Pulse matching side (faster when closer)
+        else Path clear
+            C->>M: No vibration
+        end
+    end
+
+    opt A sensor does not respond
+        C->>M: One long pulse on both motors (error)
+    end
