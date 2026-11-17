@@ -193,10 +193,11 @@ function design(local: number): DeviceState {
   return state("design", {
     azimuth: 8 * DEG,
     elevation: 36 * DEG,
-    size: 2.2 + 0.85 * smooth(e / 0.6),
-    target: [0, -0.1, 0.24],
+    size: 2.25 + 1.25 * smooth(e / 0.7),
+    // aim lower as the lenses drop away, so the exploded view stays centred in the slot
+    target: [0, -0.42 * smooth(e / 0.6), 0.24 + 0.36 * smooth(e / 0.6)],
     explode: e,
-    labels: smooth((e - 0.55) / 0.3),
+    labels: smooth((e - 0.3) / 0.15),
   });
 }
 

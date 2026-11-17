@@ -1,11 +1,25 @@
 import * as THREE from "three";
-import { PARTS, STAGE_WINDOWS, type PartConfig, type Stage } from "./deviceConfig";
+import { PARTS, STAGE_WINDOWS, type ExplodeMove, type PartConfig, type Stage } from "./deviceConfig";
 import { smooth } from "./geometry";
 
 /** 0..1 progress of a stage given the overall explode progress (0 assembled → 1 fully exploded). */
 export function stageProgress(stage: Stage, explode: number): number {
   const [a, b] = STAGE_WINDOWS[stage];
   return smooth((explode - a) / (b - a));
+}
+
+/** 0..1 progress of one move: its stage, narrowed to its optional window (staggered parts). */
+export function moveProgress(m: ExplodeMove, explode: number): number {
+  const [a, b] = STAGE_WINDOWS[m.stage];
+  const raw = Math.min(1, Math.max(0, (explode - a) / (b - a)));
+  if (!m.window) return smooth(raw);
+  return smooth((raw - m.window[0]) / (m.window[1] - m.window[0]));
+}
+
+/** How far a part has travelled along its whole explode path, 0..1 (labels fade in near the end). */
+export function partArrival(p: PartConfig, explode: number): number {
+  if (!p.explode.length) return explode > 0.6 ? 1 : 0;
+  return moveProgress(p.explode[p.explode.length - 1], explode);
 }
 
 const dir = new THREE.Vector3();
@@ -19,7 +33,7 @@ const IDENTITY = new THREE.Quaternion();
 export function explodeOffset(p: PartConfig, explode: number, out = new THREE.Vector3()): THREE.Vector3 {
   out.set(0, 0, 0);
   for (const m of p.explode) {
-    const k = stageProgress(m.stage, explode);
+    const k = moveProgress(m, explode);
     if (k <= 0) continue;
     dir.set(m.direction[0], m.direction[1], m.direction[2]).normalize();
     out.addScaledVector(dir, m.distance * k);

@@ -49,7 +49,7 @@ function ScrollExplode() {
   }, []);
 
   return (
-    <div ref={track} className={compact ? "h-[230svh]" : "h-[320svh]"}>
+    <div ref={track} className={compact ? "h-[300svh]" : "h-[420svh]"}>
       <div className="sticky top-[4.5rem] h-[calc(100svh-4.5rem)]">
         <div className="mx-auto h-full max-w-7xl px-2 sm:px-8">
           <StageSlot id="design" className="size-full">

@@ -14,7 +14,7 @@ import { Obstacles } from "./effects/Obstacles";
 import { ProblemProps } from "./effects/ProblemProps";
 import { SignalDots } from "./effects/SignalDots";
 import { OrbitRings } from "./effects/OrbitRings";
-import { LABELLED_PARTS } from "./explode";
+import { LABELLED_PARTS, partArrival } from "./explode";
 import { smooth } from "./geometry";
 import { layoutCallouts, projectToScreen, type ScreenAnchor } from "./labelProjection";
 import { FOCUS_PARTS, mix, pageTimeline, type DeviceState, type SectionRange } from "./pageTimeline";
@@ -79,7 +79,7 @@ function placeCamera(camera: THREE.PerspectiveCamera, s: DeviceState, rect: Rect
   const dH = s.size / (2 * tanV * (rect.h / vh) * FILL);
   const dW = s.size / (2 * tanV * (vw / vh) * (rect.w / vw) * FILL);
   // tall, narrow slots (phones): let the widest unlabelled parts touch the edges
-  const d = Math.max(dH, rect.w / rect.h < 0.75 ? dW * 0.8 : dW);
+  const d = Math.max(dH, rect.w / rect.h < 0.75 ? dW * 0.7 : dW);
   target.set(...s.target);
   camera.position.set(
     target.x + Math.sin(s.azimuth) * Math.cos(s.elevation) * d,
@@ -114,6 +114,16 @@ function writeLabels(
   for (const part of LABELLED_PARTS) {
     const g = parts.get(part.id);
     if (!g) continue;
+    // each label fades in as its own part arrives, so the eye follows one group at a time
+    const item = h.items.get(part.label as LabelId);
+    if (item) {
+      const v = smooth((partArrival(part, s.explode) - 0.55) / 0.35).toFixed(3);
+      if (item.label.style.opacity !== v) {
+        item.label.style.opacity = v;
+        item.line.style.opacity = v;
+        item.dot.style.opacity = v;
+      }
+    }
     world.set(...((part.anchor ?? [0, 0, 0]) as [number, number, number]));
     g.localToWorld(world);
     const sp = projectToScreen(world, camera, vw, vh);
@@ -135,7 +145,7 @@ function writeLabels(
     heights.set(a.id, el?.offsetHeight ?? 0);
   }
   const c = projectToScreen(target, camera, vw, vh);
-  const layout = layoutCallouts(anchors, box.w, box.h, c.x - box.x, { gap: 36, margin: 12, top: 28, bottom: 64 }, heights);
+  const layout = layoutCallouts(anchors, box.w, box.h, c.x - box.x, { gap: 46, margin: 12, top: 36, bottom: 76 }, heights, 16);
   for (const a of anchors) {
     const item = h.items.get(a.id);
     const l = layout.get(a.id);
@@ -229,7 +239,7 @@ function Director({ compact, onReady }: { compact: boolean; onReady: () => void 
     const goal = pageTimeline(p, m.ranges, (0.35 * m.vh) / m.max);
     // ease towards the scroll state so fast scrolling still looks smooth
     const prev = live.current;
-    const s = { ...(prev ? mix(prev, goal, 1 - Math.exp(-dt * 9)) : goal), slot: goal.slot };
+    const s = { ...(prev ? mix(prev, goal, 1 - Math.exp(-dt * 6)) : goal), slot: goal.slot };
     live.current = s;
 
     // place the camera so the device sits in the current slot (travelling between slots)

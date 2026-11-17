@@ -36,6 +36,8 @@ export function layoutCallouts(
   opts: { gap: number; margin: number; top: number; bottom: number },
   /** Measured label heights; labels that wrap get more room. */
   heights?: Map<LabelId, number>,
+  /** Extra space between neighbouring labels, in px. */
+  padding = 8,
 ) {
   let left = anchors.filter((a) => a.x < centerX);
   let right = anchors.filter((a) => a.x >= centerX);
@@ -52,7 +54,7 @@ export function layoutCallouts(
   const space = (a: ScreenAnchor, b: ScreenAnchor) => {
     const ha = heights?.get(a.id);
     const hb = heights?.get(b.id);
-    return ha && hb ? Math.max(opts.gap, (ha + hb) / 2 + 8) : opts.gap;
+    return ha && hb ? Math.max(opts.gap, (ha + hb) / 2 + padding) : opts.gap;
   };
   const place = (list: ScreenAnchor[]) => {
     const ys = list.map((a) => Math.min(h - opts.bottom, Math.max(opts.top, a.y)));
