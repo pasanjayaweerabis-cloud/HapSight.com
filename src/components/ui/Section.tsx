@@ -28,6 +28,8 @@ export function SectionHeading({
   );
 }
 
+/* Page width: 72.5rem on laptops, then 88% of the screen on wide monitors so the layout spreads out
+   instead of leaving big empty sides. Navbar and Footer use the same value. Text blocks keep their own max-w. */
 export function Container({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-[1160px] px-5 sm:px-8 ${className}`}>{children}</div>;
+  return <div className={`mx-auto w-full max-w-[max(72.5rem,88vw)] px-5 sm:px-8 ${className}`}>{children}</div>;
 }
