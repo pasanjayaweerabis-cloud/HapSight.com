@@ -1,6 +1,7 @@
-# DESIGN.md – HapSight visual system (as found, before the design pass)
+# DESIGN.md – HapSight visual system
 
-Documented from the shipped code on `main` (f49c81e). Tokens live in `src/app/globals.css`.
+Updated after the impeccable design pass (branch `design/impeccable-pass`). Tokens live in
+`src/app/globals.css`; all copy lives in `src/content/site.ts`.
 
 ## World
 
@@ -21,18 +22,20 @@ section to section.
 | `--stage-muted` | #a1afbd (8.6:1) | | stage body text |
 | `--haptic` | #ffcb8a | | vibration only |
 
-High-contrast theme (`.hc`) swaps to pure black/white with solid borders. No `forced-colors`
-rules exist yet.
+High-contrast theme (`.hc`) swaps to pure black/white with solid borders. Windows forced-colors
+mode has its own rules: buttons use ButtonFace/ButtonText with 2px edges, cards/inputs/radio
+cards get CanvasText borders, focus uses Highlight, stills and the canvas keep their colours.
+Text selection and caret use the accent colour.
 
 ## Type
 
 Inter (next/font, swap), one family. Root size is fluid (16px → 22px from 1440 to 2560 px wide)
 times `--font-scale` (1.2 with Large text). Body 1.125rem / 1.65.
 
-- h1: 3rem → 4.5rem, weight 600, leading 0.97, tracking −0.06em
-- h2: 2.25rem → 3rem, weight 600, leading 1.06, tracking −0.045em
-- Kicker: 0.8125rem, 700, uppercase, tracking 0.18em, with a 1.4rem rule before it
-- Intro: 1.125rem → 1.25rem, muted
+- h1: 2.75rem → 4.5rem, weight 600, leading 1.0, tracking −0.04em (the floor)
+- h2: 2.125rem → 3rem, weight 600, leading 1.08, tracking −0.035em
+- Kicker: 0.9375rem, 600, sentence case, tracking 0.01em, with a 1.4rem rule before it
+- Hero sub: 1.125rem → 1.375rem, max 34ch; section intros max 62ch, muted
 
 ## Space and layout
 
@@ -43,14 +46,22 @@ times `--font-scale` (1.2 with Large text). Body 1.125rem / 1.65.
 ## Components
 
 - Buttons: pill, min-height 48px, 5 variants (primary, secondary, ghost, stagePrimary,
-  stageSecondary). Colour transitions only.
+  stageSecondary). 200ms expo-out on colour/border/shadow, scale 0.97 on press.
 - Glass card: `--stage-glass` + 1px `--stage-border` + 14px backdrop blur.
-- Navbar: sticky, theme-coloured (white in light theme), blur, 72px tall.
+- Navbar: sticky, always solid stage navy (all themes and pages), stagePrimary CTA, 72px tall.
+  The first screen reads as one dark surface.
+- Hero: grid. Phones/tablets stack headline → device (16:9 / 2:1) → sub + CTAs, so the glasses
+  are on the first screen; CTAs are full-width stacked on phones. Desktop: text left, device right.
+  The hero slot is `role="img"` with a label pointing to the written description.
+- Demo: compact glass note (icon + text) until a real video exists.
 - Form: 52px inputs, radio cards, error summary with links, inline errors.
 
 ## Motion
 
 - Framer Motion for scroll-progress text in pinned sections; R3F for the device.
-- Canvas: `frameloop="demand"` while active, `"never"` off-screen; DPR 1.25 compact / 1.75
-  desktop, stepped down by PerformanceMonitor.
+- One authored entrance: hero text "rises" (opacity 0.35→1, 14px, 3px blur, 900ms expo-out,
+  second block +120ms). CSS only, visible by default.
+- Canvas: `frameloop="demand"` while active, `"never"` off-screen; DPR capped at
+  min(screen, 1.25 compact / 1.5 desktop), stepped down by PerformanceMonitor. Fades in over the
+  poster still (700ms). Context loss or a scene error brings the stills back.
 - Reduced motion (OS or panel): no canvas, stills, all transitions 0.01ms.
