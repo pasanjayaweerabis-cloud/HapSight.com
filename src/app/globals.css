@@ -141,8 +141,12 @@
 }
 
 /* ---------- Base ---------- */
+/* Fluid root size: 16px up to a 1440px-wide screen, then grows to 22px at 2560px. Every rem-based
+   size (type, spacing, the page container) scales with it, so large monitors get a
+   proportionally larger layout instead of a small island. Percentages respect the browser's
+   own font-size setting, and --font-scale (Large text) still multiplies on top. */
 html {
-  font-size: calc(100% * var(--font-scale));
+  font-size: calc(clamp(100%, 0.536vw + 51.8%, 137.5%) * var(--font-scale));
   scroll-padding-top: 5.5rem;
   -webkit-text-size-adjust: 100%;
 }

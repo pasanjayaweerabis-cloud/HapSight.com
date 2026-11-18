@@ -7,7 +7,7 @@ export function Footer() {
   return (
     <footer className="border-t border-line bg-bg-soft">
       <div
-        className={`mx-auto grid max-w-[1160px] gap-10 px-5 py-14 sm:px-8 ${
+        className={`mx-auto grid max-w-[max(72.5rem,88vw)] gap-10 px-5 py-14 sm:px-8 ${
           hasSocials ? "md:grid-cols-[1.4fr_1fr_1fr_1fr]" : "md:grid-cols-[1.6fr_1fr_1fr]"
         }`}
       >
@@ -57,7 +57,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-line">
-        <p className="mx-auto max-w-[1160px] px-5 py-6 text-sm text-muted sm:px-8">{footer.credit}</p>
+        <p className="mx-auto max-w-[max(72.5rem,88vw)] px-5 py-6 text-sm text-muted sm:px-8">{footer.credit}</p>
       </div>
     </footer>
   );
