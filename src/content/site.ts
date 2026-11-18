@@ -84,12 +84,13 @@ export const a11yPanel = {
 } as const;
 
 export const hero = {
-  eyebrow: "Student prototype · in design",
+  eyebrow: "Student prototype, in development",
   headline: brand.tagline,
-  sub: brand.shortDescription,
+  sub: "Low-cost glasses designed to sense obstacles at head height. A gentle vibration behind one ear tells you which side they are on. Silent, hands-free, and made to work with your cane.",
   primaryCta: { href: "#waitlist", label: "Join the waitlist" },
   secondaryCta: { href: "#how-it-works", label: "See how it works" },
   deviceDescriptionTitle: "What the device is like",
+  visualLabel: `The ${brand.name} glasses: a flat-topped charcoal frame with clear lenses and three small sensors in the top bar. A full description follows below.`,
   deviceDescription:
     `${brand.name} looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.`,
 } as const;
@@ -117,19 +118,19 @@ export const howItWorks = {
   eyebrow: "How it works",
   title: "Sense. Decide. Feel.",
   intro:
-    "Three laser sensors in the frame look ahead. A small vibration behind the matching ear tells you which side an obstacle is on. You decide how to move.",
+    "Three sensors in the frame look ahead. A small vibration behind the matching ear tells you which side an obstacle is on. You decide how to move.",
   steps: [
     {
       id: "sense",
       number: "1",
       title: "Sense",
-      body: "Three laser sensors scan left, ahead and right. They sit in open windows in the top bar of the frame, not behind the lenses, and are designed to measure how far away things are at head height.",
+      body: "Three laser sensors look left, ahead and right from small windows in the top of the frame. They measure how far away things are at head height.",
     },
     {
       id: "decide",
       number: "2",
       title: "Decide",
-      body: "The controller works out how close the obstacle is and which side it's on, from which of the three sensors sees it.",
+      body: "A small computer in the left arm works out how close the obstacle is, and which side it is on.",
     },
     {
       id: "feel",
@@ -374,7 +375,7 @@ export const demo = {
   id: "demo",
   eyebrow: "Demo",
   title: "See it working",
-  intro: "We will add a short video of the prototype here once it is built and safely tested.",
+  intro: "We will add a short video here once the prototype is built and safely tested.",
   placeholder: "Prototype demo coming soon",
   placeholderNote: "No video yet. This space is kept for the real prototype, not a mock-up.",
 } as const;
@@ -501,9 +502,9 @@ export const team = {
     {
       name: "Pasan Jayaweera",
       file: "pasan",
-      role: "Team Leader · Technical Lead · Developer (design & web implementation)",
+      role: "Team Leader · Technical Lead · Developer",
     },
-    { name: "Vidurath Jayaweera", file: "vidurath", role: "Product Owner · Developer (hardware)" },
+    { name: "Vidurath Jayaweera", file: "vidurath", role: "Product Owner · Developer" },
     { name: "Haziq Shafie", file: "haziq", role: "Scrum Master (Sprint 1) · Developer" },
     { name: "Krishan Wijeyesekera", file: "krishan", role: "Developer · Requirements lead" },
     { name: "Aynkaran Selvarajan (Vinod)", file: "aynkaran", role: "Developer · UX & ethics lead" },
@@ -616,6 +617,7 @@ export const waitlist = {
   success: {
     title: "Thank you, you're on the list.",
     body: `We will email you when there is news about ${brand.name}.`,
+    already: "Signed up before? You're still on the list. There's nothing else to do.",
   },
 } as const;
 

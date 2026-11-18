@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ComponentType } from "react";
+import { Component, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { hasWebGL } from "@/lib/webgl";
 
 export interface StageSceneProps {
@@ -91,9 +91,26 @@ export function LazyStage<P extends object>({
       </div>
       {Scene ? (
         <div className={`absolute inset-0 transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}>
-          <Scene {...sceneProps} active={active} onReady={() => setReady(true)} />
+          <SceneBoundary onError={() => setReady(false)}>
+            <Scene {...sceneProps} active={active} onReady={() => setReady(true)} />
+          </SceneBoundary>
         </div>
       ) : null}
     </div>
   );
+}
+
+/** If the 3D scene throws (driver bug, context creation fails), drop it and keep the still. */
+class SceneBoundary extends Component<{ children: ReactNode; onError: () => void }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(error: unknown) {
+    console.warn("[3D] scene failed, showing the still instead:", error);
+    this.props.onError();
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
 }

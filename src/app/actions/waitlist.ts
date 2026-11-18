@@ -33,10 +33,10 @@ export async function joinWaitlist(_prev: WaitlistState, formData: FormData): Pr
   // Honeypot: real people never see or fill this field. Pretend it worked.
   const honeypot = String(formData.get("company_website") ?? "");
   const startedAt = Number(formData.get("started_at") ?? 0);
-  if (honeypot.trim() !== "" || (startedAt > 0 && Date.now() - startedAt < MIN_FILL_MS)) {
-    return { status: "success", fieldErrors: {}, values };
-  }
+  if (honeypot.trim() !== "") return { status: "success", fieldErrors: {}, values };
 
+  // Validate before the timing check, so a person who submits too quickly (or empty) always sees
+  // the real errors instead of a fake "thank you".
   const parsed = waitlistSchema.safeParse(raw);
   if (!parsed.success) {
     const fieldErrors: WaitlistState["fieldErrors"] = {};
@@ -45,6 +45,11 @@ export async function joinWaitlist(_prev: WaitlistState, formData: FormData): Pr
       if (!fieldErrors[field]) fieldErrors[field] = issue.message as WaitlistState["fieldErrors"][FieldName];
     }
     return { status: "error", fieldErrors, values };
+  }
+
+  // A valid form filled in under 2.5 s is almost certainly a bot. Pretend it worked.
+  if (startedAt > 0 && Date.now() - startedAt < MIN_FILL_MS) {
+    return { status: "success", fieldErrors: {}, values };
   }
 
   const h = await headers();

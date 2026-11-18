@@ -8,17 +8,21 @@ export function Hero() {
   return (
     <section id="top" aria-labelledby="hero-title" className="stage stage-gradient relative overflow-hidden">
       <RangeMarker id="hero" />
-      <Container className="grid items-center gap-8 pb-16 pt-14 sm:pt-20 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[1fr_1.15fr] lg:gap-4 lg:py-10">
-        <div className="relative z-10 max-w-xl">
+      {/* Phones: headline, then the device, then the details, so the glasses are on the first screen.
+          Desktop: text on the left (two rows), device on the right spanning both. */}
+      <Container className="grid items-center gap-x-4 pb-14 pt-10 sm:pt-16 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[1fr_1.15fr] lg:grid-rows-[auto_auto] lg:content-center lg:py-10">
+        <div className="hero-rise relative z-10 max-w-xl lg:col-start-1 lg:row-start-1 lg:self-end">
           <p className="kicker text-stage-accent">{t.eyebrow}</p>
           <h1
             id="hero-title"
-            className="mt-5 text-balance text-5xl font-semibold leading-[0.97] tracking-[-0.06em] sm:text-6xl lg:text-7xl"
+            className="mt-4 text-balance text-[2.75rem] font-semibold leading-[1] tracking-[-0.04em] sm:text-6xl lg:text-7xl"
           >
             {t.headline}
           </h1>
-          <p className="mt-6 text-pretty text-xl text-stage-muted sm:text-2xl">{t.sub}</p>
-          <div className="mt-10 flex flex-wrap gap-3">
+        </div>
+        <div className="hero-rise hero-rise-2 relative z-10 order-3 max-w-xl lg:order-none lg:col-start-1 lg:row-start-2 lg:self-start">
+          <p className="mt-5 max-w-[34ch] text-pretty text-lg leading-relaxed text-stage-muted sm:text-xl lg:mt-6 lg:text-[1.375rem]">{t.sub}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:mt-10">
             <ButtonLink href={t.primaryCta.href} variant="stagePrimary">
               {t.primaryCta.label}
             </ButtonLink>
@@ -33,7 +37,8 @@ export function Hero() {
           still={STILLS.hero}
           sizes="(min-width: 1024px) 55vw, 100vw"
           preload
-          className="-mx-5 aspect-[4/3] sm:mx-0 lg:aspect-square"
+          label={t.visualLabel}
+          className="order-2 -mx-5 -my-2 aspect-[16/9] sm:mx-0 sm:aspect-[2/1] lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-0 lg:aspect-square"
         />
       </Container>
 
