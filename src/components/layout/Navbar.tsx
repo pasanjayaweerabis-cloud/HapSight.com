@@ -29,7 +29,7 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="stage sticky top-0 z-50 border-b border-stage-line !bg-stage/90 backdrop-blur-xl supports-[backdrop-filter]:!bg-stage/75">
+    <header className="stage sticky top-0 z-50 border-b border-stage-line !bg-stage">
       <div className="mx-auto flex h-18 max-w-[max(72.5rem,88vw)] items-center gap-4 px-5 sm:px-8">
         <a href={onHome ? "#top" : "/"} className="flex min-h-12 items-center gap-3 rounded-lg font-semibold tracking-tight">
           <LogoMark />

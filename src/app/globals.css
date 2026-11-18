@@ -307,6 +307,7 @@ body {
     background: ButtonFace !important;
     color: ButtonText !important;
     border-color: ButtonText !important;
+    box-shadow: none !important;
   }
   .btn:hover {
     background: Highlight !important;

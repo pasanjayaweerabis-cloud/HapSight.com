@@ -38,7 +38,7 @@ export function Hero() {
           sizes="(min-width: 1024px) 55vw, 100vw"
           preload
           label={t.visualLabel}
-          className="order-2 -mx-5 mt-2 aspect-[16/10] sm:mx-0 sm:aspect-[16/9] lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-0 lg:aspect-square"
+          className="order-2 -mx-5 -my-2 aspect-[16/9] sm:mx-0 sm:aspect-[2/1] lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-0 lg:aspect-square"
         />
       </Container>
 
