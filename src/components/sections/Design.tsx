@@ -7,7 +7,7 @@ import { Container, SectionHeading } from "@/components/ui/Section";
 import { ExplodeOverlay } from "@/components/visuals/ExplodeOverlay";
 import { StageSlot, useStageEnabled, useStageSection } from "@/components/visuals/StageSlot";
 import { STILLS, Still } from "@/components/visuals/Still";
-import { useIsCompact } from "@/lib/useMediaQuery";
+import { useIsCompact, useMediaQuery } from "@/lib/useMediaQuery";
 import type { LabelOverlayHandles } from "@/three/labelProjection";
 import { designExplode } from "@/three/pageTimeline";
 import { stageBus } from "@/three/stageBus";
@@ -37,6 +37,8 @@ function stageName(e: number) {
 /** Scroll scrubs the explode (half → full) on the shared device; numbered callouts follow the parts. */
 function ScrollExplode() {
   const compact = useIsCompact();
+  // side cards need room beside the device; below 1024px the numbered dots + parts list are clearer
+  const narrow = useMediaQuery("(max-width: 1023px)");
   const track = useRef<HTMLDivElement>(null);
   const overlay = useRef<LabelOverlayHandles>(null);
   const { scrollYProgress } = useScroll({ target: track, offset: ["start start", "end end"] });
@@ -51,9 +53,9 @@ function ScrollExplode() {
   return (
     <div ref={track} className={compact ? "h-[300svh]" : "h-[420svh]"}>
       <div className="sticky top-[4.5rem] h-[calc(100svh-4.5rem)]">
-        <div className="mx-auto h-full max-w-7xl px-2 sm:px-8">
+        <div className="mx-auto h-full max-w-[max(80rem,92vw)] px-2 sm:px-8">
           <StageSlot id="design" className="size-full">
-            <ExplodeOverlay ref={overlay} mode={compact ? "dots" : "callouts"} />
+            <ExplodeOverlay ref={overlay} mode={narrow ? "dots" : "callouts"} />
           </StageSlot>
         </div>
         <p

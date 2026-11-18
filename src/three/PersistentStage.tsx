@@ -16,7 +16,7 @@ import { SignalDots } from "./effects/SignalDots";
 import { OrbitRings } from "./effects/OrbitRings";
 import { LABELLED_PARTS, partArrival } from "./explode";
 import { smooth } from "./geometry";
-import { layoutCallouts, projectToScreen, type ScreenAnchor } from "./labelProjection";
+import { layoutRing, projectToScreen, type ScreenAnchor } from "./labelProjection";
 import { FOCUS_PARTS, mix, pageTimeline, type DeviceState, type SectionRange } from "./pageTimeline";
 import { stageBus } from "./stageBus";
 
@@ -129,7 +129,7 @@ function writeLabels(
     const sp = projectToScreen(world, camera, vw, vh);
     anchors.push({ id: part.label as LabelId, x: sp.x - box.x, y: sp.y - box.y, visible: sp.visible });
   }
-  if (compact) {
+  if (compact || h.mode === "dots") {
     for (const a of anchors) {
       const item = h.items.get(a.id);
       if (item) item.dot.style.transform = `translate(${a.x}px, ${a.y}px) translate(-50%, -50%)`;
@@ -137,26 +137,19 @@ function writeLabels(
     return;
   }
   // read sizes first, then write, to avoid layout thrashing
-  const widths = new Map<LabelId, number>();
-  const heights = new Map<LabelId, number>();
+  const sizes = new Map<LabelId, { w: number; h: number }>();
   for (const a of anchors) {
     const el = h.items.get(a.id)?.label;
-    widths.set(a.id, el?.offsetWidth ?? 0);
-    heights.set(a.id, el?.offsetHeight ?? 0);
+    sizes.set(a.id, { w: el?.offsetWidth ?? 0, h: el?.offsetHeight ?? 0 });
   }
-  const c = projectToScreen(target, camera, vw, vh);
-  const layout = layoutCallouts(anchors, box.w, box.h, c.x - box.x, { gap: 46, margin: 12, top: 36, bottom: 76 }, heights, 16);
+  const ring = layoutRing(anchors, box.w, box.h, { margin: 4, top: 16, bottom: 72, gap: 14 }, sizes);
   for (const a of anchors) {
     const item = h.items.get(a.id);
-    const l = layout.get(a.id);
-    if (!item || !l) continue;
-    const w = widths.get(a.id) ?? 0;
-    const left = l.side === "left";
-    item.label.style.transform = `translate(${left ? l.lx : l.lx - w}px, ${l.ly}px) translateY(-50%)`;
-    const edge = left ? l.lx + w + 6 : l.lx - w - 6;
-    const knee = left ? edge + 22 : edge - 22;
-    item.line.setAttribute("points", `${edge},${l.ly} ${knee},${l.ly} ${a.x},${a.y}`);
+    const p = ring.get(a.id);
+    if (!item || !p) continue;
+    item.label.style.transform = `translate(${p.cx}px, ${p.cy}px) translate(-50%, -50%)`;
     item.dot.style.transform = `translate(${a.x}px, ${a.y}px) translate(-50%, -50%)`;
+    item.line.setAttribute("d", p.d);
   }
 }
 
