@@ -6,7 +6,7 @@ import Image from "next/image";
  * surrounding text says what it shows.
  */
 export function Still({ src, sizes, preload = false }: { src: string; sizes: string; preload?: boolean }) {
-  return <Image src={src} alt="" fill sizes={sizes} preload={preload} className="object-contain" />;
+  return <Image src={src} alt="" fill sizes={sizes} preload={preload} fetchPriority={preload ? "high" : undefined} className="object-contain" />;
 }
 
 export const STILLS = {
