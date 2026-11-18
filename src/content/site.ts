@@ -502,9 +502,9 @@ export const team = {
     {
       name: "Pasan Jayaweera",
       file: "pasan",
-      role: "Team Leader · Technical Lead · Developer (design & web implementation)",
+      role: "Team Leader · Technical Lead · Developer",
     },
-    { name: "Vidurath Jayaweera", file: "vidurath", role: "Product Owner · Developer (hardware)" },
+    { name: "Vidurath Jayaweera", file: "vidurath", role: "Product Owner · Developer" },
     { name: "Haziq Shafie", file: "haziq", role: "Scrum Master (Sprint 1) · Developer" },
     { name: "Krishan Wijeyesekera", file: "krishan", role: "Developer · Requirements lead" },
     { name: "Aynkaran Selvarajan (Vinod)", file: "aynkaran", role: "Developer · UX & ethics lead" },
