@@ -290,3 +290,44 @@ body {
   margin-top: 0.75rem;
   color: var(--text-muted);
 }
+
+/* Windows High Contrast / forced colours: the browser replaces our colours, so anything that was
+   drawn only with a background or a soft border needs a real system-colour edge. */
+@media (forced-colors: active) {
+  .btn,
+  .glass,
+  .card,
+  [data-radio-card],
+  input,
+  textarea,
+  select {
+    border: 2px solid CanvasText !important;
+  }
+  .btn {
+    forced-color-adjust: none;
+    background: ButtonFace !important;
+    color: ButtonText !important;
+    border-color: ButtonText !important;
+  }
+  .btn:hover {
+    background: Highlight !important;
+    color: HighlightText !important;
+  }
+  :focus-visible,
+  .stage :focus-visible,
+  .stage .on-surface :focus-visible {
+    outline: 3px solid Highlight !important;
+  }
+  .kicker::before {
+    background: CanvasText;
+  }
+  [data-radio-card]:has(:checked) {
+    border-color: Highlight !important;
+    border-width: 3px !important;
+  }
+  /* decorative stills and the 3D canvas keep their own colours */
+  [data-stage-slot] img,
+  [data-stage-host] canvas {
+    forced-color-adjust: none;
+  }
+}

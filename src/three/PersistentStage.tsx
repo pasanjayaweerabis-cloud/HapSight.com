@@ -329,6 +329,12 @@ export default function PersistentStage({ active, onReady, compact }: Persistent
         gl.toneMappingExposure = 1.05;
         gl.setClearColor(0x000000, 0);
         gl.domElement.style.transition = "opacity 200ms linear";
+        // GPU reset or too many contexts: bring the stills back until the context is restored.
+        gl.domElement.addEventListener("webglcontextlost", (e) => {
+          e.preventDefault();
+          stageBus.setReady(false);
+        });
+        gl.domElement.addEventListener("webglcontextrestored", () => stageBus.setReady(true));
       }}
       tabIndex={-1}
     >

@@ -90,6 +90,7 @@ export const hero = {
   primaryCta: { href: "#waitlist", label: "Join the waitlist" },
   secondaryCta: { href: "#how-it-works", label: "See how it works" },
   deviceDescriptionTitle: "What the device is like",
+  visualLabel: `The ${brand.name} glasses: a flat-topped charcoal frame with clear lenses and three small sensors in the top bar. A full description follows below.`,
   deviceDescription:
     `${brand.name} looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.`,
 } as const;
@@ -616,6 +617,7 @@ export const waitlist = {
   success: {
     title: "Thank you, you're on the list.",
     body: `We will email you when there is news about ${brand.name}.`,
+    already: "Signed up before? You're still on the list. There's nothing else to do.",
   },
 } as const;
 

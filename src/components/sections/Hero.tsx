@@ -33,6 +33,7 @@ export function Hero() {
           still={STILLS.hero}
           sizes="(min-width: 1024px) 55vw, 100vw"
           preload
+          label={t.visualLabel}
           className="-mx-5 aspect-[4/3] sm:mx-0 lg:aspect-square"
         />
       </Container>
