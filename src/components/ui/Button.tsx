@@ -3,7 +3,7 @@ import Link from "next/link";
 type Variant = "primary" | "secondary" | "ghost" | "stagePrimary" | "stageSecondary";
 
 const base =
-  "btn inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold leading-tight transition-colors duration-200 border";
+  "btn inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold leading-tight border transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97]";
 
 const variants: Record<Variant, string> = {
   primary: "bg-accent text-accent-contrast border-accent hover:bg-accent-strong hover:border-accent-strong",

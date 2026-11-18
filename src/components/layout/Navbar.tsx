@@ -29,7 +29,7 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/70 bg-bg/85 backdrop-blur-xl supports-[backdrop-filter]:bg-bg/75">
+    <header className="stage sticky top-0 z-50 border-b border-stage-line !bg-stage">
       <div className="mx-auto flex h-18 max-w-[max(72.5rem,88vw)] items-center gap-4 px-5 sm:px-8">
         <a href={onHome ? "#top" : "/"} className="flex min-h-12 items-center gap-3 rounded-lg font-semibold tracking-tight">
           <LogoMark />
@@ -43,7 +43,7 @@ export function Navbar() {
               <li key={l.href}>
                 <a
                   href={href(l.href)}
-                  className="inline-flex min-h-12 items-center rounded-full px-4 text-base font-medium text-muted transition-colors hover:text-text"
+                  className="inline-flex min-h-12 items-center rounded-full px-4 text-base font-medium text-stage-muted transition-colors hover:text-stage-text"
                 >
                   {l.label}
                 </a>
@@ -55,7 +55,7 @@ export function Navbar() {
         <div className="ml-auto flex items-center gap-2 lg:ml-2">
           <A11yPanel />
           <span className="hidden sm:block">
-            <a href={href(nav.cta.href)} className={buttonClass("primary")}>
+            <a href={href(nav.cta.href)} className={buttonClass("stagePrimary", "!shadow-none")}>
               {nav.cta.label}
             </a>
           </span>
@@ -65,7 +65,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex size-12 items-center justify-center rounded-full border border-line lg:hidden"
+            className="inline-flex size-12 items-center justify-center rounded-full border border-stage-line text-stage-text transition-colors hover:border-stage-accent lg:hidden"
           >
             <Icon name={open ? "close" : "menu"} />
             <span className="sr-only">{open ? nav.closeMenu : nav.openMenu}</span>
@@ -73,7 +73,7 @@ export function Navbar() {
         </div>
       </div>
 
-      <div id="mobile-menu" hidden={!open} className="border-t border-line bg-bg lg:hidden">
+      <div id="mobile-menu" hidden={!open} className="border-t border-stage-line bg-stage lg:hidden">
         <nav aria-label={nav.menuTitle} className="mx-auto max-w-[max(72.5rem,88vw)] px-5 py-4 sm:px-8">
           <ul className="grid gap-1">
             {nav.links.map((l) => (
@@ -81,14 +81,14 @@ export function Navbar() {
                 <a
                   href={href(l.href)}
                   onClick={() => setOpen(false)}
-                  className="flex min-h-12 items-center rounded-xl px-3 text-lg font-medium hover:bg-bg-soft"
+                  className="flex min-h-12 items-center rounded-xl px-3 text-lg font-medium hover:bg-stage-surface-2"
                 >
                   {l.label}
                 </a>
               </li>
             ))}
             <li className="mt-2 sm:hidden">
-              <a href={href(nav.cta.href)} onClick={() => setOpen(false)} className={buttonClass("primary", "w-full")}>
+              <a href={href(nav.cta.href)} onClick={() => setOpen(false)} className={buttonClass("stagePrimary", "w-full !shadow-none")}>
                 {nav.cta.label}
               </a>
             </li>

@@ -315,7 +315,8 @@ function Director({ compact, onReady }: { compact: boolean; onReady: () => void 
 
 /** The one persistent canvas. Loaded lazily by StageHost through LazyStage. */
 export default function PersistentStage({ active, onReady, compact }: PersistentStageProps & StageSceneProps) {
-  const max = compact ? 1.25 : 1.75;
+  // DPR cap: 1.25 on phones, 1.5 elsewhere (sharp enough, far fewer pixels than 2–3× screens).
+  const max = Math.min(window.devicePixelRatio || 1, compact ? 1.25 : 1.5);
   const [dpr, setDpr] = useState(max);
   useEffect(() => () => stageBus.setReady(false), []);
   return (
@@ -329,6 +330,12 @@ export default function PersistentStage({ active, onReady, compact }: Persistent
         gl.toneMappingExposure = 1.05;
         gl.setClearColor(0x000000, 0);
         gl.domElement.style.transition = "opacity 200ms linear";
+        // GPU reset or too many contexts: bring the stills back until the context is restored.
+        gl.domElement.addEventListener("webglcontextlost", (e) => {
+          e.preventDefault();
+          stageBus.setReady(false);
+        });
+        gl.domElement.addEventListener("webglcontextrestored", () => stageBus.setReady(true));
       }}
       tabIndex={-1}
     >

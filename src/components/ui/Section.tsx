@@ -18,11 +18,11 @@ export function SectionHeading({
       <p className={`kicker ${stage ? "text-stage-accent" : "text-accent"}`}>
         {eyebrow}
       </p>
-      <h2 id={`${id}-title`} className="mt-4 text-balance text-4xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-5xl">
+      <h2 id={`${id}-title`} className="mt-3 text-balance text-[2.125rem] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
         {title}
       </h2>
       {intro ? (
-        <p className={`mt-5 text-pretty text-lg sm:text-xl ${stage ? "text-stage-muted" : "text-muted"}`}>{intro}</p>
+        <p className={`mt-5 max-w-[62ch] text-pretty text-lg sm:text-xl ${stage ? "text-stage-muted" : "text-muted"}`}>{intro}</p>
       ) : null}
     </div>
   );

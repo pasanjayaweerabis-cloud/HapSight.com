@@ -41,8 +41,11 @@ export function StageSlot({
   preload = false,
   className = "",
   front = false,
+  label,
   children,
 }: {
+  /** Gives the slot a text alternative (role="img") instead of hiding it. Use once, for the hero. */
+  label?: string;
   id: StageSectionId;
   /** Phones: draw the device above the page here; the slot gets a solid backdrop. */
   front?: boolean;
@@ -63,7 +66,10 @@ export function StageSlot({
   // without 3D, a slot with no still would only be empty space
   if (!enabled && !still) return null;
   return (
-    <div ref={ref} aria-hidden="true" data-stage-slot={id} className={`relative ${front ? "bg-stage" : ""} ${className}`}>
+    <div
+      ref={ref}
+      {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })}
+      data-stage-slot={id} className={`relative ${front ? "bg-stage" : ""} ${className}`}>
       {still ? (
         <div className={`absolute inset-0 transition-opacity duration-500 ${ready ? "opacity-0" : "opacity-100"}`}>
           <Still src={still} sizes={sizes} preload={preload} />

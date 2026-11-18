@@ -47,6 +47,7 @@ export function WaitlistForm() {
           {t.success.title}
         </p>
         <p className="mt-3 text-lg text-muted">{t.success.body}</p>
+        <p className="mt-2 text-base text-muted">{t.success.already}</p>
       </div>
     );
   }
@@ -56,7 +57,7 @@ export function WaitlistForm() {
   const err = (f: FieldName) => (errors[f] ? t.errors[errors[f]] : undefined);
 
   return (
-    <form action={formAction} noValidate className="card rounded-3xl border border-line bg-surface p-6 sm:p-8">
+    <form action={formAction} noValidate aria-busy={pending} className="card rounded-3xl border border-line bg-surface p-6 sm:p-8">
       {state.status === "error" ? (
         <div ref={summaryRef} tabIndex={-1} aria-labelledby="wl-summary-title" className="mb-8 rounded-2xl border-2 border-danger p-5">
           <p id="wl-summary-title" className="flex items-center gap-2 text-lg font-semibold text-danger">
@@ -130,6 +131,7 @@ export function WaitlistForm() {
             {t.fields.role.options.map((o, i) => (
               <label
                 key={o.value}
+                data-radio-card
                 className={`flex min-h-13 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 has-[:checked]:border-accent has-[:checked]:bg-accent-soft ${errors.role ? "border-danger" : "border-line"}`}
               >
                 <input

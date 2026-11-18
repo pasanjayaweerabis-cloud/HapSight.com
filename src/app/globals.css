@@ -226,10 +226,9 @@ body {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 .kicker::before {
   content: "";
@@ -289,4 +288,87 @@ body {
 .prose-legal p {
   margin-top: 0.75rem;
   color: var(--text-muted);
+}
+
+/* Windows High Contrast / forced colours: the browser replaces our colours, so anything that was
+   drawn only with a background or a soft border needs a real system-colour edge. */
+@media (forced-colors: active) {
+  .btn,
+  .glass,
+  .card,
+  [data-radio-card],
+  input,
+  textarea,
+  select {
+    border: 2px solid CanvasText !important;
+  }
+  .btn {
+    forced-color-adjust: none;
+    background: ButtonFace !important;
+    color: ButtonText !important;
+    border-color: ButtonText !important;
+    box-shadow: none !important;
+  }
+  .btn:hover {
+    background: Highlight !important;
+    color: HighlightText !important;
+  }
+  :focus-visible,
+  .stage :focus-visible,
+  .stage .on-surface :focus-visible {
+    outline: 3px solid Highlight !important;
+  }
+  .kicker::before {
+    background: CanvasText;
+  }
+  [data-radio-card]:has(:checked) {
+    border-color: Highlight !important;
+    border-width: 3px !important;
+  }
+  /* decorative stills and the 3D canvas keep their own colours */
+  [data-stage-slot] img,
+  [data-stage-host] canvas {
+    forced-color-adjust: none;
+  }
+}
+
+/* One authored entrance: the hero text settles in as the page opens (CSS only, so it runs before
+   any JS). It starts mostly visible, so nothing is ever hidden if animation is off or slow.
+   Reduced motion: the global rules above cut it to 0.01ms. */
+@keyframes hero-rise {
+  from {
+    opacity: 0.35;
+    transform: translateY(14px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion) .hero-rise {
+    animation: hero-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  html:not(.reduce-motion) .hero-rise-2 {
+    animation-delay: 120ms;
+  }
+}
+
+/* Browser surfaces in the palette */
+::selection {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.stage ::selection {
+  background: var(--stage-accent);
+  color: var(--navy-ink);
+}
+input,
+textarea {
+  caret-color: var(--accent);
+}
+a {
+  text-underline-offset: 0.2em;
 }
