@@ -26,7 +26,7 @@ export function A11yPanel() {
         type="button"
         onClick={open}
         aria-haspopup="dialog"
-        className="inline-flex size-12 items-center justify-center rounded-full border border-line text-text transition-colors hover:border-accent hover:text-accent"
+        className="inline-flex size-12 items-center justify-center rounded-full border border-stage-line text-stage-text transition-colors hover:border-stage-accent hover:text-stage-accent"
       >
         <Icon name="a11y" />
         <span className="sr-only">{t.open}</span>
@@ -40,7 +40,7 @@ export function A11yPanel() {
         onClick={(e) => {
           if (e.target === dialogRef.current) close();
         }}
-        className="card m-auto w-[min(92vw,28rem)] rounded-3xl border border-line bg-surface p-0 text-text shadow-2xl backdrop:bg-black/60"
+        className="card on-surface m-auto w-[min(92vw,28rem)] rounded-3xl border border-line bg-surface p-0 text-text shadow-2xl backdrop:bg-black/60"
       >
         <div className="p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4">
