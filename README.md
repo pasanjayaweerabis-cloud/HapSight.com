@@ -192,6 +192,8 @@ Test with VoiceOver (macOS and iOS), NVDA (Windows) and TalkBack (Android):
   device does not have, so do not crop them for the site. Add real photos (or corrected renders)
   as `public/gallery/front.png`, `side.png`, `three-quarter.png`, check the alt text in `site.ts`,
   then set `gallery.enabled = true`.
+- Demo: off. There is no real prototype video yet, so the section stays hidden rather than showing
+  a mock-up. Once the prototype is built and safely tested, add the video and set `demo.enabled = true`.
 - Battery life (3–5 hours) and the parts prices are early estimates; update `site.ts` after testing.
 - three.js r187 logs a deprecation warning ("THREE.Clock … use THREE.Timer") from inside
   @react-three/fiber 9. It is a warning, not an error.

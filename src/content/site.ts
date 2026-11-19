@@ -30,7 +30,7 @@ export const contactHow = brand.contactEmail
   : "use the contact email that will be published in the footer of this site before the waitlist opens";
 
 export const meta = {
-  title: `${brand.name} – haptic glasses that feel the path ahead`,
+  title: `${brand.name}: haptic glasses that feel the path ahead`,
   description:
     `${brand.name} is a student-designed pair of low-cost haptic glasses for blind and visually impaired people. Three laser sensors in the frame look left, ahead and right, and a gentle vibration behind the matching ear tells you where an obstacle is. It works with the white cane, not instead of it.`,
   ogAlt:
@@ -97,7 +97,6 @@ export const hero = {
 
 export const problem = {
   id: "problem",
-  eyebrow: "The problem",
   title: "The cane finds the ground. Not everything is on the ground.",
   paragraphs: [
     "A white cane is the best tool for checking the path at your feet: steps, kerbs, holes and objects on the ground.",
@@ -115,26 +114,22 @@ export const problem = {
 
 export const howItWorks = {
   id: "how-it-works",
-  eyebrow: "How it works",
   title: "Sense. Decide. Feel.",
   intro:
     "Three sensors in the frame look ahead. A small vibration behind the matching ear tells you which side an obstacle is on. You decide how to move.",
   steps: [
     {
       id: "sense",
-      number: "1",
       title: "Sense",
       body: "Three laser sensors look left, ahead and right from small windows in the top of the frame. They measure how far away things are at head height.",
     },
     {
       id: "decide",
-      number: "2",
       title: "Decide",
       body: "A small computer in the left arm works out how close the obstacle is, and which side it is on.",
     },
     {
       id: "feel",
-      number: "3",
       title: "Feel",
       body: "The matching ear vibrates, faster as you get closer. Both ears vibrate together when the obstacle is straight ahead. You choose how to step around it, keeping your cane on the ground as usual.",
     },
@@ -147,7 +142,6 @@ export type FeatureIcon = "directions" | "haptic" | "handsFree" | "cane" | "char
 
 export const features = {
   id: "features",
-  eyebrow: "Features",
   title: "Designed for real streets",
   intro: "These are the features in the current design. The final prototype may change as we test with users.",
   items: [
@@ -204,7 +198,10 @@ export type LabelId =
   | "lenses"
   | "wiring";
 
+export type PartGroup = "front" | "leftArm" | "rightArm" | "whole";
+
 export interface PartLabel {
+  group: PartGroup;
   name: string;
   where: string;
   description: string;
@@ -217,7 +214,6 @@ const MOTOR_DESCRIPTION =
 
 export const design = {
   id: "design",
-  eyebrow: "Design",
   title: "What's inside",
   intro:
     "Scroll to take the glasses apart. First the temple covers, lenses, nose pad and ear caps come off, then the sensors, boards, battery and motors come out. Dashed lines show where each part sits. Scroll back up to put it together again.",
@@ -228,66 +224,84 @@ export const design = {
   },
   currentStageLabel: "Current view",
   listTitle: "Parts and where they are",
+  groups: {
+    front: "In the front frame",
+    leftArm: "In the left arm",
+    rightArm: "In the right arm",
+    whole: "Through the whole frame",
+  } satisfies Record<PartGroup, string>,
   labels: {
-    tofFront: {
-      name: "Front distance sensor (VL53L1X)",
-      where: "Centre of the top bar, above the bridge, facing straight ahead",
-      description: TOF_DESCRIPTION,
-    },
     tofLeft: {
+      group: "front",
       name: "Left distance sensor (VL53L1X)",
       where: "Left corner of the top bar, angled left-forward",
       description: TOF_DESCRIPTION,
     },
+    tofFront: {
+      group: "front",
+      name: "Front distance sensor (VL53L1X)",
+      where: "Centre of the top bar, above the bridge, facing straight ahead",
+      description: TOF_DESCRIPTION,
+    },
     tofRight: {
+      group: "front",
       name: "Right distance sensor (VL53L1X)",
       where: "Right corner of the top bar, angled right-forward",
       description: TOF_DESCRIPTION,
     },
-    controller: {
-      name: "Controller (ESP32-C3 SuperMini)",
-      where: "Inside the left temple, next to the hinge",
-      description: "Reads the three sensors and sets how fast each motor pulses.",
-    },
-    motorLeft: {
-      name: "Left vibration motor",
-      where: "Left ear tip, behind the ear",
-      description: MOTOR_DESCRIPTION,
-    },
-    motorRight: {
-      name: "Right vibration motor",
-      where: "Right ear tip, behind the ear",
-      description: MOTOR_DESCRIPTION,
-    },
-    drivers: {
-      name: "Motor drivers (2 MOSFET switches)",
-      where: "Inside the left temple, behind the controller",
-      description:
-        "Switches battery power to the motors, because the controller's pins can't drive them directly. A small diode protects the circuit.",
-    },
-    battery: {
-      name: "Battery (LiPo 3.7 V, 500 mAh)",
-      where: "Inside the right temple",
-      description: "Powers everything without a cable.",
-    },
-    charger: {
-      name: "USB-C charging (TP4056 with protection)",
-      where: "Inside the right temple, port on the outside",
-      description:
-        "Charges the battery over USB-C and protects it from overcharging, over-discharging and short circuits.",
-    },
-    frame: {
-      name: "3D-printed frame (PLA/PETG)",
-      where: "The whole body: front, temples, covers",
-      description: "Holds every part at the right angle. It can be printed on an ordinary 3D printer.",
-    },
     lenses: {
+      group: "front",
       name: "Clear lenses",
       where: "Front frame",
       description:
         "Non-prescription, mainly so the device looks and feels like ordinary glasses. The sensors are not behind the lenses.",
     },
+    controller: {
+      group: "leftArm",
+      name: "Controller (ESP32-C3 SuperMini)",
+      where: "Inside the left temple, next to the hinge",
+      description: "Reads the three sensors and sets how fast each motor pulses.",
+    },
+    drivers: {
+      group: "leftArm",
+      name: "Motor drivers (2 MOSFET switches)",
+      where: "Inside the left temple, behind the controller",
+      description:
+        "Switches battery power to the motors, because the controller's pins can't drive them directly. A small diode protects the circuit.",
+    },
+    motorLeft: {
+      group: "leftArm",
+      name: "Left vibration motor",
+      where: "Left ear tip, behind the ear",
+      description: MOTOR_DESCRIPTION,
+    },
+    battery: {
+      group: "rightArm",
+      name: "Battery (LiPo 3.7 V, 500 mAh)",
+      where: "Inside the right temple",
+      description: "Powers everything without a cable.",
+    },
+    charger: {
+      group: "rightArm",
+      name: "USB-C charging (TP4056 with protection)",
+      where: "Inside the right temple, port on the outside",
+      description:
+        "Charges the battery over USB-C and protects it from overcharging, over-discharging and short circuits.",
+    },
+    motorRight: {
+      group: "rightArm",
+      name: "Right vibration motor",
+      where: "Right ear tip, behind the ear",
+      description: MOTOR_DESCRIPTION,
+    },
+    frame: {
+      group: "whole",
+      name: "3D-printed frame (PLA/PETG)",
+      where: "The whole body: front, temples, covers",
+      description: "Holds every part at the right angle. It can be printed on an ordinary 3D printer.",
+    },
     wiring: {
+      group: "whole",
       name: "Wiring and power switch",
       where: "Wires run through the frame and temples; switch on the right temple",
       description: "Connects every part. The switch turns the glasses fully off so the battery doesn't drain.",
@@ -295,12 +309,11 @@ export const design = {
   } satisfies Record<LabelId, PartLabel>,
   otherPartsTitle: "Also inside",
   otherParts: ["Flyback diodes", "Resistors", "Perfboard", "Heat-shrink tubing", "JST connectors"],
-  note: "Concept design – the final prototype may differ.",
+  note: "Concept design. The final prototype may differ.",
 } as const;
 
 export const insideArms = {
   id: "inside",
-  eyebrow: "Inside the arms",
   title: "What each arm carries",
   intro: "The two arms hold different electronics. Here is what is inside each one, and how a warning travels.",
   sides: [
@@ -328,7 +341,6 @@ export const gallery = {
    */
   enabled: false,
   id: "gallery",
-  eyebrow: "Gallery",
   title: "The glasses",
   intro: "Concept renders of the glasses from the front, the side and at an angle.",
   items: [
@@ -350,21 +362,17 @@ export const gallery = {
 
 export const audience = {
   id: "who-its-for",
-  eyebrow: "Who it's for",
   title: "Made with the people who will use it",
   items: [
     {
-      illustration: "cane",
       title: "People born blind",
       body: "For confident cane users who want an extra warning about obstacles above the ground and to the sides.",
     },
     {
-      illustration: "street",
       title: "People who lost their sight later in life",
       body: "For people still building confidence with a cane, who want more information about what is around them.",
     },
     {
-      illustration: "family",
       title: "Families and carers",
       body: "For the people who support them, and want a simple, affordable tool they can help set up and look after.",
     },
@@ -372,8 +380,9 @@ export const audience = {
 } as const;
 
 export const demo = {
+  /** Off until there is a real prototype video to show. Flip to true once it exists. */
+  enabled: false,
   id: "demo",
-  eyebrow: "Demo",
   title: "See it working",
   intro: "We will add a short video here once the prototype is built and safely tested.",
   placeholder: "Prototype demo coming soon",
@@ -429,7 +438,6 @@ export const roadmap = {
  */
 export const comparison = {
   id: "comparison",
-  eyebrow: "Comparison",
   title: "How it compares",
   caption: `${brand.name} compared with imported smart canes and AI smart glasses`,
   columns: [`${brand.name}`, "Imported smart canes", "AI smart glasses"],
@@ -439,8 +447,8 @@ export const comparison = {
       label: "Approximate price",
       values: [
         "Low-cost goal, built from parts sold in Sri Lanka. No price set yet: it is a student prototype",
-        "About US$600–850 (for example, WeWALK Smart Cane 2), before shipping and import duty",
-        "About US$1,900–3,500 (for example, Envision Glasses), before shipping and import duty",
+        "About US$600-850 (for example, WeWALK Smart Cane 2), before shipping and import duty",
+        "About US$1,900-3,500 (for example, Envision Glasses), before shipping and import duty",
       ],
     },
     {
@@ -495,32 +503,32 @@ export interface TeamMember {
 
 export const team = {
   id: "team",
-  eyebrow: "Team",
   title: "Meet the team",
   intro: "Five software engineering students building HapSight together.",
   members: [
     {
       name: "Pasan Jayaweera",
       file: "pasan",
-      role: "Team Leader · Technical Lead · Developer",
+      role: "Team Leader, Technical Lead, Developer",
     },
-    { name: "Vidurath Jayaweera", file: "vidurath", role: "Product Owner · Developer" },
-    { name: "Haziq Shafie", file: "haziq", role: "Scrum Master (Sprint 1) · Developer" },
-    { name: "Krishan Wijeyesekera", file: "krishan", role: "Developer · Requirements lead" },
-    { name: "Aynkaran Selvarajan (Vinod)", file: "aynkaran", role: "Developer · UX & ethics lead" },
+    { name: "Vidurath Jayaweera", file: "vidurath", role: "Product Owner, Developer" },
+    { name: "Haziq Shafie", file: "haziq", role: "Scrum Master (Sprint 1), Developer" },
+    { name: "Krishan Wijeyesekera", file: "krishan", role: "Developer, Requirements lead" },
+    { name: "Aynkaran Selvarajan (Vinod)", file: "aynkaran", role: "Developer, UX and ethics lead" },
   ] satisfies TeamMember[] as TeamMember[],
-  photoComingSoon: "Photo coming soon",
+  photosNote: "Team photos are being added.",
   photoAlt: (name: string) => `Photo of ${name}`,
   linkedinLabel: (name: string) => `${name} on LinkedIn`,
   githubLabel: (name: string) => `${name} on GitHub`,
-  course:
-    "Group 14 · ATP SE-14 · Agile Team Project (5COSC021C) · BEng (Hons) Software Engineering · Informatics Institute of Technology (IIT), Sri Lanka · University of Westminster",
+  course: [
+    "Group 14, ATP SE-14, Agile Team Project (5COSC021C)",
+    "BEng (Hons) Software Engineering, Informatics Institute of Technology (IIT), Sri Lanka, affiliated with the University of Westminster",
+  ],
   supervisor: "Supervisor: Nipuna Senanayake",
 } as const;
 
 export const faq = {
   id: "faq",
-  eyebrow: "FAQ",
   title: "Questions",
   items: [
     {
@@ -547,7 +555,7 @@ export const faq = {
     {
       q: "How long does the battery last?",
       a: [
-        "Our early estimate is about 3–5 hours of continuous use with the prototype's 500 mAh battery. We'll measure it properly during testing.",
+        "Our early estimate is about 3-5 hours of continuous use with the prototype's 500 mAh battery. We'll measure it properly during testing.",
         "It charges with an ordinary USB-C cable.",
       ],
     },
@@ -570,7 +578,6 @@ export const faq = {
 
 export const waitlist = {
   id: "waitlist",
-  eyebrow: "Waitlist",
   title: "Join the waitlist",
   intro:
     "Get updates as the prototype develops. We will only use your details for this project, and you can ask us to delete them at any time.",
@@ -634,7 +641,7 @@ export const footer = {
     { href: "/privacy", label: "Privacy notice" },
     { href: "/accessibility", label: "Accessibility statement" },
   ],
-  credit: `© 2026 ${brand.name} · ATP Group 14 (SE-14) · IIT Sri Lanka`,
+  credit: `© 2026 ${brand.name}. ATP Group 14 (SE-14), IIT Sri Lanka.`,
 } as const;
 
 export const notFound = {

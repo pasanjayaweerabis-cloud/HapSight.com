@@ -3,14 +3,14 @@ import Link from "next/link";
 type Variant = "primary" | "secondary" | "ghost" | "stagePrimary" | "stageSecondary";
 
 const base =
-  "btn inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold leading-tight border transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97]";
+  "btn inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold leading-tight border transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100";
 
 const variants: Record<Variant, string> = {
   primary: "bg-accent text-accent-contrast border-accent hover:bg-accent-strong hover:border-accent-strong",
   secondary: "bg-transparent text-text border-line hover:border-accent hover:text-accent",
   ghost: "bg-transparent text-text border-transparent hover:text-accent",
-  stagePrimary:
-    "bg-stage-accent text-navy-ink border-stage-accent shadow-[0_8px_34px_rgba(20,224,200,0.18)] hover:bg-white hover:border-white",
+  // navy-ink on stage-accent-2: 14.6:1
+  stagePrimary: "bg-stage-accent text-navy-ink border-stage-accent hover:bg-stage-accent-2 hover:border-stage-accent-2",
   stageSecondary: "bg-transparent text-stage-text border-stage-line hover:border-stage-accent hover:text-stage-accent",
 };
 

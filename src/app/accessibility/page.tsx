@@ -15,7 +15,7 @@ export default function AccessibilityPage() {
       <section>
         <h2>{r.heading}</h2>
         <p>{r.tested}</p>
-        <div className="mt-6 overflow-x-auto rounded-2xl border border-line" tabIndex={0} role="region" aria-label={r.caption}>
+        <div className="mt-6 overflow-x-auto rounded-xl border border-line" tabIndex={0} role="region" aria-label={r.caption}>
           <table className="w-full border-collapse text-left text-base">
             <caption className="sr-only">{r.caption}</caption>
             <thead>

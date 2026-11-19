@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Atkinson_Hyperlegible_Next, Atkinson_Hyperlegible_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { brand, meta } from "@/content/site";
 import { bootScript } from "@/lib/a11yPrefs";
@@ -8,7 +8,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+/** Designed by the Braille Institute for low-vision readability; a better motivated choice than a default UI sans for this audience. */
+const sans = Atkinson_Hyperlegible_Next({ subsets: ["latin"], variable: "--font-sans-face", display: "swap" });
+const mono = Atkinson_Hyperlegible_Mono({ subsets: ["latin"], variable: "--font-mono-face", display: "swap" });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? brand.siteUrl;
 
@@ -41,7 +43,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>

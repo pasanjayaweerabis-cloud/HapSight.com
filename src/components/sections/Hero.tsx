@@ -45,7 +45,7 @@ export function Hero() {
       <Container className="pb-16 sm:pb-20">
         <div className="max-w-4xl border-t border-stage-line pt-8">
           <h2 className="text-lg font-semibold">{t.deviceDescriptionTitle}</h2>
-          <p className="mt-3 text-base text-stage-muted sm:text-lg">{t.deviceDescription}</p>
+          <p className="mt-3 max-w-[65ch] text-base text-stage-muted sm:text-lg">{t.deviceDescription}</p>
         </div>
       </Container>
     </section>

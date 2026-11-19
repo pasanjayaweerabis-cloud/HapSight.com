@@ -14,7 +14,7 @@ export function HowItWorks() {
   return (
     <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative">
       <Container className="pt-24 sm:pt-32">
-        <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} stage />
+        <SectionHeading id={t.id} title={t.title} intro={t.intro} stage />
       </Container>
       {enabled ? <ScrollStory /> : <StaticStory />}
     </section>
@@ -41,8 +41,9 @@ function ScrollStory() {
           id="how-it-works"
           still={STILLS.howItWorks}
           front={compact}
-          className="sticky top-[4.5rem] z-20 -mx-5 h-[42svh] sm:mx-0 lg:z-0 lg:h-[calc(100svh-4.5rem)]"
+          className="sticky top-[4.5rem] z-(--z-sticky) -mx-5 h-[42svh] sm:mx-0 lg:z-0 lg:h-[calc(100svh-4.5rem)]"
         />
+        {/* z-10: local stacking, above the sticky slot on phones only */}
         <ol ref={listRef} className="relative z-10 pb-[10svh] lg:py-[20vh]">
           {t.steps.map((s, i) => (
             <li
@@ -51,14 +52,11 @@ function ScrollStory() {
               className="flex min-h-[56svh] items-end pb-[4svh] lg:min-h-[78svh] lg:items-center lg:pb-0"
             >
               <div
-                className={`card w-full rounded-3xl border p-6 transition-colors duration-300 sm:p-8 ${
+                className={`card w-full rounded-card border p-6 transition-colors duration-300 sm:p-8 ${
                   active === i ? "glass border-stage-accent!" : "glass"
                 }`}
               >
-                <p className="kicker text-stage-accent">
-                  {s.number} / {t.steps.length}
-                </p>
-                <h3 className="mt-3 text-2xl font-semibold sm:text-3xl">{s.title}</h3>
+                <h3 className="text-2xl font-semibold sm:text-3xl">{s.title}</h3>
                 <p className={`mt-3 text-lg ${active === i ? "text-stage-text" : "text-stage-muted"}`}>{s.body}</p>
               </div>
             </li>
@@ -79,11 +77,8 @@ function StaticStory() {
       <p className="mt-4 text-base text-stage-muted">{t.reducedMotionNote}</p>
       <ol className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {t.steps.map((s) => (
-          <li key={s.id} className="card rounded-3xl border border-stage-line p-6">
-            <p className="text-sm font-semibold tabular-nums text-stage-accent">
-              {s.number} / {t.steps.length}
-            </p>
-            <h3 className="mt-3 text-xl font-semibold">{s.title}</h3>
+          <li key={s.id} className="card rounded-card border border-stage-line p-6">
+            <h3 className="text-xl font-semibold">{s.title}</h3>
             <p className="mt-2 text-base text-stage-muted">{s.body}</p>
           </li>
         ))}

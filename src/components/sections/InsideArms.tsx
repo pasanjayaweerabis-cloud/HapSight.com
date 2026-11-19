@@ -11,14 +11,11 @@ type Side = (typeof t.sides)[number];
 
 function SideCard({ s, active }: { s: Side; active?: boolean }) {
   return (
-    <div className={`glass card rounded-3xl p-7 transition-colors duration-300 ${active ? "border-stage-accent!" : ""}`}>
-      <h3 className="text-2xl font-semibold tracking-[-0.03em]">{s.title}</h3>
-      <ul className="mt-4 grid gap-2">
+    <div className={`glass card rounded-card p-7 transition-colors duration-300 ${active ? "border-stage-accent!" : ""}`}>
+      <h3 className="text-2xl font-semibold tracking-[-0.01em]">{s.title}</h3>
+      <ul className="mt-4 grid list-disc gap-2 pl-5 text-base text-stage-text marker:text-stage-accent">
         {s.parts.map((p) => (
-          <li key={p} className="flex items-start gap-3 text-base text-stage-text">
-            <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-stage-accent" />
-            {p}
-          </li>
+          <li key={p}>{p}</li>
         ))}
       </ul>
       <p className="mt-4 text-base text-stage-muted">{s.body}</p>
@@ -47,7 +44,7 @@ export function InsideArms() {
   return (
     <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative">
       <Container className="pt-24 sm:pt-32">
-        <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} stage />
+        <SectionHeading id={t.id} title={t.title} intro={t.intro} stage />
       </Container>
       {enabled ? (
         <div ref={track} className="h-[200svh]">
