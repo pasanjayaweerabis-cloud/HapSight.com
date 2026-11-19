@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
+import { Explore } from "@/components/sections/Explore";
 import { Problem } from "@/components/sections/Problem";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Features } from "@/components/sections/Features";
@@ -21,6 +22,7 @@ export default function Home() {
       <JsonLd />
       <StageHost />
       <Hero />
+      <Explore />
       <Problem />
       <HowItWorks />
       <Features />

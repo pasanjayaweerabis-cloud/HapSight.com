@@ -95,6 +95,32 @@ export const hero = {
     `${brand.name} looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.`,
 } as const;
 
+/** Interactive 3D viewer right after the hero: turn, zoom, pick a view or a part. */
+export const explore = {
+  id: "explore",
+  eyebrow: "Explore in 3D",
+  title: "Turn it. Zoom in. Look inside.",
+  intro:
+    "Drag the glasses to turn them. Pinch, or use the zoom buttons, to move closer. Pick a view or a part and the camera flies to it.",
+  hint: "Drag to turn",
+  viewsLabel: "Views",
+  views: {
+    angle: "Angle",
+    front: "Front",
+    side: "Side",
+    top: "Top",
+  },
+  layersLabel: "Layers",
+  partsLabel: "Parts",
+  zoomIn: "Zoom in",
+  zoomOut: "Zoom out",
+  reset: "Reset view",
+  allParts: "Whole device",
+  allPartsDescription:
+    "Chunky, flat-topped glasses in matte charcoal 3D-printed plastic, with clear lenses and three small sensor windows in the top bar.",
+  fallbackNote: "The 3D view is off (reduced motion, or the browser has no WebGL). Every part is described below.",
+} as const;
+
 export const problem = {
   id: "problem",
   title: "The cane finds the ground. Not everything is on the ground.",

@@ -188,6 +188,9 @@ Test with VoiceOver (macOS and iOS), NVDA (Windows) and TalkBack (Android):
 
 - The 3D model is procedural and follows the concept renders loosely. Adjust `FRAME`,
   `LENS_LEFT`, `TEMPLE`, `BAY_PROFILE` and `ARM_LEFT` in `deviceConfig.ts`, then `npm run stills`.
+- Explore in 3D (after the hero): `Explore.tsx` + `src/three/ExploreScene.tsx`, a second canvas with
+  the same device model. Drag to turn, pinch or the buttons to zoom, views, layers and parts.
+  Reduced motion or no WebGL shows the assembled still and the part descriptions.
 - Gallery: off. The concept renders show extra sensor modules on the lower lens corners, which the
   device does not have, so do not crop them for the site. Add real photos (or corrected renders)
   as `public/gallery/front.png`, `side.png`, `three-quarter.png`, check the alt text in `site.ts`,
