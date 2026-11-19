@@ -47,7 +47,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>
-      <body className="flex min-h-dvh flex-col antialiased">
+      {/* suppressHydrationWarning: browser extensions (e.g. ColorZilla adds cz-shortcut-listen) edit <body> attributes before React loads */}
+      <body className="flex min-h-dvh flex-col antialiased" suppressHydrationWarning>
         <SkipLink />
         <Navbar />
         <main id="main" tabIndex={-1} className="flex-1 outline-none">
