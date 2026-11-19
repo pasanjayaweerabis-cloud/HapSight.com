@@ -32,6 +32,8 @@ export const COLORS = {
   /** Only for vibration: motors, pulses, haptic ripples. */
   haptic: "#FFCB8A",
   lens: "#a9d6ff",
+  /** Gunmetal lens rims. */
+  rim: "#6b7280",
   pcbBlack: "#15161a",
   pcbGreen: "#1d7a3e",
   pcbBlue: "#1f4fae",
@@ -43,7 +45,7 @@ export const COLORS = {
   wireRed: "#c62a2a",
   wireBlack: "#141414",
   connector: "#ece9e1",
-  sensorLens: "#4a1f73",
+  sensorLens: "#0d5c55",
   port: "#08090b",
   screw: "#3b3e45",
   smd: "#cfc6b4",

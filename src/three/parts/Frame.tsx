@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { RoundedBox } from "@react-three/drei";
 import {
@@ -42,10 +42,19 @@ export function Frame() {
     return g;
   }, [seg, quality]);
 
+  const bezels = useMemo(
+    () =>
+      sensorWindows().map((w) => {
+        const ring = new THREE.Shape(roundedPolygon(insetCorners(w, -0.011), seg));
+        ring.holes.push(new THREE.Path(roundedPolygon(insetCorners(w, -0.003), seg)));
+        return new THREE.ShapeGeometry(ring, 4);
+      }),
+    [seg],
+  );
+  useEffect(() => () => bezels.forEach((g) => g.dispose()), [bezels]);
+
   const front = FRAME.plateDepth + FRAME.bevel;
   const browH = FRAME.top - FRAME.barBottom;
-  const stripW = SENSOR_WINDOW.x - SENSOR_WINDOW.w - 0.06;
-  const stripX = SENSOR_WINDOW.w / 2 + 0.03 + stripW / 2;
 
   return (
     <group>
@@ -65,11 +74,9 @@ export function Frame() {
           <boxGeometry args={[SENSOR_WINDOW.w - 0.01, SENSOR_WINDOW.h - 0.01, 0.004]} />
         </mesh>
       ))}
-      {/* decorative teal accent strips between the windows (emissive material, not a part) */}
-      {[stripX, -stripX].map((x) => (
-        <mesh key={x} position={[x, FRAME.barCenterY + 0.004, front + 0.0015]} material={mats.accent}>
-          <boxGeometry args={[stripW, 0.011, 0.003]} />
-        </mesh>
+      {/* thin glowing teal bezel around each sensor window (emissive material, not a part) */}
+      {bezels.map((g, i) => (
+        <mesh key={i} geometry={g} position={[0, 0, front + 0.0012]} material={mats.accent} />
       ))}
       {/* corner screws */}
       {[0.655, -0.655].map((x) => (
@@ -86,7 +93,7 @@ export function Frame() {
   );
 }
 
-/** Clear lens with a soft teal edge glow. Local origin = centre of the lens opening. */
+/** Clear lens with a thin gunmetal rim. Local origin = centre of the lens opening. */
 export function Lens({ side }: { side: Side }) {
   const { mats, quality } = useParts();
   const seg = quality === "high" ? 10 : 5;
@@ -105,9 +112,9 @@ export function Lens({ side }: { side: Side }) {
       curveSegments: 4,
     });
     lens.translate(-cx, -cy, -0.004);
-    // glow ring just inside the visible edge of the opening
+    // thin metal rim just inside the visible edge of the opening
     const ring = new THREE.Shape(roundedPolygon(insetCorners(corners, FRAME.bevel), seg));
-    ring.holes.push(new THREE.Path(roundedPolygon(insetCorners(corners, FRAME.bevel + 0.011), seg)));
+    ring.holes.push(new THREE.Path(roundedPolygon(insetCorners(corners, FRAME.bevel + 0.008), seg)));
     const edge = new THREE.ShapeGeometry(ring, 4);
     edge.translate(-cx, -cy, 0.0065);
     return { lens, edge };

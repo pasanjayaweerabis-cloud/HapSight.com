@@ -24,16 +24,42 @@ export type MaterialKey =
   | "screw"
   | "smd";
 
+/**
+ * Fine stipple for the 3D-printed plastic: a small tiling noise texture used as a bump map, so
+ * the frame catches light like the matte, slightly grainy finish in the concept renders.
+ */
+function stippleTexture(): THREE.DataTexture {
+  const n = 128;
+  const data = new Uint8Array(n * n * 4);
+  let seed = 7;
+  const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  for (let i = 0; i < n * n; i++) {
+    const v = 110 + Math.floor(rand() * 90);
+    data.set([v, v, v, 255], i * 4);
+  }
+  const t = new THREE.DataTexture(data, n, n);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(9, 9);
+  t.magFilter = THREE.LinearFilter;
+  t.minFilter = THREE.LinearMipmapLinearFilter;
+  t.generateMipmaps = true;
+  t.needsUpdate = true;
+  return t;
+}
+
 /** All materials are procedural (no image files) and created in the browser only. */
 export function createMaterials(): Record<MaterialKey, THREE.Material> {
+  const stipple = stippleTexture();
   return {
-    // matte 3D-printed plastic
+    // matte 3D-printed plastic with a fine grain
     frame: new THREE.MeshPhysicalMaterial({
       color: COLORS.frame,
-      roughness: 0.66,
-      metalness: 0.04,
-      clearcoat: 0.12,
-      clearcoatRoughness: 0.7,
+      roughness: 0.62,
+      metalness: 0.05,
+      clearcoat: 0.18,
+      clearcoatRoughness: 0.6,
+      bumpMap: stipple,
+      bumpScale: 0.35,
     }),
     frameInside: new THREE.MeshStandardMaterial({ color: COLORS.frameInside, roughness: 0.85 }),
     rubber: new THREE.MeshStandardMaterial({ color: COLORS.rubber, roughness: 0.95 }),
@@ -51,16 +77,9 @@ export function createMaterials(): Record<MaterialKey, THREE.Material> {
       depthWrite: false,
       side: THREE.DoubleSide,
     }),
-    // soft teal glow along each lens edge (decoration only)
-    lensEdge: new THREE.MeshBasicMaterial({
-      color: COLORS.teal2,
-      transparent: true,
-      opacity: 0.5,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      toneMapped: false,
-    }),
-    // thin decorative teal accent strips on the top bar: an emissive material, not a real LED part
+    // thin gunmetal rim around each lens, as in the concept renders
+    lensEdge: new THREE.MeshStandardMaterial({ color: COLORS.rim, roughness: 0.3, metalness: 0.85 }),
+    // thin teal bezels around the three sensor windows: an emissive material, not a real LED part
     accent: new THREE.MeshStandardMaterial({
       color: COLORS.teal,
       emissive: new THREE.Color(COLORS.teal),
@@ -78,10 +97,11 @@ export function createMaterials(): Record<MaterialKey, THREE.Material> {
     wireRed: new THREE.MeshStandardMaterial({ color: COLORS.wireRed, roughness: 0.5 }),
     wireBlack: new THREE.MeshStandardMaterial({ color: COLORS.wireBlack, roughness: 0.5 }),
     connector: new THREE.MeshStandardMaterial({ color: COLORS.connector, roughness: 0.6 }),
+    // the sensor's lens glows teal through its window (styling: the real laser is invisible infrared)
     sensorLens: new THREE.MeshPhysicalMaterial({
       color: COLORS.sensorLens,
-      emissive: new THREE.Color("#7c3aed"),
-      emissiveIntensity: 0.35,
+      emissive: new THREE.Color(COLORS.teal),
+      emissiveIntensity: 1.4,
       roughness: 0.05,
       clearcoat: 1,
     }),
