@@ -10,7 +10,29 @@ Student prototype by ATP Group 14, BEng (Hons) Software Engineering, IIT Sri Lan
 - Next.js 16 (App Router) · TypeScript strict · Tailwind CSS v4
 - three.js via @react-three/fiber + @react-three/drei (procedural model, no model files)
 - framer-motion (UI motion and scroll progress; GSAP is not needed)
-- Supabase (waitlist) · Vercel Analytics (cookieless)
+- Supabase (waitlist) · hosted on Netlify (HTTPS, hapsight.com)
+- Vercel Analytics (cookieless) is in the code but only loads on Vercel, so it is off on Netlify
+
+## Team
+
+ATP Group 14 (SE-14), Agile Team Project (5COSC021C), Informatics Institute of Technology.
+Supervisor: **Mr Nipuna Senanayake**.
+
+Each member leads one area and owns one device part and one website part. The lead roles show
+who coordinates an area, not who does all of it: every member also works on the requirements,
+design, documentation and reviews for the whole project.
+
+| Member | Role | Leads | Device part | Website part |
+| --- | --- | --- | --- | --- |
+| Pasan Jayaweera | Team Leader, Scrum Master (Sprint 0), Developer | Technical lead: repository, CI, landing page, security | Controller firmware and integration | Platform and security, pull request reviews |
+| Vidurath Jayaweera | Product Owner, Developer | Product idea, backlog and system architecture | Front sensing | Admin panel (planned) |
+| Haziq Shafie | Scrum Master (Sprint 1), Developer | Scrum events, task board and sprint records | Haptic language | Waitlist pipeline (planned) |
+| Krishan Wijeyesekera | Developer | Requirements and the SRS | Side sensing and false-alert filtering | Contact and data-deletion forms (planned) |
+| Aynkaran Selvarajan (Vinod) | Developer | UX and ethics: wireframes, Figma prototype, ethical clearance | Power and charging | Sinhala/Tamil versions and accessibility testing (planned) |
+
+The landing page design is based on Vinod's Figma prototype and draw.io wireframes. Device parts
+are designed in Semester 1 and built in Sprints 2 to 4 (Semester 2). The Scrum Master role
+rotates each sprint. Each member's own work can be seen in the commit and pull request history.
 
 ## Run it
 
@@ -145,6 +167,8 @@ form does not reveal who is on the list.
 
 ## Deploy to Vercel with your own domain (HTTPS)
 
+The live site runs on Netlify. These Vercel steps are kept as an alternative set-up.
+
 - [ ] Push this repo to GitHub.
 - [ ] On <https://vercel.com>: **Add New → Project → Import** the repo (Next.js preset, defaults are fine).
 - [ ] **Settings → Environment Variables**: `SUPABASE_URL`, `SUPABASE_SECRET_KEY`,
@@ -202,3 +226,17 @@ Test with VoiceOver (macOS and iOS), NVDA (Windows) and TalkBack (Android):
   @react-three/fiber 9. It is a warning, not an error.
 - The retention period, contact address and "planned" claims in the comparison are commitments
   the team must keep.
+
+## Acknowledgements
+
+We thank our supervisor, **Mr Nipuna Senanayake**, for his weekly guidance and feedback, which
+helped us choose a project we can build as a team and keep its scope realistic. We also thank the
+Agile Team Project module team at IIT for their feedback during the module.
+
+## Academic integrity and AI use
+
+This repository is coursework for the Agile Team Project module. Generative AI tools (Claude and
+Claude Code) were used to help draft and build parts of this site from the team's own design and
+brief. All output was reviewed and tested by the team, and the AI use is declared in the CW1
+submission.
+
