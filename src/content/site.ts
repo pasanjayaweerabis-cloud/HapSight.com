@@ -39,6 +39,9 @@ export const meta = {
 
 export const skipLink = "Skip to main content";
 
+/** Floating button, bottom right, once you have scrolled down a screen or so. */
+export const backToTop = { label: "Back to top", short: "Top" } as const;
+
 export const nav = {
   label: "Main",
   homeLabel: `${brand.name} home`,

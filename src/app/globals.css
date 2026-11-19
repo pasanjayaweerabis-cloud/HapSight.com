@@ -363,6 +363,22 @@ body {
   }
 }
 
+/* Explore viewer: the "Reset view" button pulses a soft teal ring when the view has changed. */
+@keyframes attention-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(20, 224, 200, 0.55);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 12px rgba(20, 224, 200, 0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion) .reset-view[data-changed] {
+    animation: attention-ring 1.8s ease-out 3;
+  }
+}
+
 /* Browser surfaces in the palette */
 ::selection {
   background: var(--accent);

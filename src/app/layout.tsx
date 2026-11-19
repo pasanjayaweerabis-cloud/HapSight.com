@@ -5,6 +5,7 @@ import { brand, meta } from "@/content/site";
 import { bootScript } from "@/lib/a11yPrefs";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { Navbar } from "@/components/layout/Navbar";
+import { BackToTop } from "@/components/layout/BackToTop";
 import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
+        <BackToTop />
         {/* Vercel Web Analytics only exists on Vercel deployments (no cookies, no personal data). */}
         {process.env.VERCEL ? <Analytics /> : null}
       </body>
