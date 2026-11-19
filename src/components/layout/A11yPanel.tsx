@@ -40,7 +40,7 @@ export function A11yPanel() {
         onClick={(e) => {
           if (e.target === dialogRef.current) close();
         }}
-        className="card on-surface m-auto w-[min(92vw,28rem)] rounded-3xl border border-line bg-surface p-0 text-text shadow-2xl backdrop:bg-black/60"
+        className="card on-surface m-auto w-[min(92vw,28rem)] rounded-card border border-line bg-surface p-0 text-text shadow-2xl backdrop:bg-black/60"
       >
         <div className="p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4">

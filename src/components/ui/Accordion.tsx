@@ -12,7 +12,7 @@ export function Accordion({ items }: { items: { title: string; body: readonly st
   const base = useId();
 
   return (
-    <div className="divide-y divide-line rounded-3xl border border-line bg-surface">
+    <div className="divide-y divide-line">
       {items.map((item, i) => {
         const expanded = open === i;
         const btnId = `${base}-b${i}`;
@@ -39,7 +39,7 @@ export function Accordion({ items }: { items: { title: string; body: readonly st
             </h3>
             <div id={panelId} role="region" aria-labelledby={btnId} hidden={!expanded} className="px-6 pb-7 sm:px-8">
               {item.body.map((p) => (
-                <p key={p} className="mt-3 max-w-2xl text-lg text-muted first:mt-0">
+                <p key={p} className="mt-3 max-w-[65ch] text-lg text-muted first:mt-0">
                   {p}
                 </p>
               ))}

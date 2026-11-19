@@ -1,14 +1,15 @@
 import { comparison as t } from "@/content/site";
 import { Container, SectionHeading } from "@/components/ui/Section";
+import { Reveal } from "@/components/ui/Reveal";
 
 export function Comparison() {
   return (
     <section id={t.id} aria-labelledby={`${t.id}-title`} className="bg-bg-soft py-24 sm:py-32">
       <Container>
-        <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} />
+        <SectionHeading id={t.id} title={t.title} />
 
         {/* Desktop and tablet: a real table. */}
-        <div className="mt-12 hidden overflow-hidden rounded-3xl border border-line bg-surface md:block">
+        <Reveal index={0} className="mt-12 hidden overflow-hidden rounded-card border border-line bg-surface md:block">
           <table className="w-full border-collapse text-left">
             <caption className="sr-only">{t.caption}</caption>
             <thead>
@@ -26,7 +27,7 @@ export function Comparison() {
               </tr>
             </thead>
             <tbody>
-              {t.rows.map((r) => (
+              {t.rows.map((r, ri) => (
                 <tr key={r.label} className="border-b border-line last:border-b-0">
                   <th scope="row" className="p-6 align-top text-base font-semibold">
                     {r.label}
@@ -34,7 +35,7 @@ export function Comparison() {
                   {r.values.map((v, i) => (
                     <td
                       key={i}
-                      className={`p-6 align-top text-base text-muted ${i === 0 ? "bg-accent-soft/60 font-medium text-text" : ""}`}
+                      className={`p-6 align-top text-base text-muted ${i === 0 ? "bg-accent-soft/60 font-medium text-text" : ""} ${ri === 0 ? "font-mono tabular-nums" : ""}`}
                     >
                       {v}
                     </td>
@@ -43,37 +44,37 @@ export function Comparison() {
               ))}
             </tbody>
           </table>
-        </div>
+        </Reveal>
 
         {/* Phones: one card per product, so nothing needs sideways scrolling at 200% zoom. */}
-        <div className="mt-10 grid gap-5 md:hidden">
+        <Reveal index={0} className="mt-10 grid gap-5 md:hidden">
           {t.columns.map((c, ci) => (
             <section
               key={c}
               aria-labelledby={`cmp-${ci}`}
-              className={`card rounded-3xl border p-6 ${ci === 0 ? "border-accent bg-accent-soft" : "border-line bg-surface"}`}
+              className={`card rounded-card border p-6 ${ci === 0 ? "border-accent bg-accent-soft" : "border-line bg-surface"}`}
             >
               <h3 id={`cmp-${ci}`} className="text-xl font-semibold">
                 {c}
               </h3>
               <dl className="mt-4 grid gap-4">
-                {t.rows.map((r) => (
+                {t.rows.map((r, ri) => (
                   <div key={r.label}>
                     <dt className="text-sm font-semibold">{r.label}</dt>
-                    <dd className="mt-1 text-base text-muted">{r.values[ci]}</dd>
+                    <dd className={`mt-1 text-base text-muted ${ri === 0 ? "font-mono tabular-nums" : ""}`}>{r.values[ci]}</dd>
                   </div>
                 ))}
               </dl>
             </section>
           ))}
-        </div>
+        </Reveal>
 
         <p className="mt-6 text-sm text-muted">{t.footnote}</p>
         <p className="mt-2 text-sm text-muted">
           {t.sourcesLabel}:{" "}
           {t.sources.map((src, i) => (
             <span key={src.href}>
-              {i > 0 ? " · " : null}
+              {i > 0 ? ", " : null}
               <a href={src.href} className="text-accent underline underline-offset-4" rel="noopener noreferrer">
                 {src.label}
               </a>

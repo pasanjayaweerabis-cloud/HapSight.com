@@ -27,10 +27,16 @@ export default function Home() {
       <Design />
       <InsideArms />
       <Gallery />
+      <Roadmap />
+      {/* visible hand-over from the always-dark stage to the page's own theme */}
+      <div
+        aria-hidden="true"
+        className="h-24"
+        style={{ background: "linear-gradient(to bottom, var(--stage-bg), var(--bg))" }}
+      />
       <Demo />
       <Audience />
       <Comparison />
-      <Roadmap />
       <Team />
       <Faq />
       <Waitlist />

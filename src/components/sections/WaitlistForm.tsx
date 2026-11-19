@@ -41,7 +41,7 @@ export function WaitlistForm() {
 
   if (state.status === "success") {
     return (
-      <div ref={successRef} tabIndex={-1} role="status" className="card rounded-3xl border-2 border-success bg-accent-soft p-8">
+      <div ref={successRef} tabIndex={-1} role="status" className="card rounded-card border-2 border-success bg-accent-soft p-8">
         <p className="flex items-center gap-3 text-2xl font-semibold">
           <Icon name="check" className="size-7 text-success" />
           {t.success.title}
@@ -57,9 +57,9 @@ export function WaitlistForm() {
   const err = (f: FieldName) => (errors[f] ? t.errors[errors[f]] : undefined);
 
   return (
-    <form action={formAction} noValidate aria-busy={pending} className="card rounded-3xl border border-line bg-surface p-6 sm:p-8">
+    <form action={formAction} noValidate aria-busy={pending} className="card rounded-card border border-line bg-surface p-6 sm:p-8">
       {state.status === "error" ? (
-        <div ref={summaryRef} tabIndex={-1} aria-labelledby="wl-summary-title" className="mb-8 rounded-2xl border-2 border-danger p-5">
+        <div ref={summaryRef} tabIndex={-1} aria-labelledby="wl-summary-title" className="mb-8 rounded-xl border-2 border-danger p-5">
           <p id="wl-summary-title" className="flex items-center gap-2 text-lg font-semibold text-danger">
             <Icon name="alert" />
             {state.formError ? t.errors[state.formError] : t.errors.summaryTitle}

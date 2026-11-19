@@ -18,7 +18,7 @@ export function Design() {
   return (
     <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative">
       <Container className="pt-24 sm:pt-32">
-        <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} stage />
+        <SectionHeading id={t.id} title={t.title} intro={t.intro} stage />
       </Container>
       {enabled ? <ScrollExplode /> : <StaticViews />}
       <Container className="pb-24 sm:pb-32">
@@ -78,7 +78,7 @@ function StaticViews() {
           { src: STILLS.assembled, caption: t.stages.assembled },
           { src: STILLS.exploded, caption: t.stages.full },
         ].map((v) => (
-          <figure key={v.src} className="glass rounded-3xl p-4">
+          <figure key={v.src} className="glass rounded-card p-4">
             <div aria-hidden="true" className="relative aspect-[4/3]">
               <Still src={v.src} sizes="(min-width: 1024px) 45vw, 100vw" />
             </div>

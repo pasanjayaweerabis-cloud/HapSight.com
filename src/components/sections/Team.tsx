@@ -15,6 +15,7 @@ function photoSrc(m: TeamMember): string | undefined {
   return undefined;
 }
 import { Container, SectionHeading } from "@/components/ui/Section";
+import { Reveal } from "@/components/ui/Reveal";
 
 const initials = (name: string) =>
   name
@@ -36,27 +37,18 @@ function Photo({ m }: { m: TeamMember }) {
         width={400}
         height={400}
         sizes="(min-width: 1280px) 120px, 112px"
-        className="size-28 rounded-full object-cover"
+        className="size-28 rounded-xl object-cover"
       />
     );
   }
-  // Placeholder until the real photo is added: initials, a camera icon and visible text.
+  // Placeholder until the real photo is added: initials only.
   return (
-    <div className="flex flex-col items-center gap-2">
-      <span
-        aria-hidden="true"
-        className="relative flex size-28 items-center justify-center rounded-full bg-[linear-gradient(145deg,#0a6b60,#063e38)] text-3xl font-semibold tracking-[-0.03em] text-white"
-      >
-        {initials(m.name)}
-        <span className="absolute -bottom-1 -right-1 flex size-9 items-center justify-center rounded-full border-2 border-surface bg-teal-deep">
-          <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" focusable="false">
-            <path d="M4 8h3l1.5-2h7L17 8h3v11H4z" strokeLinejoin="round" />
-            <circle cx="12" cy="13" r="3.2" />
-          </svg>
-        </span>
-      </span>
-      <span className="text-sm text-muted">{t.photoComingSoon}</span>
-    </div>
+    <span
+      aria-hidden="true"
+      className="flex size-28 items-center justify-center rounded-xl bg-[linear-gradient(145deg,var(--teal-deep),var(--navy))] text-3xl font-semibold tracking-[-0.01em] text-white"
+    >
+      {initials(m.name)}
+    </span>
   );
 }
 
@@ -85,28 +77,36 @@ function Links({ m }: { m: TeamMember }) {
 }
 
 export function Team() {
+  const anyMissingPhoto = t.members.some((m) => !photoSrc(m));
   return (
     <section id={t.id} aria-labelledby={`${t.id}-title`} className="py-24 sm:py-32">
       <Container>
-        <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} />
-        {/* phone 1 · tablet 2 · desktop 3 + 2 centred */}
-        <ul className="mt-14 flex flex-wrap justify-center gap-5">
-          {t.members.map((m) => (
+        <SectionHeading id={t.id} title={t.title} intro={t.intro} />
+        {/* phone 1 · tablet 2 · desktop 3, last row of 2 centred */}
+        <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+          {t.members.map((m, i) => (
             <li
               key={m.name}
-              className="card w-full rounded-3xl border border-line bg-surface p-7 text-center sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.84rem)]"
+              className={`lg:col-span-2 ${i === 3 ? "lg:col-start-2" : ""} ${
+                i === 4 ? "sm:col-span-2 sm:w-1/2 sm:justify-self-center lg:col-span-2 lg:w-auto lg:justify-self-stretch" : ""
+              }`}
             >
-              <div className="flex justify-center">
-                <Photo m={m} />
-              </div>
-              <h3 className="mt-5 text-lg font-semibold tracking-[-0.02em]">{m.name}</h3>
-              <p className="mt-1 text-base text-muted">{m.role}</p>
-              <Links m={m} />
+              <Reveal index={i} className="card h-full rounded-card border border-line bg-surface p-7 text-center">
+                <div className="flex justify-center">
+                  <Photo m={m} />
+                </div>
+                <h3 className="mt-5 text-lg font-semibold tracking-[-0.02em]">{m.name}</h3>
+                <p className="mt-1 text-base text-muted">{m.role}</p>
+                <Links m={m} />
+              </Reveal>
             </li>
           ))}
         </ul>
+        {anyMissingPhoto ? <p className="mt-6 text-center text-sm text-muted">{t.photosNote}</p> : null}
         <div className="mt-10 grid gap-1 text-center text-sm text-muted">
-          <p>{t.course}</p>
+          {t.course.map((line) => (
+            <p key={line}>{line}</p>
+          ))}
           <p>{t.supervisor}</p>
         </div>
       </Container>

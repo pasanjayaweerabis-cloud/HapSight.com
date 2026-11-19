@@ -10,6 +10,7 @@ import { buttonClass } from "@/components/ui/Button";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState<string | null>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const onHome = pathname === "/";
@@ -28,10 +29,39 @@ export function Navbar() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Highlight the nav link for the section currently in view. Home page only.
+  // IntersectionObserver callbacks only report entries whose state changed, so a running map
+  // (not just the latest callback's entries) is what tells us when nothing is in view any more.
+  useEffect(() => {
+    if (!onHome) return;
+    const elements = nav.links
+      .map((l) => document.getElementById(l.href.slice(1)))
+      .filter((el): el is HTMLElement => !!el);
+    if (!elements.length) return;
+    const visible = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.set(entry.target.id, entry.boundingClientRect.top);
+          else visible.delete(entry.target.id);
+        }
+        if (visible.size === 0) {
+          setActiveHref(null);
+          return;
+        }
+        const [topId] = [...visible.entries()].reduce((a, b) => (a[1] < b[1] ? a : b));
+        setActiveHref(`#${topId}`);
+      },
+      { rootMargin: "-40% 0px -55% 0px" },
+    );
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [onHome]);
+
   return (
-    <header className="stage sticky top-0 z-50 border-b border-stage-line !bg-stage">
+    <header className="stage sticky top-0 z-(--z-nav) border-b border-stage-line !bg-stage">
       <div className="mx-auto flex h-18 max-w-[max(72.5rem,88vw)] items-center gap-4 px-5 sm:px-8">
-        <a href={onHome ? "#top" : "/"} className="flex min-h-12 items-center gap-3 rounded-lg font-semibold tracking-tight">
+        <a href={onHome ? "#top" : "/"} className="flex min-h-12 items-center gap-3 rounded-xl font-semibold tracking-tight">
           <LogoMark />
           <span className="text-xl">{brand.name}</span>
           <span className="sr-only">, home</span>
@@ -43,7 +73,10 @@ export function Navbar() {
               <li key={l.href}>
                 <a
                   href={href(l.href)}
-                  className="inline-flex min-h-12 items-center rounded-full px-4 text-base font-medium text-stage-muted transition-colors hover:text-stage-text"
+                  aria-current={onHome && activeHref === l.href ? "true" : undefined}
+                  className={`inline-flex min-h-12 items-center rounded-full px-4 text-base transition-colors hover:text-stage-text ${
+                    onHome && activeHref === l.href ? "font-semibold text-stage-text" : "font-medium text-stage-muted"
+                  }`}
                 >
                   {l.label}
                 </a>

@@ -19,7 +19,7 @@ export function StageHost() {
   const touch = useMediaQuery("(pointer: coarse)");
   if (reduced || !webgl) return null;
   return (
-    <div aria-hidden="true" data-stage-host className="pointer-events-none fixed inset-0 z-[1]">
+    <div aria-hidden="true" data-stage-host className="pointer-events-none fixed inset-0 z-(--z-canvas)">
       <LazyStage
         load={loadStage}
         deferUntilIdle

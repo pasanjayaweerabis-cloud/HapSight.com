@@ -3,6 +3,14 @@
 /* Theme switching is class based: .dark / .light are set on <html> before paint. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ---------- Radius system ----------
+   rounded-full: interactive elements (buttons, icon buttons, nav pills, status chips) and the
+     numbered callout circles.
+   rounded-card (24px, --radius-card below): containers (cards, glass panels, the comparison
+     table wrapper, the waitlist form card, the FAQ wrapper).
+   rounded-xl (12px): inner elements (inputs, radio tiles, the consent box, the error summary,
+     icon tiles, avatars). */
+
 /* ---------- Design tokens ---------- */
 /* Deep navy + teal (from the HapSight design file). Bright teal (#14e0c8) is text only on the dark
    backgrounds; on white it fails contrast (1.7:1), so the light theme uses a dark teal (#0a6b60)
@@ -17,6 +25,14 @@
   --teal-light: #dcf5f1;
   --haptic: #ffcb8a; /* 12.9:1 on stage-bg */
   --radius: 24px;
+
+  /* z-index scale: the 3D canvas sits behind section content, sticky in-section slots sit above
+     it, the navbar sits above those, and the skip link sits above everything. */
+  --z-canvas: 1;
+  --z-content: 2;
+  --z-sticky: 20;
+  --z-nav: 50;
+  --z-skip: 100;
 
   /* light theme (default before the boot script runs) */
   --bg: #ffffff;
@@ -137,7 +153,8 @@
   --color-teal-light: var(--teal-light);
   --color-haptic: var(--haptic);
   --radius-card: var(--radius);
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, monospace;
 }
 
 /* ---------- Base ---------- */
@@ -175,16 +192,6 @@ body {
 .stage :focus-visible {
   outline-color: var(--stage-accent);
 }
-/* light cards inside a dark stage (the waitlist form) keep the normal focus colour */
-.stage .on-surface {
-  color-scheme: light;
-}
-.dark .stage .on-surface {
-  color-scheme: dark;
-}
-.stage .on-surface :focus-visible {
-  outline-color: var(--focus);
-}
 
 /* The 3D stage sections */
 .stage {
@@ -204,12 +211,12 @@ body {
   background: #000;
 }
 
-/* The one 3D canvas is fixed behind the page (z-index 1). Section content sits above it;
+/* The one 3D canvas is fixed behind the page (--z-canvas). Section content sits above it;
    section backgrounds stay below it. In the base layer, so utilities (absolute, sticky) win. */
 @layer base {
   :where(main section) > * {
     position: relative;
-    z-index: 2;
+    z-index: var(--z-content);
   }
 }
 
@@ -280,7 +287,7 @@ body {
 
 .prose-legal h2 {
   font-size: 1.5rem;
-  font-weight: 650;
+  font-weight: 600;
   margin-top: 2.5rem;
   margin-bottom: 0.75rem;
   letter-spacing: -0.01em;

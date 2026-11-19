@@ -87,7 +87,7 @@ export function ExplodeOverlay({ ref, mode }: { ref: React.Ref<LabelOverlayHandl
             {/* equal-width cards so both columns line up; the scene stacks them with even gaps */}
             <span
               ref={(el) => register(id, "label", el)}
-              className={`absolute left-0 top-0 w-[11.25rem] items-center gap-2.5 rounded-2xl border-[1.5px] border-stage-accent/60 bg-stage/90 py-2 pl-2 pr-3 text-stage-text backdrop-blur xl:w-[13.5rem] xl:gap-3 xl:py-2.5 xl:pl-2.5 xl:pr-3.5 ${
+              className={`absolute left-0 top-0 w-[11.25rem] items-center gap-2.5 rounded-xl border-[1.5px] border-stage-accent/60 bg-stage/90 py-2 pl-2 pr-3 text-stage-text backdrop-blur xl:w-[13.5rem] xl:gap-3 xl:py-2.5 xl:pl-2.5 xl:pr-3.5 ${
                 mode === "dots" ? "hidden" : "flex"
               }`}
             >

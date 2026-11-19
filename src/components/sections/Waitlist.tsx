@@ -5,16 +5,18 @@ import { WaitlistForm } from "./WaitlistForm";
 
 export function Waitlist() {
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="relative py-24 sm:py-32">
       <RangeMarker id="waitlist" />
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
         <div>
-          <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} stage />
-          {/* the device returns front-on here; one haptic pulse when you join */}
-          <StageSlot id="waitlist" className="mt-10 hidden aspect-[4/3] w-full lg:block" />
+          <SectionHeading id={t.id} title={t.title} intro={t.intro} />
+          {/* the device returns front-on here; one haptic pulse when you join. A soft panel keeps
+              the charcoal glasses visible against a light background. */}
+          <div className="mt-10 hidden rounded-card bg-bg-soft lg:block">
+            <StageSlot id="waitlist" className="aspect-[4/3] w-full" />
+          </div>
         </div>
-        {/* the form keeps the page's own (light or dark) theme colours, so every field stays readable */}
-        <div className="on-surface self-start text-text">
+        <div className="self-start">
           <WaitlistForm />
         </div>
       </Container>

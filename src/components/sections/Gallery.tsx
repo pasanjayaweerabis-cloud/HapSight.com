@@ -8,10 +8,10 @@ export function Gallery() {
   return (
     <section id={t.id} aria-labelledby={`${t.id}-title`} className="py-24 sm:py-32">
       <Container>
-        <SectionHeading id={t.id} eyebrow={t.eyebrow} title={t.title} intro={t.intro} />
+        <SectionHeading id={t.id} title={t.title} intro={t.intro} />
         <ul className="mt-12 grid gap-5 md:grid-cols-3">
           {t.items.map((g) => (
-            <li key={g.src} className="card overflow-hidden rounded-3xl border border-line bg-bg-soft">
+            <li key={g.src} className="card overflow-hidden rounded-card border border-line bg-bg-soft">
               <div className="relative aspect-square">
                 <Image src={g.src} alt={g.alt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
               </div>

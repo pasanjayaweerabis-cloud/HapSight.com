@@ -7,7 +7,7 @@ export function SectionHeading({
   className = "",
 }: {
   id: string;
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   intro?: string;
   stage?: boolean;
@@ -15,9 +15,7 @@ export function SectionHeading({
 }) {
   return (
     <div className={`max-w-3xl ${className}`}>
-      <p className={`kicker ${stage ? "text-stage-accent" : "text-accent"}`}>
-        {eyebrow}
-      </p>
+      {eyebrow ? <p className={`kicker ${stage ? "text-stage-accent" : "text-accent"}`}>{eyebrow}</p> : null}
       <h2 id={`${id}-title`} className="mt-3 text-balance text-[2.125rem] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
         {title}
       </h2>
