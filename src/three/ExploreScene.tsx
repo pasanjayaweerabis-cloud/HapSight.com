@@ -53,7 +53,7 @@ function Rig({ view, explode, focus, zoom, resetN, compact, onReady }: ExploreSc
   const dim = useRef(0);
   const focusIds = useRef<Set<string>>(new Set());
   const ready = useRef(false);
-  const { size, gl } = useThree();
+  const { size } = useThree();
 
   useEffect(() => {
     focusIds.current = new Set(focus ? partsFor(focus) : []);
@@ -72,30 +72,19 @@ function Rig({ view, explode, focus, zoom, resetN, compact, onReady }: ExploreSc
     }
   });
 
-  // mouse: left turns, right pans; the wheel keeps scrolling the page (zoom with buttons or pinch)
+  // mouse: left turns, right pans, wheel zooms (only while the pointer is over the viewer;
+  // camera-controls stops the page from scrolling then). Trackpad pinch arrives as ctrl+wheel.
   useEffect(() => {
     const c = controls.current;
     if (!c) return;
     c.mouseButtons.left = ACTION.ROTATE;
     c.mouseButtons.right = ACTION.TRUCK;
     c.mouseButtons.middle = ACTION.DOLLY;
-    c.mouseButtons.wheel = ACTION.NONE;
+    c.mouseButtons.wheel = ACTION.DOLLY;
     c.touches.one = ACTION.TOUCH_ROTATE;
     c.touches.two = ACTION.TOUCH_DOLLY_TRUCK;
     c.touches.three = ACTION.NONE;
   }, []);
-
-  // trackpad pinch arrives as a wheel event with ctrlKey: zoom instead of zooming the page
-  useEffect(() => {
-    const el = gl.domElement;
-    const onWheel = (e: WheelEvent) => {
-      if (!e.ctrlKey) return;
-      e.preventDefault();
-      controls.current?.dolly(-e.deltaY * 0.012, false);
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, [gl]);
 
   // fly to the chosen view or part
   useEffect(() => {
@@ -134,8 +123,9 @@ function Rig({ view, explode, focus, zoom, resetN, compact, onReady }: ExploreSc
       <CameraControls
         ref={controls}
         makeDefault
-        minDistance={0.5}
-        maxDistance={11}
+        minDistance={1}
+        maxDistance={9}
+        dollySpeed={0.3}
         smoothTime={0.5}
         draggingSmoothTime={0.12}
       />

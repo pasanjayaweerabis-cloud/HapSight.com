@@ -104,8 +104,8 @@ export const explore = {
   eyebrow: "Explore in 3D",
   title: "Turn it. Zoom in. Look inside.",
   intro:
-    "Drag the glasses to turn them. Pinch, or use the zoom buttons, to move closer. Pick a view or a part and the camera flies to it.",
-  hint: "Drag to turn",
+    "Drag the glasses to turn them. Scroll or pinch inside the box, or use the zoom buttons, to move closer. Pick a view or a part and the camera flies to it.",
+  hint: "Drag to turn · Scroll to zoom",
   viewsLabel: "Views",
   views: {
     angle: "Angle",

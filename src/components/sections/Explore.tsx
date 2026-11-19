@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { design, explore as t, type LabelId } from "@/content/site";
 import { Container, SectionHeading } from "@/components/ui/Section";
 import { LazyStage } from "@/components/visuals/LazyStage";
@@ -50,6 +50,7 @@ export function Explore() {
   /** Bumped on every change, so the reset button's pulse restarts each time. */
   const [pulse, setPulse] = useState(0);
   const bump = () => setPulse((n) => n + 1);
+  const lastWheel = useRef(0);
 
   const pickPart = (id: LabelId | null) => {
     bump();
@@ -96,6 +97,13 @@ export function Explore() {
                 onPointerDown={() => {
                   setMoved(true);
                   bump();
+                }}
+                onWheel={() => {
+                  setMoved(true);
+                  // restart the reset button's pulse at most every 0.8 s while zooming
+                  const now = performance.now();
+                  if (now - lastWheel.current > 800) bump();
+                  lastWheel.current = now;
                 }}
               >
                 <LazyStage
