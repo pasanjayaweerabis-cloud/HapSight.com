@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { design, explore as t, type LabelId } from "@/content/site";
 import { Container, SectionHeading } from "@/components/ui/Section";
 import { LazyStage } from "@/components/visuals/LazyStage";
@@ -44,19 +44,34 @@ export function Explore() {
   const [focus, setFocus] = useState<LabelId | null>(null);
   const [zoom, setZoom] = useState<ExploreSceneProps["zoom"]>({ n: 0, dir: 1 });
   const [resetN, setResetN] = useState(0);
+  /** The visitor turned or zoomed the camera by hand. */
+  const [moved, setMoved] = useState(false);
+  const changed = moved || view !== "angle" || layer !== "assembled" || focus !== null;
+  /** Bumped on every change, so the reset button's pulse restarts each time. */
+  const [pulse, setPulse] = useState(0);
+  const bump = () => setPulse((n) => n + 1);
+  const lastWheel = useRef(0);
 
   const pickPart = (id: LabelId | null) => {
+    bump();
     setFocus(id);
     if (id && INTERNAL_PARTS.includes(id) && layer === "assembled") setLayer("full");
   };
   const pickView = (v: ViewId) => {
+    bump();
     setFocus(null);
     setView(v);
+  };
+  const zoomBy = (dir: 1 | -1) => {
+    setMoved(true);
+    bump();
+    setZoom((z) => ({ n: z.n + 1, dir }));
   };
   const reset = () => {
     setFocus(null);
     setView("angle");
     setLayer("assembled");
+    setMoved(false);
     setResetN((n) => n + 1);
   };
 
@@ -77,11 +92,26 @@ export function Explore() {
             }}
           >
             {enabled ? (
-              <LazyStage
-                load={loadScene}
-                sceneProps={sceneProps}
-                fallback={<Still src={STILLS.assembled} sizes="(min-width: 1024px) 60vw, 100vw" />}
-              />
+              <div
+                className="absolute inset-0"
+                onPointerDown={() => {
+                  setMoved(true);
+                  bump();
+                }}
+                onWheel={() => {
+                  setMoved(true);
+                  // restart the reset button's pulse at most every 0.8 s while zooming
+                  const now = performance.now();
+                  if (now - lastWheel.current > 800) bump();
+                  lastWheel.current = now;
+                }}
+              >
+                <LazyStage
+                  load={loadScene}
+                  sceneProps={sceneProps}
+                  fallback={<Still src={STILLS.assembled} sizes="(min-width: 1024px) 60vw, 100vw" />}
+                />
+              </div>
             ) : (
               <Still src={STILLS.assembled} sizes="(min-width: 1024px) 60vw, 100vw" />
             )}
@@ -99,16 +129,29 @@ export function Explore() {
                   [ {t.hint} ]
                 </p>
                 <div className="absolute bottom-3 right-3 flex gap-2 sm:bottom-4 sm:right-4">
-                  <button type="button" aria-label={t.zoomOut} className={iconBtn} onClick={() => setZoom((z) => ({ n: z.n + 1, dir: -1 }))}>
+                  <button type="button" aria-label={t.zoomOut} className={iconBtn} onClick={() => zoomBy(-1)}>
                     <span aria-hidden="true" className="text-xl leading-none">−</span>
                   </button>
-                  <button type="button" aria-label={t.zoomIn} className={iconBtn} onClick={() => setZoom((z) => ({ n: z.n + 1, dir: 1 }))}>
+                  <button type="button" aria-label={t.zoomIn} className={iconBtn} onClick={() => zoomBy(1)}>
                     <span aria-hidden="true" className="text-xl leading-none">+</span>
                   </button>
-                  <button type="button" aria-label={t.reset} className={iconBtn} onClick={reset}>
-                    <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  {/* Text button that lights up (teal, soft pulse) whenever the view differs from the start. */}
+                  <button
+                    key={changed ? pulse : "idle"}
+                    type="button"
+                    onClick={reset}
+                    aria-disabled={!changed}
+                    data-changed={changed || undefined}
+                    className={`reset-view flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold backdrop-blur transition-colors duration-300 ${
+                      changed
+                        ? "border-stage-accent bg-stage-accent text-navy-ink hover:bg-stage-accent-2"
+                        : "border-stage-line bg-stage/70 text-stage-muted"
+                    }`}
+                  >
+                    <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                       <path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" />
                     </svg>
+                    {t.reset}
                   </button>
                 </div>
               </>
@@ -121,7 +164,10 @@ export function Explore() {
                 <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-stage-muted">{t.layersLabel}</h3>
                 <div role="group" aria-label={t.layersLabel} className="mt-3 flex flex-wrap gap-2">
                   {LAYER_IDS.map((l) => (
-                    <button key={l} type="button" aria-pressed={layer === l} onClick={() => setLayer(l)} className={chip(layer === l)}>
+                    <button key={l} type="button" aria-pressed={layer === l} onClick={() => {
+                        bump();
+                        setLayer(l);
+                      }} className={chip(layer === l)}>
                       {design.stages[l]}
                     </button>
                   ))}
