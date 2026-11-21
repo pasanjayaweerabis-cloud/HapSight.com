@@ -235,8 +235,7 @@ Agile Team Project module team at IIT for their feedback during the module.
 
 ## Academic integrity and AI use
 
-This repository is coursework for the Agile Team Project module. Generative AI tools (Claude and
-Claude Code) were used to help draft and build parts of this site from the team's own design and
+This repository is coursework for the Agile Team Project module. Generative AI tools (Claude, Claude Code and ChatGPT) were used to help draft and build parts of this site from the team's own design and
 brief. All output was reviewed and tested by the team, and the AI use is declared in the CW1
 submission.
 
