@@ -23,7 +23,7 @@ const LABEL_IDS = Object.keys(design.labels) as LabelId[];
 const chip = (on: boolean) =>
   `rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
     on
-      ? "border-stage-accent bg-stage-accent text-navy-ink"
+      ? "border-stage-cta bg-stage-cta text-stage-cta-text"
       : "border-stage-line text-stage-text hover:border-stage-accent hover:text-stage-accent"
   }`;
 
@@ -86,10 +86,7 @@ export function Explore() {
         <div className="mt-10 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-6">
           <div
             className="relative aspect-square overflow-hidden rounded-card border border-stage-line sm:aspect-[16/10] lg:sticky lg:top-24 lg:aspect-auto lg:h-[min(80svh,44rem)] lg:self-start"
-            style={{
-              background:
-                "radial-gradient(60% 55% at 50% 45%, rgba(40,90,160,0.28) 0%, rgba(8,15,29,0) 70%), radial-gradient(40% 30% at 50% 100%, rgba(20,224,200,0.08) 0%, rgba(8,15,29,0) 70%)",
-            }}
+            style={{ background: "var(--panel-glow)" }}
           >
             {enabled ? (
               <div
@@ -144,7 +141,7 @@ export function Explore() {
                     data-changed={changed || undefined}
                     className={`reset-view flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold backdrop-blur transition-colors duration-300 ${
                       changed
-                        ? "border-stage-accent bg-stage-accent text-navy-ink hover:bg-stage-accent-2"
+                        ? "border-stage-cta bg-stage-cta text-stage-cta-text hover:bg-stage-accent-2"
                         : "border-stage-line bg-stage/70 text-stage-muted"
                     }`}
                   >

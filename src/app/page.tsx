@@ -30,7 +30,7 @@ export default function Home() {
       <InsideArms />
       <Gallery />
       <Roadmap />
-      {/* visible hand-over from the always-dark stage to the page's own theme */}
+      {/* visible hand-over from the themed stage to the page's own theme */}
       <div
         aria-hidden="true"
         className="h-24"

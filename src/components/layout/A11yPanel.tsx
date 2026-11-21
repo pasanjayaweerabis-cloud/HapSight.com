@@ -26,7 +26,7 @@ export function A11yPanel() {
         type="button"
         onClick={open}
         aria-haspopup="dialog"
-        className="inline-flex size-12 items-center justify-center rounded-full border border-stage-line text-stage-text transition-colors hover:border-stage-accent hover:text-stage-accent"
+        className="inline-flex size-12 items-center justify-center rounded-full border border-stage-line text-stage-text transition-colors hover:border-stage-line-strong hover:bg-stage-surface-2"
       >
         <Icon name="a11y" />
         <span className="sr-only">{t.open}</span>

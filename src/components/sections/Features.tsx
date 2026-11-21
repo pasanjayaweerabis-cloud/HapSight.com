@@ -17,7 +17,7 @@ function Card({ f, active, accent = false }: { f: Item; active?: boolean; accent
       className={`glass card rounded-card p-7 transition-colors duration-300 ${active ? "border-stage-accent!" : ""}`}
       style={
         accent
-          ? { background: "radial-gradient(80% 60% at 0% 0%, rgba(20,224,200,0.08), transparent), var(--stage-glass)" }
+          ? { background: "radial-gradient(80% 60% at 0% 0%, color-mix(in srgb, var(--stage-accent) 9%, transparent), transparent), var(--stage-glass)" }
           : undefined
       }
     >

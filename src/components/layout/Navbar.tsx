@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { brand, nav } from "@/content/site";
 import { LogoMark } from "./Logo";
 import { A11yPanel } from "./A11yPanel";
+import { ThemeToggle } from "./ThemeToggle";
 import { Icon } from "@/components/ui/Icon";
 import { buttonClass } from "@/components/ui/Button";
 
@@ -74,8 +75,10 @@ export function Navbar() {
                 <a
                   href={href(l.href)}
                   aria-current={onHome && activeHref === l.href ? "true" : undefined}
-                  className={`inline-flex min-h-12 items-center rounded-full px-4 text-base transition-colors hover:text-stage-text ${
-                    onHome && activeHref === l.href ? "font-semibold text-stage-text" : "font-medium text-stage-muted"
+                  className={`relative inline-flex min-h-12 items-center rounded-full px-4 text-base transition-colors hover:text-stage-text after:absolute after:inset-x-4 after:bottom-2 after:h-0.5 after:rounded-full after:bg-stage-accent after:transition-opacity ${
+                    onHome && activeHref === l.href
+                      ? "font-semibold text-stage-text after:opacity-100"
+                      : "font-medium text-stage-muted after:opacity-0"
                   }`}
                 >
                   {l.label}
@@ -86,6 +89,7 @@ export function Navbar() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-2">
+          <ThemeToggle />
           <A11yPanel />
           <span className="hidden sm:block">
             <a href={href(nav.cta.href)} className={buttonClass("stagePrimary", "!shadow-none")}>
@@ -98,7 +102,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex size-12 items-center justify-center rounded-full border border-stage-line text-stage-text transition-colors hover:border-stage-accent lg:hidden"
+            className="inline-flex size-12 items-center justify-center rounded-full border border-stage-line text-stage-text transition-colors hover:border-stage-line-strong hover:bg-stage-surface-2 lg:hidden"
           >
             <Icon name={open ? "close" : "menu"} />
             <span className="sr-only">{open ? nav.closeMenu : nav.openMenu}</span>

@@ -58,6 +58,17 @@ export const nav = {
   menuTitle: "Menu",
 } as const;
 
+export const themeToggle = {
+  label: "Colour theme",
+  options: [
+    { value: "light", label: "Light theme", short: "Light" },
+    { value: "dark", label: "Dark theme", short: "Dark" },
+    { value: "system", label: "Match my device", short: "System" },
+  ],
+  switchToDark: "Switch to dark theme",
+  switchToLight: "Switch to light theme",
+} as const;
+
 export const a11yPanel = {
   open: "Accessibility settings",
   close: "Close accessibility settings",

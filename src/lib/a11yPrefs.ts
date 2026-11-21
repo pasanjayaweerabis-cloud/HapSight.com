@@ -24,7 +24,7 @@ export const DEFAULT_PREFS: A11yPrefs = {
  * Runs inline in <head> before the first paint so there is no flash of the wrong theme.
  * Keep it dependency free and in sync with `applyPrefs` below.
  */
-export const bootScript = `(function(){try{var p=JSON.parse(localStorage.getItem('${STORAGE_KEY}')||'{}');var d=document.documentElement;var t=p.theme||'system';var dark=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);d.classList.toggle('dark',dark);d.classList.toggle('light',!dark);d.classList.toggle('hc',!!p.highContrast);d.classList.toggle('large-text',!!p.largeText);d.classList.toggle('reduce-motion',!!p.reduceMotion);}catch(e){}})();`;
+export const bootScript = `(function(){try{var p=JSON.parse(localStorage.getItem('${STORAGE_KEY}')||'{}');var d=document.documentElement;var t=p.theme||'system';var dark=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);d.classList.toggle('dark',dark);d.classList.toggle('light',!dark);d.dataset.theme=dark?'dark':'light';d.style.colorScheme=dark?'dark':'light';d.classList.toggle('hc',!!p.highContrast);d.classList.toggle('large-text',!!p.largeText);d.classList.toggle('reduce-motion',!!p.reduceMotion);}catch(e){}})();`;
 
 let current: A11yPrefs = DEFAULT_PREFS;
 let loaded = false;
@@ -51,6 +51,8 @@ export function applyPrefs(p: A11yPrefs): void {
   const dark = p.theme === "dark" || (p.theme === "system" && systemDark());
   d.classList.toggle("dark", dark);
   d.classList.toggle("light", !dark);
+  d.dataset.theme = dark ? "dark" : "light";
+  d.style.colorScheme = dark ? "dark" : "light";
   d.classList.toggle("hc", p.highContrast);
   d.classList.toggle("large-text", p.largeText);
   d.classList.toggle("reduce-motion", p.reduceMotion);
@@ -75,7 +77,10 @@ function subscribe(cb: () => void): () => void {
   listeners.add(cb);
   const mq = window.matchMedia("(prefers-color-scheme: dark)");
   const onScheme = () => {
-    if (load().theme === "system") applyPrefs(current);
+    if (load().theme === "system") {
+      applyPrefs(current);
+      cb();
+    }
   };
   mq.addEventListener("change", onScheme);
   return () => {
@@ -86,6 +91,18 @@ function subscribe(cb: () => void): () => void {
 
 export function useA11yPrefs(): A11yPrefs {
   return useSyncExternalStore(subscribe, load, () => DEFAULT_PREFS);
+}
+
+/** The theme actually on screen ("system" resolved against the OS setting). */
+export function useResolvedTheme(): "light" | "dark" {
+  return useSyncExternalStore(
+    subscribe,
+    () => {
+      const t = load().theme;
+      return t === "dark" || (t === "system" && systemDark()) ? "dark" : "light";
+    },
+    () => "light",
+  );
 }
 
 function subscribeMotion(cb: () => void): () => void {
