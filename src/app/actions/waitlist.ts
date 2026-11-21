@@ -60,8 +60,10 @@ export async function joinWaitlist(_prev: WaitlistState, formData: FormData): Pr
 
   const supabase = getSupabase();
   if (!supabase) {
-    console.error("[waitlist] SUPABASE_URL or SUPABASE_SECRET_KEY is not set.");
-    return { status: "error", fieldErrors: {}, formError: "notConfigured", values };
+    // Front-end only for now: with no database connected, show the visitor the normal
+    // "thank you" message. NOTHING IS SAVED until SUPABASE_URL and SUPABASE_SECRET_KEY are set.
+    console.warn("[waitlist] SUPABASE_URL or SUPABASE_SECRET_KEY is not set; signup was not saved.");
+    return { status: "success", fieldErrors: {}, values: { name: "", email: "", role: "", consent: false } };
   }
 
   const { error } = await supabase.from("waitlist").insert({
