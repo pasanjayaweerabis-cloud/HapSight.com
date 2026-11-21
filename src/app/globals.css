@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Theme switching is class based: .dark / .light are set on <html> before paint. */
+/* Theme switching is class based: .dark / .light (plus data-theme) are set on <html> before paint. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------- Radius system ----------
@@ -12,18 +12,26 @@
      icon tiles, avatars). */
 
 /* ---------- Design tokens ---------- */
-/* Deep navy + teal (from the HapSight design file). Bright teal (#14e0c8) is text only on the dark
-   backgrounds; on white it fails contrast (1.7:1), so the light theme uses a dark teal (#0a6b60)
-   for text and links and keeps bright teal for decoration. Orange (--haptic) is ONLY for vibration:
-   motors, pulses and haptic ripples. Ratios below are WCAG 2.2 contrast ratios. */
+/* "Midnight Teal + Daylight Teal" (HAPSIGHT_COLOR_PALETTE_GUIDE). Teal marks interaction and
+   product technology in both modes; large reading areas stay neutral. Bright teal (#18D4C3) is
+   only for text/fills on the dark theme; on ivory the light theme uses deep teal (#087F75).
+   Orange (--haptic) is ONLY for vibration: motors, pulses and haptic ripples (3D only).
+   Ratios below are WCAG 2.2 contrast ratios against the token's own background. */
 :root {
-  --navy: #080f1d;
-  --navy-ink: #041411; /* text on bright teal buttons: 11.3:1 */
-  --teal: #14e0c8;
-  --teal-2: #8af5e7;
-  --teal-deep: #0a6b60;
-  --teal-light: #dcf5f1;
-  --haptic: #ffcb8a; /* 12.9:1 on stage-bg */
+  /* shared brand colours */
+  --brand-teal: #18d4c3;
+  --brand-teal-deep: #087f75;
+  --brand-teal-soft: #a7e9df; /* decoration only, never body text */
+  --ink-on-teal: #06221f;
+
+  /* legacy aliases used across components */
+  --navy: #06111d;
+  --navy-ink: var(--ink-on-teal);
+  --teal: var(--brand-teal);
+  --teal-2: #48e2d4;
+  --teal-deep: var(--brand-teal-deep);
+  --teal-light: var(--brand-teal-soft);
+  --haptic: #ffcb8a;
   --radius: 24px;
 
   /* z-index scale: the 3D canvas sits behind section content, sticky in-section slots sit above
@@ -34,89 +42,135 @@
   --z-nav: 50;
   --z-skip: 100;
 
-  /* light theme (default before the boot script runs) */
-  --bg: #ffffff;
-  --bg-soft: #f1f6f6;
-  --surface: #ffffff;
-  --text: #0b1422; /* 18.5:1 on white */
-  --text-muted: #475569; /* 7.6:1 on white, 7.0:1 on bg-soft */
-  --border: #d3e0de;
-  --accent: #0a6b60; /* 6.4:1 on white, 5.9:1 on bg-soft, 5.6:1 on accent-soft */
-  --accent-strong: #07544b;
-  --accent-contrast: #ffffff; /* 6.4:1 on accent */
-  --accent-soft: #dcf5f1;
-  --focus: #07544b;
-  --danger: #a3221b;
-  --success: #07544b;
+  /* ---- Light mode (default before the boot script runs) ---- */
+  --hs-page: #f6f7f2; /* warm ivory */
+  --hs-surface: #ffffff;
+  --hs-surface-tint: #eaf6f2;
+  --hs-text-primary: #14283b; /* 14.0:1 on page */
+  --hs-text-secondary: #4b6076; /* 6.0:1 on page, 5.9:1 on tint */
+  --hs-text-muted: #5c7083; /* guide #63778A was 4.3:1; nudged to 4.8:1 on page, 4.6:1 on tint */
+  --hs-border: #d5e0df;
+  --hs-border-strong: #afc5c3;
+  --hs-input-border: #78909a; /* form control edges: 3.4:1 on white, 3.1:1 on page */
+  --hs-accent: #077a70; /* guide #087F75 was 4.4:1 on the mint tint; nudged to 4.8:1 on page, 4.7:1 on tint */
+  --hs-accent-hover: #066b64;
+  --hs-cta-bg: #087f75;
+  --hs-cta-text: #ffffff; /* 4.9:1 on cta */
+  --hs-focus: #087f75;
+  --hs-success: #176b4d;
+  --hs-warning: #8a5a00;
+  --hs-error: #b42332;
+  --hs-info: #245e9b;
+  --glass: rgba(255, 255, 255, 0.78);
+  /* hero: restrained left-to-right ivory → mint wash, behind the product only */
+  --hero-wash: linear-gradient(90deg, #f6f7f2 0%, #f6f7f2 38%, #eaf6f2 100%);
+  --panel-glow: radial-gradient(60% 55% at 50% 45%, rgba(8, 127, 117, 0.1) 0%, rgba(8, 127, 117, 0) 70%);
 
-  /* the "stage" (hero and 3D sections) is always dark */
-  --stage-bg: #080f1d;
-  --stage-surface: #0d1727;
-  --stage-surface-2: #111f31;
-  --stage-text: #f2f7fa; /* 17.8:1 on stage-bg */
-  --stage-muted: #a1afbd; /* 8.6:1 on stage-bg, 7.4:1 on stage-surface-2 */
-  --stage-soft: #708194; /* 4.8:1 on stage-bg, but 4.2:1 on cards: decoration only, never body text */
-  --stage-accent: #14e0c8; /* 11.4:1 on stage-bg, 9.9:1 on stage-surface-2 */
-  --stage-accent-2: #8af5e7;
-  --stage-border: rgba(176, 205, 222, 0.13);
-  --stage-glass: rgba(13, 23, 39, 0.62);
+  /* the names components use, mapped onto the semantic palette */
+  --bg: var(--hs-page);
+  --bg-soft: var(--hs-surface-tint);
+  --surface: var(--hs-surface);
+  --text: var(--hs-text-primary);
+  --text-muted: var(--hs-text-secondary);
+  --text-subtle: var(--hs-text-muted);
+  --border: var(--hs-border);
+  --border-strong: var(--hs-border-strong);
+  --input-border: var(--hs-input-border);
+  --accent: var(--hs-accent);
+  --accent-strong: var(--hs-accent-hover);
+  --accent-contrast: var(--hs-cta-text);
+  --accent-soft: var(--hs-surface-tint);
+  --focus: var(--hs-focus);
+  --danger: var(--hs-error);
+  --success: var(--hs-success);
+
+  /* the "stage" (hero, nav and 3D sections) follows the theme too */
+  --stage-bg: var(--hs-page);
+  --stage-surface: var(--hs-surface);
+  --stage-surface-2: var(--hs-surface-tint);
+  --stage-text: var(--hs-text-primary);
+  --stage-muted: var(--hs-text-secondary);
+  --stage-soft: var(--hs-text-muted);
+  --stage-accent: var(--hs-accent);
+  --stage-accent-2: var(--hs-accent-hover);
+  --stage-cta-bg: var(--hs-cta-bg);
+  --stage-cta-text: var(--hs-cta-text);
+  --stage-border: var(--hs-border);
+  --stage-border-strong: var(--hs-border-strong);
+  --stage-glass: var(--glass);
 
   --font-scale: 1;
   color-scheme: light;
 }
 
+/* ---- Dark mode ---- */
 .dark {
-  --bg: #080f1d;
-  --bg-soft: #0d1727;
-  --surface: #111f31;
-  --text: #f2f7fa; /* 17.8:1 on bg */
-  --text-muted: #a1afbd; /* 8.6:1 on bg, 8.0:1 on bg-soft, 7.4:1 on surface */
-  --border: rgba(176, 205, 222, 0.16);
-  --accent: #14e0c8; /* 11.4:1 on bg, 9.9:1 on surface, 9.1:1 on accent-soft */
-  --accent-strong: #8af5e7;
-  --accent-contrast: #041411; /* 11.3:1 on accent */
-  --accent-soft: #0b2a2d;
-  --focus: #8af5e7;
-  --danger: #ffaaa3;
-  --success: #8af5e7;
+  --hs-page: #06111d;
+  --hs-surface: #0b1a27;
+  --hs-surface-tint: #0c252b;
+  --hs-text-primary: #f4f7f9; /* 17.7:1 on page */
+  --hs-text-secondary: #b6c5d2; /* 10.8:1 on page */
+  --hs-text-muted: #91a4b4; /* 7.3:1 on page */
+  --hs-border: #203140;
+  --hs-border-strong: #385060;
+  --hs-input-border: #5d7686; /* form control edges: 3.7:1 on surface */
+  --hs-accent: #18d4c3; /* 10.2:1 on page */
+  --hs-accent-hover: #48e2d4;
+  --hs-cta-bg: #18d4c3;
+  --hs-cta-text: #06221f; /* 9.0:1 on cta, 10.4:1 on hover */
+  --hs-focus: #48e2d4;
+  --hs-success: #65d6a5;
+  --hs-warning: #f2c66d;
+  --hs-error: #ff7b83;
+  --hs-info: #82b8ff;
+  --glass: rgba(11, 26, 39, 0.66);
+  /* hero: quiet radial glow behind the glasses on the right, left side stays page-dark */
+  --hero-wash:
+    radial-gradient(46% 58% at 78% 46%, rgba(0, 54, 56, 0.95) 0%, rgba(12, 55, 58, 0.45) 45%, rgba(6, 17, 29, 0) 75%),
+    #06111d;
+  --panel-glow:
+    radial-gradient(60% 55% at 50% 45%, rgba(0, 54, 56, 0.85) 0%, rgba(6, 17, 29, 0) 70%),
+    radial-gradient(40% 30% at 50% 100%, rgba(24, 212, 195, 0.08) 0%, rgba(6, 17, 29, 0) 70%);
   color-scheme: dark;
 }
 
 /* High contrast: pure black/white, solid borders, no soft greys or glass. */
 .hc {
   --text-muted: var(--text);
+  --text-subtle: var(--text);
   --border: currentColor;
-  --stage-muted: #ffffff;
-  --stage-soft: #ffffff;
-  --stage-border: #ffffff;
-  --stage-bg: #000000;
-  --stage-surface: #000000;
-  --stage-surface-2: #000000;
-  --stage-glass: #000000;
-  --stage-text: #ffffff;
-  --stage-accent: #5ff5e1; /* 15.6:1 on black */
-  --stage-accent-2: #5ff5e1;
+  --border-strong: currentColor;
+  --input-border: currentColor;
+  --stage-muted: var(--stage-text);
+  --stage-soft: var(--stage-text);
+  --stage-border: currentColor;
+  --stage-border-strong: currentColor;
+  --hero-wash: var(--stage-bg);
+  --panel-glow: none;
 }
 .hc.light,
 .hc:not(.dark) {
-  --bg: #ffffff;
-  --bg-soft: #ffffff;
-  --surface: #ffffff;
-  --text: #000000;
-  --accent: #064a42; /* 10.2:1 on white */
-  --accent-strong: #03302a;
-  --accent-soft: #ffffff;
-  --focus: #000000;
+  --hs-page: #ffffff;
+  --hs-surface: #ffffff;
+  --hs-surface-tint: #ffffff;
+  --hs-text-primary: #000000;
+  --hs-accent: #064a42; /* 10.2:1 on white */
+  --hs-accent-hover: #03302a;
+  --hs-cta-bg: #064a42;
+  --hs-focus: #000000;
+  --glass: #ffffff;
 }
 .hc.dark {
-  --bg: #000000;
-  --bg-soft: #000000;
-  --surface: #000000;
-  --text: #ffffff;
-  --accent: #5ff5e1;
-  --accent-strong: #b8fbf2;
-  --accent-soft: #000000;
-  --focus: #ffffff;
+  --hs-page: #000000;
+  --hs-surface: #000000;
+  --hs-surface-tint: #000000;
+  --hs-text-primary: #ffffff;
+  --hs-accent: #5ff5e1; /* 15.6:1 on black */
+  --hs-accent-hover: #b8fbf2;
+  --hs-cta-bg: #5ff5e1;
+  --hs-cta-text: #000000;
+  --hs-focus: #ffffff;
+  --glass: #000000;
 }
 
 .large-text {
@@ -130,6 +184,9 @@
   --color-text: var(--text);
   --color-muted: var(--text-muted);
   --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-input: var(--input-border);
+  --color-subtle: var(--text-subtle);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-contrast: var(--accent-contrast);
@@ -141,6 +198,9 @@
   --color-stage-muted: var(--stage-muted);
   --color-stage-accent: var(--stage-accent);
   --color-stage-line: var(--stage-border);
+  --color-stage-line-strong: var(--stage-border-strong);
+  --color-stage-cta: var(--stage-cta-bg);
+  --color-stage-cta-text: var(--stage-cta-text);
   --color-stage-surface: var(--stage-surface);
   --color-stage-surface-2: var(--stage-surface-2);
   --color-stage-soft: var(--stage-soft);
@@ -197,18 +257,14 @@ body {
 .stage {
   background: var(--stage-bg);
   color: var(--stage-text);
-  color-scheme: dark;
 }
-/* Soft teal glow behind the device, as in the design file. */
+/* Hero wash: ivory → mint in light mode, a teal glow behind the glasses in dark mode. */
 .stage-gradient {
-  background:
-    radial-gradient(48% 58% at 78% 44%, rgba(20, 224, 200, 0.1) 0%, rgba(20, 224, 200, 0) 70%),
-    radial-gradient(70% 70% at 15% 0%, rgba(32, 53, 82, 0.28) 0%, rgba(32, 53, 82, 0) 65%),
-    var(--stage-bg);
+  background: var(--hero-wash);
 }
 .hc .stage,
 .hc .stage-gradient {
-  background: #000;
+  background: var(--stage-bg);
 }
 
 /* The one 3D canvas is fixed behind the page (--z-canvas). Section content sits above it;
@@ -366,11 +422,11 @@ body {
 /* Explore viewer: the "Reset view" button pulses a soft teal ring when the view has changed. */
 @keyframes attention-ring {
   0% {
-    box-shadow: 0 0 0 0 rgba(20, 224, 200, 0.55);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--stage-accent) 55%, transparent);
   }
   70%,
   100% {
-    box-shadow: 0 0 0 12px rgba(20, 224, 200, 0);
+    box-shadow: 0 0 0 12px color-mix(in srgb, var(--stage-accent) 0%, transparent);
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -385,8 +441,8 @@ body {
   color: var(--accent-contrast);
 }
 .stage ::selection {
-  background: var(--stage-accent);
-  color: var(--navy-ink);
+  background: var(--stage-cta-bg);
+  color: var(--stage-cta-text);
 }
 input,
 textarea {

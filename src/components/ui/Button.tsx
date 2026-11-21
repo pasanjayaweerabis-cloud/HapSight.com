@@ -7,11 +7,11 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary: "bg-accent text-accent-contrast border-accent hover:bg-accent-strong hover:border-accent-strong",
-  secondary: "bg-transparent text-text border-line hover:border-accent hover:text-accent",
+  secondary: "bg-transparent text-text border-line hover:bg-bg-soft hover:border-line-strong",
   ghost: "bg-transparent text-text border-transparent hover:text-accent",
-  // navy-ink on stage-accent-2: 14.6:1
-  stagePrimary: "bg-stage-accent text-navy-ink border-stage-accent hover:bg-stage-accent-2 hover:border-stage-accent-2",
-  stageSecondary: "bg-transparent text-stage-text border-stage-line hover:border-stage-accent hover:text-stage-accent",
+  // CTA: white on deep teal (light), ink on bright teal (dark). Hover darkens in light, brightens in dark.
+  stagePrimary: "bg-stage-cta text-stage-cta-text border-stage-cta hover:bg-stage-accent-2 hover:border-stage-accent-2",
+  stageSecondary: "bg-transparent text-stage-text border-stage-line hover:bg-stage-surface-2 hover:border-stage-line-strong",
 };
 
 export function buttonClass(variant: Variant = "primary", extra = ""): string {

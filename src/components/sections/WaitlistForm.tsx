@@ -18,7 +18,7 @@ const FIELD_TARGET: Record<FieldName, string> = {
 };
 
 const inputClass =
-  "mt-2 block min-h-13 w-full rounded-xl border border-line bg-surface px-4 text-lg text-text placeholder:text-muted aria-[invalid=true]:border-danger aria-[invalid=true]:border-2";
+  "mt-2 block min-h-13 w-full rounded-xl border border-input bg-surface px-4 text-lg text-text placeholder:text-muted aria-[invalid=true]:border-danger aria-[invalid=true]:border-2";
 
 export function WaitlistForm() {
   const [state, formAction, pending] = useActionState(joinWaitlist, initialWaitlistState);
@@ -132,7 +132,7 @@ export function WaitlistForm() {
               <label
                 key={o.value}
                 data-radio-card
-                className={`flex min-h-13 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 has-[:checked]:border-accent has-[:checked]:bg-accent-soft ${errors.role ? "border-danger" : "border-line"}`}
+                className={`flex min-h-13 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 has-[:checked]:border-accent has-[:checked]:bg-accent-soft ${errors.role ? "border-danger" : "border-input"}`}
               >
                 <input
                   id={`wl-role-${i}`}
@@ -151,7 +151,7 @@ export function WaitlistForm() {
 
         <div>
           {err("consent") ? <FieldError id="wl-consent-error" message={err("consent")!} /> : null}
-          <div className={`flex gap-3 rounded-xl border p-4 ${errors.consent ? "border-2 border-danger" : "border-line"}`}>
+          <div className={`flex gap-3 rounded-xl border p-4 ${errors.consent ? "border-2 border-danger" : "border-input"}`}>
             <input
               id="wl-consent"
               name="consent"
