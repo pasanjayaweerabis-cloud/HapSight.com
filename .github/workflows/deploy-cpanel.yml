@@ -28,6 +28,7 @@ jobs:
           cp -r .next/static .next/standalone/.next/
           mkdir -p .next/standalone/tmp
           date > .next/standalone/tmp/restart.txt
+          find .next/standalone -type f -empty -exec sh -c 'echo "" > "$1"' _ {} \;
 
       - name: Upload to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
