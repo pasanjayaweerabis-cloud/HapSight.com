@@ -41,6 +41,7 @@ export function StageSlot({
   preload = false,
   className = "",
   front = false,
+  backdrop = front,
   label,
   children,
 }: {
@@ -49,6 +50,8 @@ export function StageSlot({
   id: StageSectionId;
   /** Phones: draw the device above the page here; the slot gets a solid backdrop. */
   front?: boolean;
+  /** Solid stage-coloured backdrop behind a front slot. Turn off when the parent already has one. */
+  backdrop?: boolean;
   still?: string;
   sizes?: string;
   preload?: boolean;
@@ -69,7 +72,7 @@ export function StageSlot({
     <div
       ref={ref}
       {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })}
-      data-stage-slot={id} className={`relative ${front ? "bg-stage" : ""} ${className}`}>
+      data-stage-slot={id} className={`relative ${backdrop ? "bg-stage" : ""} ${className}`}>
       {still ? (
         <div className={`absolute inset-0 transition-opacity duration-500 ${ready ? "opacity-0" : "opacity-100"}`}>
           <Still src={still} sizes={sizes} preload={preload} />

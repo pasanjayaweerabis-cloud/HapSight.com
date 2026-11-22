@@ -325,11 +325,14 @@ export default function PersistentStage({ active, onReady, compact }: Persistent
       frameloop={active ? "demand" : "never"}
       camera={{ position: [0, 0, 6], fov: FOV, near: 0.1, far: 30 }}
       gl={{ antialias: !compact, alpha: true, powerPreference: "high-performance" }}
+      // never take clicks: on "front" slots the canvas sits above the page (pointer tilt listens on window)
+      style={{ pointerEvents: "none" }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
         gl.toneMappingExposure = 1.05;
         gl.setClearColor(0x000000, 0);
         gl.domElement.style.transition = "opacity 200ms linear";
+        gl.domElement.style.pointerEvents = "none";
         // GPU reset or too many contexts: bring the stills back until the context is restored.
         gl.domElement.addEventListener("webglcontextlost", (e) => {
           e.preventDefault();

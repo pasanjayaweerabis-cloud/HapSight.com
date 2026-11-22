@@ -16,15 +16,12 @@ export const brand = {
   tagline: "Feel the path ahead.",
   shortDescription:
     "Low-cost haptic glasses being designed to help blind and visually impaired people notice obstacles at head height, silently and hands-free.",
-  /**
-   * TODO(Pasan): add the real team inbox. While this is null the site shows "coming soon" text
-   * instead of a fake address, and the legal pages say where it will be published.
-   */
-  contactEmail: null as string | null,
+  /** Team inbox: shown in the footer as a mailto link and used on the legal pages. */
+  contactEmail: "atp.hapsight@gmail.com" as string | null,
   siteUrl: "https://hapsight.com",
 } as const;
 
-/** How to reach the team, in words, for the legal pages (works with or without an email yet). */
+/** How to reach the team, in words, for the legal pages. */
 export const contactHow = brand.contactEmail
   ? `email ${brand.contactEmail}`
   : "use the contact email that will be published in the footer of this site before the waitlist opens";
