@@ -79,7 +79,7 @@ export function createMaterials(): Record<MaterialKey, THREE.Material> {
     }),
     // thin gunmetal rim around each lens, as in the concept renders
     lensEdge: new THREE.MeshStandardMaterial({ color: COLORS.rim, roughness: 0.3, metalness: 0.85 }),
-    // thin teal bezels around the three sensor windows: an emissive material, not a real LED part
+    // thin orange bezels around the three sensor windows: an emissive material, not a real LED part
     accent: new THREE.MeshStandardMaterial({
       color: COLORS.teal,
       emissive: new THREE.Color(COLORS.teal),
@@ -97,7 +97,7 @@ export function createMaterials(): Record<MaterialKey, THREE.Material> {
     wireRed: new THREE.MeshStandardMaterial({ color: COLORS.wireRed, roughness: 0.5 }),
     wireBlack: new THREE.MeshStandardMaterial({ color: COLORS.wireBlack, roughness: 0.5 }),
     connector: new THREE.MeshStandardMaterial({ color: COLORS.connector, roughness: 0.6 }),
-    // the sensor's lens glows teal through its window (styling: the real laser is invisible infrared)
+    // the sensor's lens glows orange through its window (styling: the real laser is invisible infrared)
     sensorLens: new THREE.MeshPhysicalMaterial({
       color: COLORS.sensorLens,
       emissive: new THREE.Color(COLORS.teal),

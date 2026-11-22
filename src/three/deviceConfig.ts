@@ -27,8 +27,8 @@ export const COLORS = {
   frame: "#2C2E33",
   frameInside: "#24262b",
   rubber: "#18191c",
-  teal: "#14E0C8",
-  teal2: "#8AF5E7",
+  teal: "#FF6A1A", // brand orange (name kept): sensor glow, beams, arrows
+  teal2: "#FFB27A",
   /** Only for vibration: motors, pulses, haptic ripples. */
   haptic: "#FFCB8A",
   lens: "#a9d6ff",
@@ -45,7 +45,7 @@ export const COLORS = {
   wireRed: "#c62a2a",
   wireBlack: "#141414",
   connector: "#ece9e1",
-  sensorLens: "#0d5c55",
+  sensorLens: "#5c2a0d",
   port: "#08090b",
   screw: "#3b3e45",
   smd: "#cfc6b4",

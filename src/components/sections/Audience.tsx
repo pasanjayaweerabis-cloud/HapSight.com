@@ -5,7 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 export function Audience() {
   const [first, ...rest] = t.items;
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} className="py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="py-16 sm:py-20">
       <Container>
         <SectionHeading id={t.id} title={t.title} />
         <div className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">

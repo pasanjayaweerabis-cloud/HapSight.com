@@ -85,12 +85,12 @@ function ScrollFeatures() {
           className="sticky top-[4.5rem] z-(--z-sticky) -mx-5 h-[38svh] sm:mx-0 lg:order-2 lg:z-0 lg:h-[calc(100svh-4.5rem)]"
         />
         {/* z-10: local stacking, above the sticky slot on phones only */}
-        <ul ref={listRef} className="relative z-10 pb-[10svh] lg:order-1 lg:py-[18vh]">
+        <ul ref={listRef} className="relative z-10 pb-[10svh] lg:order-1 lg:py-[10vh]">
           {t.items.map((f, i) => (
             <li
               key={f.title}
               aria-current={active === i ? "true" : undefined}
-              className="flex min-h-[48svh] items-end pb-[4svh] lg:min-h-[62svh] lg:items-center lg:pb-0"
+              className="flex min-h-[48svh] items-end pb-[4svh] lg:min-h-[52svh] lg:items-center lg:pb-0"
             >
               <Card f={f} active={active === i} />
             </li>

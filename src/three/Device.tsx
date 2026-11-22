@@ -14,7 +14,7 @@ export interface DeviceProps {
   getExplode?: () => number;
   /** Optional per-part opacity 0..1 (highlight one part, dim or X-ray the rest). */
   getPartOpacity?: (id: string) => number;
-  /** Optional 0..1 boost for the decorative teal strips. */
+  /** Optional 0..1 boost for the decorative orange strips. */
   getGlow?: () => number;
   quality?: "high" | "low";
   /** Receives the part groups by id, e.g. to project label anchors to the screen. */

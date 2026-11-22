@@ -6,7 +6,7 @@ import { Container, SectionHeading } from "@/components/ui/Section";
 export function Gallery() {
   if (!t.enabled) return null;
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} className="py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="py-16 sm:py-20">
       <Container>
         <SectionHeading id={t.id} title={t.title} intro={t.intro} />
         <ul className="mt-12 grid gap-5 md:grid-cols-3">

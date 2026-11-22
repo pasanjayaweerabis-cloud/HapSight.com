@@ -44,12 +44,12 @@ function ScrollStory() {
           className="sticky top-[4.5rem] z-(--z-sticky) -mx-5 h-[42svh] sm:mx-0 lg:z-0 lg:h-[calc(100svh-4.5rem)]"
         />
         {/* z-10: local stacking, above the sticky slot on phones only */}
-        <ol ref={listRef} className="relative z-10 pb-[10svh] lg:py-[20vh]">
+        <ol ref={listRef} className="relative z-10 pb-[10svh] lg:py-[12vh]">
           {t.steps.map((s, i) => (
             <li
               key={s.id}
               aria-current={active === i ? "step" : undefined}
-              className="flex min-h-[56svh] items-end pb-[4svh] lg:min-h-[78svh] lg:items-center lg:pb-0"
+              className="flex min-h-[56svh] items-end pb-[4svh] lg:min-h-[64svh] lg:items-center lg:pb-0"
             >
               <div
                 className={`card w-full rounded-card border p-6 transition-colors duration-300 sm:p-8 ${

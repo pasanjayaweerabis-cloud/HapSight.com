@@ -79,7 +79,7 @@ function Links({ m }: { m: TeamMember }) {
 export function Team() {
   const anyMissingPhoto = t.members.some((m) => !photoSrc(m));
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} className="py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="py-16 sm:py-20">
       <Container>
         <SectionHeading id={t.id} title={t.title} intro={t.intro} />
         {/* phone 1 · tablet 2 · desktop 3, last row of 2 centred */}

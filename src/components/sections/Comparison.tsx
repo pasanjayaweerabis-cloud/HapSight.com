@@ -4,7 +4,7 @@ import { Reveal } from "@/components/ui/Reveal";
 
 export function Comparison() {
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} className="bg-bg-soft py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="bg-bg-soft py-16 sm:py-20">
       <Container>
         <SectionHeading id={t.id} title={t.title} />
 

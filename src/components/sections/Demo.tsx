@@ -9,7 +9,7 @@ import { RangeMarker, StageSlot } from "@/components/visuals/StageSlot";
 export function Demo() {
   if (!t.enabled) return null;
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative py-16 sm:py-20">
       <RangeMarker id="demo" />
       <Container>
         <div className="flex items-end justify-between gap-8">

@@ -6,7 +6,7 @@ import { WaitlistForm } from "./WaitlistForm";
 
 export function Waitlist() {
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} className="relative py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="relative py-16 sm:py-20">
       <RangeMarker id="waitlist" />
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
         <div>
