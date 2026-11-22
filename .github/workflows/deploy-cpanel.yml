@@ -30,17 +30,30 @@ jobs:
           date > .next/standalone/tmp/restart.txt
           find .next/standalone -type f -empty -exec sh -c 'echo "" > "$1"' _ {} \;
 
-      - name: Upload to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Pack the site
+        run: tar -czf site.tgz -C .next/standalone .
+
+      - name: Upload over SSH
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          host: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          security: loose
-          timeout: 600000
-          local-dir: ./.next/standalone/
-          server-dir: ./hapsight/
-          exclude: |
-            **/.git*
-            **/.git*/**
+          port: 26742
+          source: site.tgz
+          target: hapsight-upload
+
+      - name: Unpack and restart
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 26742
+          script: |
+            set -e
+            mkdir -p ~/hapsight
+            tar -xzf ~/hapsight-upload/site.tgz -C ~/hapsight
+            rm -rf ~/hapsight-upload
+            mkdir -p ~/hapsight/tmp
+            touch ~/hapsight/tmp/restart.txt
