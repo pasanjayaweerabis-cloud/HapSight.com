@@ -3,9 +3,8 @@
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { COLORS } from "../deviceConfig";
 
-/** Thin teal rings behind the device in the hero, like the design file. Decorative. */
+/** Thin brand-orange rings behind the device in the hero, like the design file. Decorative. */
 export function OrbitRings({ getAmount, animate }: { getAmount: () => number; animate: boolean }) {
   const group = useRef<THREE.Group>(null);
   const rings = useMemo(
@@ -14,7 +13,7 @@ export function OrbitRings({ getAmount, animate }: { getAmount: () => number; an
         (r) =>
           [
             new THREE.TorusGeometry(r, 0.0035, 6, 160),
-            new THREE.MeshBasicMaterial({ color: COLORS.teal, transparent: true, opacity: 0, depthWrite: false, toneMapped: false }),
+            new THREE.MeshBasicMaterial({ color: "#FF6A1A", transparent: true, opacity: 0, depthWrite: false, toneMapped: false }),
           ] as const,
       ),
     [],
