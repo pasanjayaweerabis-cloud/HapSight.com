@@ -21,7 +21,7 @@ function Node({ status, className = "" }: { status: RoadmapStatus; className?: s
 /** Project status in plain words: an ordered list, so screen readers hear the sequence. */
 export function Roadmap() {
   return (
-    <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative py-24 sm:py-32">
+    <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative py-16 sm:py-20">
       <RangeMarker id="roadmap" />
       <Container>
         <div className="flex items-end justify-between gap-8">

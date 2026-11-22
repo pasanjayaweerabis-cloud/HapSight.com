@@ -74,7 +74,7 @@ export function Frame() {
           <boxGeometry args={[SENSOR_WINDOW.w - 0.01, SENSOR_WINDOW.h - 0.01, 0.004]} />
         </mesh>
       ))}
-      {/* thin glowing teal bezel around each sensor window (emissive material, not a part) */}
+      {/* thin glowing orange bezel around each sensor window (emissive material, not a part) */}
       {bezels.map((g, i) => (
         <mesh key={i} geometry={g} position={[0, 0, front + 0.0012]} material={mats.accent} />
       ))}

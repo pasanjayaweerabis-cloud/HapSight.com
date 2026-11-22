@@ -161,7 +161,7 @@ export default function ExploreScene({ active, onReady, ...props }: ExploreScene
     >
       <ambientLight intensity={0.3} />
       <directionalLight position={[-2.5, 3, 3]} intensity={1.7} color="#f4f7ff" />
-      <directionalLight position={[2.5, 1.5, -3.5]} intensity={2.3} color="#9ff5e9" />
+      <directionalLight position={[2.5, 1.5, -3.5]} intensity={2.3} color="#ffd2b0" />
       <directionalLight position={[-3, 0.5, -2.5]} intensity={1.3} color="#9db8ff" />
       <directionalLight position={[3, 1.2, 2]} intensity={0.6} color="#ffffff" />
       <Environment resolution={256} frames={1}>

@@ -345,13 +345,13 @@ export default function PersistentStage({ active, onReady, compact }: Persistent
       <PerformanceMonitor onDecline={() => setDpr((d) => Math.max(1, d - 0.25))} />
       <ambientLight intensity={0.32} />
       <directionalLight position={[-2.5, 3, 3]} intensity={1.7} color="#f4f7ff" />
-      <directionalLight position={[2.5, 1.5, -3.5]} intensity={2.1} color="#9ff5e9" />
+      <directionalLight position={[2.5, 1.5, -3.5]} intensity={2.1} color="#ffd2b0" />
       <directionalLight position={[-3, 0.5, -2.5]} intensity={1.1} color="#c9d6ff" />
       <directionalLight position={[3, 1.2, 2]} intensity={0.6} color="#ffffff" />
       <Environment resolution={128} frames={1}>
         <Lightformer form="rect" intensity={2.2} position={[0, 4, 1]} scale={[6, 2, 1]} rotation-x={Math.PI / 2} />
         <Lightformer form="rect" intensity={1.2} position={[-4, 1, 2]} scale={[2, 4, 1]} rotation-y={Math.PI / 2.5} />
-        <Lightformer form="rect" intensity={1.6} color="#8af5e7" position={[4, 1, -3]} scale={[2, 5, 1]} rotation-y={-Math.PI / 2.5} />
+        <Lightformer form="rect" intensity={1.6} color="#ffb27a" position={[4, 1, -3]} scale={[2, 5, 1]} rotation-y={-Math.PI / 2.5} />
         <Lightformer form="ring" intensity={0.8} color="#c7d8ff" position={[0, -3, 3]} scale={3} />
       </Environment>
       <Suspense fallback={null}>
