@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { brand, nav } from "@/content/site";
+import { nav } from "@/content/site";
 import { LogoMark } from "./Logo";
 import { A11yPanel } from "./A11yPanel";
 import { ThemeToggle } from "./ThemeToggle";
@@ -64,7 +64,9 @@ export function Navbar() {
       <div className="mx-auto flex h-18 max-w-[max(72.5rem,88vw)] items-center gap-4 px-5 sm:px-8">
         <a href={onHome ? "#top" : "/"} className="flex min-h-12 items-center gap-3 rounded-xl font-semibold tracking-tight">
           <LogoMark />
-          <span className="text-xl">{brand.name}</span>
+          <span className="text-xl">
+            Hap<span className="text-stage-accent">Sight</span>
+          </span>
           <span className="sr-only">, home</span>
         </a>
 
