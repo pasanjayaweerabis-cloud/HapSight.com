@@ -36,6 +36,8 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
+          security: loose
+          timeout: 600000
           local-dir: ./.next/standalone/
           server-dir: ./hapsight/
           exclude: |
