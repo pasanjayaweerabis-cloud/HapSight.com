@@ -95,15 +95,15 @@ export function Team() {
                 <div className="flex justify-center">
                   <Photo m={m} />
                 </div>
-                <h3 className="mt-5 text-lg font-semibold tracking-[-0.02em]">{m.name}</h3>
+                <h3 className="mt-5 text-card-sm font-semibold tracking-[-0.01em]">{m.name}</h3>
                 <p className="mt-1 text-base text-muted">{m.role}</p>
                 <Links m={m} />
               </Reveal>
             </li>
           ))}
         </ul>
-        {anyMissingPhoto ? <p className="mt-6 text-center text-sm text-muted">{t.photosNote}</p> : null}
-        <div className="mt-10 grid gap-1 text-center text-sm text-muted">
+        {anyMissingPhoto ? <p className="mt-6 text-center text-label text-muted">{t.photosNote}</p> : null}
+        <div className="mt-10 grid gap-1 text-center text-label text-muted">
           {t.course.map((line) => (
             <p key={line}>{line}</p>
           ))}

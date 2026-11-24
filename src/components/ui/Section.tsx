@@ -20,7 +20,7 @@ export function SectionHeading({
         {title}
       </h2>
       {intro ? (
-        <p className={`mt-5 max-w-[62ch] text-pretty text-lg sm:text-xl ${stage ? "text-stage-muted" : "text-muted"}`}>{intro}</p>
+        <p className={`mt-5 max-w-measure text-pretty text-lg sm:text-lead ${stage ? "text-stage-muted" : "text-muted"}`}>{intro}</p>
       ) : null}
     </div>
   );

@@ -4,16 +4,17 @@ import { RangeMarker, StageSlot } from "@/components/visuals/StageSlot";
 import { Reveal } from "@/components/ui/Reveal";
 
 /** The step's status, as a node: filled teal (done), teal ring (now) or muted ring (next). */
-function Node({ status, className = "" }: { status: RoadmapStatus; className?: string }) {
+/** `display` sets how it shows (default inline-flex); pass e.g. "hidden lg:inline-flex" to hide it. */
+function Node({ status, display = "inline-flex" }: { status: RoadmapStatus; display?: string }) {
   if (status === "done") {
-    return <span aria-hidden="true" className={`inline-flex size-3 shrink-0 rounded-full bg-stage-accent ${className}`} />;
+    return <span aria-hidden="true" className={`${display} size-3 shrink-0 rounded-full bg-stage-accent`} />;
   }
   return (
     <span
       aria-hidden="true"
-      className={`inline-flex size-3 shrink-0 rounded-full border-2 ${
+      className={`${display} size-3 shrink-0 rounded-full border-2 ${
         status === "now" ? "border-stage-accent" : "border-stage-muted"
-      } ${className}`}
+      }`}
     />
   );
 }
@@ -30,8 +31,9 @@ export function Roadmap() {
           <StageSlot id="roadmap" className="hidden h-44 w-72 shrink-0 lg:block" />
         </div>
         {/* below lg: a vertical timeline, node + connecting line beside each card.
-            at lg: a plain 5-column grid, the node moves inline with the status text. */}
-        <ol className="mt-14 grid gap-4 lg:grid-cols-5">
+            at lg: a 3-column grid (3 + 2), 5 columns only on wide screens where each card still has
+            a comfortable line length; the node moves inline with the status text. */}
+        <ol className="mt-14 grid gap-4 lg:grid-cols-3 2xl:grid-cols-5">
           {t.steps.map((s, i) => (
             <li key={s.title} className="flex gap-4 lg:block">
               <div aria-hidden="true" className="flex w-3 shrink-0 flex-col items-center lg:hidden">
@@ -43,12 +45,12 @@ export function Roadmap() {
                 className={`glass relative flex-1 rounded-card p-6 ${s.status === "now" ? "border-stage-accent!" : ""}`}
               >
                 <p
-                  className={`flex items-center gap-2 text-sm font-semibold ${s.status === "next" ? "text-stage-muted" : "text-stage-accent"}`}
+                  className={`flex items-center gap-2 text-label font-semibold ${s.status === "next" ? "text-stage-muted" : "text-stage-accent"}`}
                 >
-                  <Node status={s.status} className="hidden lg:inline-flex" />
+                  <Node status={s.status} display="hidden lg:inline-flex" />
                   {t.statusLabels[s.status]}
                 </p>
-                <h3 className="mt-3 text-xl font-semibold tracking-[-0.01em]">{s.title}</h3>
+                <h3 className="mt-3 text-card-sm font-semibold tracking-[-0.01em]">{s.title}</h3>
                 <p className="mt-2 text-base text-stage-muted">{s.body}</p>
               </Reveal>
             </li>

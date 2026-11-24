@@ -12,14 +12,16 @@
      icon tiles, avatars). */
 
 /* ---------- Design tokens ---------- */
-/* "Midnight Teal + Daylight Teal" (HAPSIGHT_COLOR_PALETTE_GUIDE). Teal marks interaction and
-   product technology in both modes; large reading areas stay neutral. Bright teal (#18D4C3) is
-   only for text/fills on the dark theme; on ivory the light theme uses deep teal (#087F75).
+/* Brand palette: orange on charcoal (dark) and on cool light grey (light). Orange marks
+   interaction and product technology in both modes; large reading areas stay neutral. The CTA
+   fill is #ff6a1a in both themes; orange TEXT uses #ff8a3d on dark and deep #b33a08 on light.
+   NOTE: the --brand-teal / --teal* / --navy* names are legacy. They now hold the orange and
+   charcoal values; they are kept so existing components and Tailwind classes keep working.
    Orange (--haptic) is ONLY for vibration: motors, pulses and haptic ripples (3D only).
    Ratios below are WCAG 2.2 contrast ratios against the token's own background. */
 :root {
   /* shared brand colours */
-  --brand-teal: #ff6a1a; /* brand orange (name kept for older components) */
+  --brand-teal: #ff6a1a; /* brand orange (legacy "teal" name) */
   --brand-teal-deep: #c2410c;
   --brand-teal-soft: #ffe6d5; /* decoration only, never body text */
   --ink-on-teal: #111111;
@@ -64,7 +66,7 @@
   --hs-error: #b42332;
   --hs-info: #245e9b;
   --glass: rgba(255, 255, 255, 0.78);
-  /* hero: restrained left-to-right ivory → mint wash, behind the product only */
+  /* hero: soft orange glow behind the product only, page grey elsewhere */
   --hero-wash: radial-gradient(48% 60% at 76% 48%, rgba(255, 106, 26, 0.22) 0%, rgba(255, 106, 26, 0) 70%), #f2f3f5;
   --panel-glow: radial-gradient(60% 55% at 50% 45%, rgba(255, 106, 26, 0.14) 0%, rgba(255, 106, 26, 0) 70%);
 
@@ -222,6 +224,26 @@
   --color-teal-light: var(--teal-light);
   --color-haptic: var(--haptic);
   --radius-card: var(--radius);
+
+  /* Shared type sizes (use these instead of picking text-xl/2xl/3xl per component).
+     Body is 1.125rem / 1.65 (see body). Section h2 and the hero h1 live in Section.tsx / Hero.tsx.
+       text-card     card and step headings (big cards, steps, the two arms)
+       text-card-sm  smaller card headings (feature, roadmap, team, list titles)
+       text-lead     section intros and lead paragraphs
+       text-label    the smallest reading text: labels, notes, footnotes (never below 16px) */
+  --text-card: 1.5rem;
+  --text-card--line-height: 1.25;
+  --text-card-sm: 1.25rem;
+  --text-card-sm--line-height: 1.35;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.55;
+  --text-label: 1rem;
+  --text-label--line-height: 1.5;
+
+  /* Reading width for paragraphs: about 65-70 characters per line. Em-based on purpose:
+     Atkinson's "0" is narrow, so 65ch came out near 95 characters. Use the max-w-measure class. */
+  --container-measure: 31em;
+
   --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, monospace;
 }
@@ -252,6 +274,13 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Light text on a dark page looks heavier than it is, so regular text is a touch lighter in dark
+   mode (Atkinson Hyperlegible Next is a variable font). Not in high contrast, which wants full
+   weight. Elements with their own weight (font-medium, font-semibold...) are unaffected. */
+html.dark:not(.hc) body {
+  font-weight: 380;
+}
+
 /* Visible, consistent focus everywhere. */
 :focus-visible {
   outline: 3px solid var(--focus);
@@ -267,7 +296,7 @@ body {
   background: var(--stage-bg);
   color: var(--stage-text);
 }
-/* Hero wash: ivory → mint in light mode, a teal glow behind the glasses in dark mode. */
+/* Hero wash: a soft orange glow behind the glasses (stronger in dark mode). */
 .stage-gradient {
   background: var(--hero-wash);
 }
@@ -293,12 +322,12 @@ body {
   backdrop-filter: blur(14px);
 }
 
-/* Section kicker: small uppercase label with a short teal line before it. */
+/* Section kicker: small sentence-case label (16px, the label size) with a short orange line before it. */
 .kicker {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.01em;
 }
@@ -428,7 +457,7 @@ body {
   }
 }
 
-/* Explore viewer: the "Reset view" button pulses a soft teal ring when the view has changed. */
+/* Explore viewer: the "Reset view" button pulses a soft orange ring when the view has changed. */
 @keyframes attention-ring {
   0% {
     box-shadow: 0 0 0 0 color-mix(in srgb, var(--stage-accent) 55%, transparent);

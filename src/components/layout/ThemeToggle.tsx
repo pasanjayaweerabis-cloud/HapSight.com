@@ -22,7 +22,7 @@ export function ThemeToggle() {
       <div
         role="group"
         aria-label={t.label}
-        className="hidden h-12 items-center gap-0.5 rounded-full border border-stage-line p-1 sm:inline-flex"
+        className="hidden items-center gap-0.5 rounded-full border border-stage-line p-0.5 sm:inline-flex lg:hidden xl:inline-flex"
       >
         {t.options.map((o) => {
           const active = theme === o.value;
@@ -33,7 +33,7 @@ export function ThemeToggle() {
               aria-pressed={active}
               title={o.label}
               onClick={() => setPrefs({ theme: o.value as ThemePref })}
-              className={`inline-flex size-10 items-center justify-center rounded-full transition-colors ${
+              className={`inline-flex size-11 items-center justify-center rounded-full transition-colors ${
                 active
                   ? "bg-stage-cta text-stage-cta-text"
                   : "text-stage-muted hover:bg-stage-surface-2 hover:text-stage-text"
@@ -50,7 +50,7 @@ export function ThemeToggle() {
         type="button"
         onClick={() => setPrefs({ theme: next })}
         title={next === "dark" ? t.switchToDark : t.switchToLight}
-        className="inline-flex size-12 items-center justify-center rounded-full border border-stage-line text-stage-text transition-colors hover:border-stage-line-strong hover:bg-stage-surface-2 sm:hidden"
+        className="inline-flex size-12 items-center justify-center rounded-full border border-stage-line text-stage-text transition-colors hover:border-stage-line-strong hover:bg-stage-surface-2 sm:hidden lg:inline-flex xl:hidden"
       >
         <Icon name={resolved === "dark" ? "moon" : "sun"} />
         <span className="sr-only">{next === "dark" ? t.switchToDark : t.switchToLight}</span>

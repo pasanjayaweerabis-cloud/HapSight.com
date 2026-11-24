@@ -32,10 +32,10 @@ export function Footer() {
         {hasSocials ? (
           <div>
             <h2 className="text-base font-semibold">{footer.socialLabel}</h2>
-            <ul className="mt-3 grid gap-2">
+            <ul className="mt-1 grid">
               {footer.socials.map((s) => (
                 <li key={s.href}>
-                  <a href={s.href} className="text-base text-accent underline underline-offset-4">
+                  <a href={s.href} className="inline-flex min-h-11 items-center text-base text-accent underline underline-offset-4">
                     {s.label}
                   </a>
                 </li>
@@ -45,10 +45,10 @@ export function Footer() {
         ) : null}
         <div>
           <h2 className="text-base font-semibold">{footer.legalLabel}</h2>
-          <ul className="mt-3 grid gap-2">
+          <ul className="mt-1 grid">
             {footer.links.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="text-base text-accent underline underline-offset-4">
+                <Link href={l.href} className="inline-flex min-h-11 items-center text-base text-accent underline underline-offset-4">
                   {l.label}
                 </Link>
               </li>
@@ -57,7 +57,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-line">
-        <p className="mx-auto max-w-[max(72.5rem,88vw)] px-5 py-6 text-sm text-muted sm:px-8">{footer.credit}</p>
+        <p className="mx-auto max-w-[max(72.5rem,88vw)] px-5 py-6 text-label text-muted sm:px-8">{footer.credit}</p>
       </div>
     </footer>
   );

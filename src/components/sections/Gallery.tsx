@@ -18,7 +18,7 @@ export function Gallery() {
             </li>
           ))}
         </ul>
-        <p className="mt-6 text-sm text-muted">{t.note}</p>
+        <p className="mt-6 text-label text-muted">{t.note}</p>
       </Container>
     </section>
   );

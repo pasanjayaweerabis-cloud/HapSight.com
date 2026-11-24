@@ -85,7 +85,7 @@ export function BackToTop() {
           <path d="M12 19V5M5 12l7-7 7 7" />
         </svg>
       </span>
-      <span className="text-sm font-semibold text-stage-text">{t.short}</span>
+      <span className="text-label font-semibold text-stage-text">{t.short}</span>
     </button>
   );
 }

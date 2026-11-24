@@ -21,14 +21,14 @@ const loadScene = () => import("@/three/ExploreScene");
 const LABEL_IDS = Object.keys(design.labels) as LabelId[];
 
 const chip = (on: boolean) =>
-  `rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
+  `inline-flex min-h-11 items-center rounded-full border px-4 text-label font-medium transition-colors ${
     on
       ? "border-stage-cta bg-stage-cta text-stage-cta-text"
       : "border-stage-line text-stage-text hover:border-stage-accent hover:text-stage-accent"
   }`;
 
 const iconBtn =
-  "grid size-10 place-items-center rounded-full border border-stage-line bg-stage/70 text-stage-text backdrop-blur transition-colors hover:border-stage-accent hover:text-stage-accent";
+  "grid size-11 place-items-center rounded-full border border-stage-line bg-stage/70 text-stage-text backdrop-blur transition-colors hover:border-stage-accent hover:text-stage-accent";
 
 /**
  * "Explore in 3D": the real device model on its own canvas. Drag to turn it, pinch or press the
@@ -122,8 +122,8 @@ export function Explore() {
                     </button>
                   ))}
                 </div>
-                <p aria-hidden="true" className="pointer-events-none absolute bottom-4 left-4 text-xs uppercase tracking-[0.14em] text-stage-muted">
-                  [ {t.hint} ]
+                <p aria-hidden="true" className="pointer-events-none absolute bottom-4 left-4 hidden max-w-[calc(100%-17rem)] text-label text-stage-muted md:block">
+                  {t.hint}
                 </p>
                 <div className="absolute bottom-3 right-3 flex gap-2 sm:bottom-4 sm:right-4">
                   <button type="button" aria-label={t.zoomOut} className={iconBtn} onClick={() => zoomBy(-1)}>
@@ -139,7 +139,7 @@ export function Explore() {
                     onClick={reset}
                     aria-disabled={!changed}
                     data-changed={changed || undefined}
-                    className={`reset-view flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold backdrop-blur transition-colors duration-300 ${
+                    className={`reset-view flex h-11 items-center gap-2 rounded-full border px-4 text-label font-semibold backdrop-blur transition-colors duration-300 ${
                       changed
                         ? "border-stage-cta bg-stage-cta text-stage-cta-text hover:bg-stage-accent-2"
                         : "border-stage-line bg-stage/70 text-stage-muted"
@@ -158,7 +158,7 @@ export function Explore() {
           <div className="glass flex flex-col gap-6 rounded-card p-5 sm:p-6">
             {enabled ? (
               <div>
-                <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-stage-muted">{t.layersLabel}</h3>
+                <h3 className="text-label font-semibold text-stage-muted">{t.layersLabel}</h3>
                 <div role="group" aria-label={t.layersLabel} className="mt-3 flex flex-wrap gap-2">
                   {LAYER_IDS.map((l) => (
                     <button key={l} type="button" aria-pressed={layer === l} onClick={() => {
@@ -171,11 +171,11 @@ export function Explore() {
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-stage-muted">{t.fallbackNote}</p>
+              <p className="text-label text-stage-muted">{t.fallbackNote}</p>
             )}
 
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-stage-muted">{t.partsLabel}</h3>
+              <h3 className="text-label font-semibold text-stage-muted">{t.partsLabel}</h3>
               <div role="group" aria-label={t.partsLabel} className="mt-3 flex flex-wrap gap-2">
                 <button type="button" aria-pressed={focus === null} onClick={() => pickPart(null)} className={chip(focus === null)}>
                   {t.allParts}
@@ -189,8 +189,8 @@ export function Explore() {
             </div>
 
             <div aria-live="polite" className="mt-auto border-t border-stage-line pt-5">
-              <p className="text-lg font-semibold">{detail ? detail.name : t.allParts}</p>
-              {detail ? <p className="mt-1 text-sm text-stage-accent">{detail.where}</p> : null}
+              <p className="text-card-sm font-semibold">{detail ? detail.name : t.allParts}</p>
+              {detail ? <p className="mt-1 text-label text-stage-accent">{detail.where}</p> : null}
               <p className="mt-2 text-pretty text-stage-muted">{detail ? detail.description : t.allPartsDescription}</p>
             </div>
           </div>

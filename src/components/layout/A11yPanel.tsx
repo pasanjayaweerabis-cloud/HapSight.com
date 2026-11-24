@@ -129,7 +129,7 @@ function Toggle({
     <label className="flex min-h-14 cursor-pointer items-center justify-between gap-4 rounded-xl border border-line px-4 py-3 has-[:checked]:border-accent">
       <span>
         <span className="block text-base font-semibold">{label}</span>
-        <span id={hintId} className="block text-sm text-muted">
+        <span id={hintId} className="block text-label text-muted">
           {hint}
         </span>
       </span>

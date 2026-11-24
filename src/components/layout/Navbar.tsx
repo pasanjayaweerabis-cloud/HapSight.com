@@ -61,7 +61,10 @@ export function Navbar() {
 
   return (
     <header className="stage sticky top-0 z-(--z-nav) border-b border-stage-line !bg-stage">
-      <div className="mx-auto flex h-18 max-w-[max(72.5rem,88vw)] items-center gap-4 px-5 sm:px-8">
+      {/* One row normally (about 77px to spare at 1024px). flex-wrap is only a safety net: if a
+          reader raises letter/word spacing (WCAG 1.4.12) the controls drop to a second row
+          instead of running off the screen. */}
+      <div className="mx-auto flex min-h-18 max-w-[max(72.5rem,88vw)] flex-wrap items-center gap-x-4 gap-y-1 px-5 py-2.5 sm:px-8">
         <a href={onHome ? "#top" : "/"} className="flex min-h-12 items-center gap-3 rounded-xl font-semibold tracking-tight">
           <LogoMark />
           <span className="text-xl">
@@ -77,7 +80,7 @@ export function Navbar() {
                 <a
                   href={href(l.href)}
                   aria-current={onHome && activeHref === l.href ? "true" : undefined}
-                  className={`relative inline-flex min-h-12 items-center rounded-full px-4 text-base transition-colors hover:text-stage-text after:absolute after:inset-x-4 after:bottom-2 after:h-0.5 after:rounded-full after:bg-stage-accent after:transition-opacity ${
+                  className={`relative inline-flex min-h-12 items-center whitespace-nowrap rounded-full px-3 text-base transition-colors hover:text-stage-text after:absolute after:inset-x-3 xl:px-4 xl:after:inset-x-4 after:bottom-2 after:h-0.5 after:rounded-full after:bg-stage-accent after:transition-opacity ${
                     onHome && activeHref === l.href
                       ? "font-semibold text-stage-text after:opacity-100"
                       : "font-medium text-stage-muted after:opacity-0"
@@ -94,7 +97,7 @@ export function Navbar() {
           <ThemeToggle />
           <A11yPanel />
           <span className="hidden sm:block">
-            <a href={href(nav.cta.href)} className={buttonClass("stagePrimary", "!shadow-none")}>
+            <a href={href(nav.cta.href)} className={buttonClass("stagePrimary", "whitespace-nowrap !shadow-none")}>
               {nav.cta.label}
             </a>
           </span>

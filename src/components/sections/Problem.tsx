@@ -6,16 +6,16 @@ export function Problem() {
   return (
     <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage relative py-16 sm:py-20">
       <RangeMarker id="problem" />
-      <Container className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+      <Container className="grid items-center gap-12 xl:grid-cols-[1.1fr_1fr] xl:gap-16">
         <div>
           <SectionHeading id={t.id} title={t.title} stage />
-          <div className="mt-8 grid max-w-[65ch] gap-5 text-lg text-stage-muted sm:text-xl">
+          <div className="mt-8 grid max-w-measure gap-6 text-lg text-stage-muted sm:text-lead">
             {t.paragraphs.map((p) => (
               <p key={p}>{p}</p>
             ))}
           </div>
           <div className="glass mt-10 rounded-card p-8 sm:p-10">
-            <h3 className="text-xl font-semibold">{t.examplesTitle}</h3>
+            <h3 className="text-card-sm font-semibold">{t.examplesTitle}</h3>
             <ul className="mt-6 grid list-disc gap-4 pl-5 text-lg marker:text-stage-accent">
               {t.examples.map((e) => (
                 <li key={e}>{e}</li>

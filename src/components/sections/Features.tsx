@@ -24,7 +24,7 @@ function Card({ f, active, accent = false }: { f: Item; active?: boolean; accent
       <span className="inline-flex size-12 items-center justify-center rounded-xl border border-stage-line text-stage-accent">
         <Icon name={f.icon} className="size-7" />
       </span>
-      <h3 className="mt-5 text-xl font-semibold tracking-[-0.01em]">{f.title}</h3>
+      <h3 className="mt-5 text-card-sm font-semibold tracking-[-0.01em]">{f.title}</h3>
       <p className={`mt-2 text-base sm:text-lg ${active === false ? "text-stage-muted" : "text-stage-text"}`}>{f.body}</p>
     </div>
   );
@@ -90,7 +90,7 @@ function ScrollFeatures() {
             <li
               key={f.title}
               aria-current={active === i ? "true" : undefined}
-              className="flex min-h-[48svh] items-end pb-[4svh] lg:min-h-[52svh] lg:items-center lg:pb-0"
+              className="flex min-h-[40svh] items-end pb-[4svh] lg:min-h-[44svh] lg:items-center lg:pb-0"
             >
               <Card f={f} active={active === i} />
             </li>
