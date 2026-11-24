@@ -77,7 +77,7 @@ export function Navbar() {
                 <a
                   href={href(l.href)}
                   aria-current={onHome && activeHref === l.href ? "true" : undefined}
-                  className={`relative inline-flex min-h-12 items-center rounded-full px-4 text-base transition-colors hover:text-stage-text after:absolute after:inset-x-4 after:bottom-2 after:h-0.5 after:rounded-full after:bg-stage-accent after:transition-opacity ${
+                  className={`relative inline-flex min-h-12 items-center whitespace-nowrap rounded-full px-3 text-base transition-colors hover:text-stage-text after:absolute after:inset-x-3 xl:px-4 xl:after:inset-x-4 after:bottom-2 after:h-0.5 after:rounded-full after:bg-stage-accent after:transition-opacity ${
                     onHome && activeHref === l.href
                       ? "font-semibold text-stage-text after:opacity-100"
                       : "font-medium text-stage-muted after:opacity-0"
@@ -94,7 +94,7 @@ export function Navbar() {
           <ThemeToggle />
           <A11yPanel />
           <span className="hidden sm:block">
-            <a href={href(nav.cta.href)} className={buttonClass("stagePrimary", "!shadow-none")}>
+            <a href={href(nav.cta.href)} className={buttonClass("stagePrimary", "whitespace-nowrap !shadow-none")}>
               {nav.cta.label}
             </a>
           </span>

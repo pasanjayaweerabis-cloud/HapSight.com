@@ -12,14 +12,16 @@
      icon tiles, avatars). */
 
 /* ---------- Design tokens ---------- */
-/* "Midnight Teal + Daylight Teal" (HAPSIGHT_COLOR_PALETTE_GUIDE). Teal marks interaction and
-   product technology in both modes; large reading areas stay neutral. Bright teal (#18D4C3) is
-   only for text/fills on the dark theme; on ivory the light theme uses deep teal (#087F75).
+/* Brand palette: orange on charcoal (dark) and on cool light grey (light). Orange marks
+   interaction and product technology in both modes; large reading areas stay neutral. The CTA
+   fill is #ff6a1a in both themes; orange TEXT uses #ff8a3d on dark and deep #b33a08 on light.
+   NOTE: the --brand-teal / --teal* / --navy* names are legacy. They now hold the orange and
+   charcoal values; they are kept so existing components and Tailwind classes keep working.
    Orange (--haptic) is ONLY for vibration: motors, pulses and haptic ripples (3D only).
    Ratios below are WCAG 2.2 contrast ratios against the token's own background. */
 :root {
   /* shared brand colours */
-  --brand-teal: #ff6a1a; /* brand orange (name kept for older components) */
+  --brand-teal: #ff6a1a; /* brand orange (legacy "teal" name) */
   --brand-teal-deep: #c2410c;
   --brand-teal-soft: #ffe6d5; /* decoration only, never body text */
   --ink-on-teal: #111111;
@@ -64,7 +66,7 @@
   --hs-error: #b42332;
   --hs-info: #245e9b;
   --glass: rgba(255, 255, 255, 0.78);
-  /* hero: restrained left-to-right ivory → mint wash, behind the product only */
+  /* hero: soft orange glow behind the product only, page grey elsewhere */
   --hero-wash: radial-gradient(48% 60% at 76% 48%, rgba(255, 106, 26, 0.22) 0%, rgba(255, 106, 26, 0) 70%), #f2f3f5;
   --panel-glow: radial-gradient(60% 55% at 50% 45%, rgba(255, 106, 26, 0.14) 0%, rgba(255, 106, 26, 0) 70%);
 
@@ -267,7 +269,7 @@ body {
   background: var(--stage-bg);
   color: var(--stage-text);
 }
-/* Hero wash: ivory → mint in light mode, a teal glow behind the glasses in dark mode. */
+/* Hero wash: a soft orange glow behind the glasses (stronger in dark mode). */
 .stage-gradient {
   background: var(--hero-wash);
 }
@@ -293,7 +295,7 @@ body {
   backdrop-filter: blur(14px);
 }
 
-/* Section kicker: small uppercase label with a short teal line before it. */
+/* Section kicker: small uppercase label with a short orange line before it. */
 .kicker {
   display: flex;
   align-items: center;
@@ -428,7 +430,7 @@ body {
   }
 }
 
-/* Explore viewer: the "Reset view" button pulses a soft teal ring when the view has changed. */
+/* Explore viewer: the "Reset view" button pulses a soft orange ring when the view has changed. */
 @keyframes attention-ring {
   0% {
     box-shadow: 0 0 0 0 color-mix(in srgb, var(--stage-accent) 55%, transparent);

@@ -229,8 +229,9 @@ const SECTIONS: Record<StageSectionId, (local: number) => DeviceState> = {
     state("problem", {
       azimuth: 90 * DEG,
       elevation: 17 * DEG,
-      size: 4.2,
-      target: [0, -0.75, 1.15],
+      // the scene is wide and short (glasses, branch, cane arc): fit it closely so it fills the 4:3 box
+      size: 3.2,
+      target: [0, -0.7, 1.15],
       problem: smooth((l - 0.05) / 0.3),
       cones: smooth((l - 0.25) / 0.3) * 0.8,
       hits: [0, smooth((l - 0.35) / 0.25), 0],

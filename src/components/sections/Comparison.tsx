@@ -35,7 +35,7 @@ export function Comparison() {
                   {r.values.map((v, i) => (
                     <td
                       key={i}
-                      className={`p-6 align-top text-base text-muted ${i === 0 ? "bg-accent-soft/60 font-medium text-text" : ""} ${ri === 0 ? "font-mono tabular-nums" : ""}`}
+                      className={`p-6 align-top text-base text-muted ${i === 0 ? "bg-accent-soft/60 font-medium text-text" : ""} ${ri === 0 ? "tabular-nums" : ""}`}
                     >
                       {v}
                     </td>
@@ -61,7 +61,7 @@ export function Comparison() {
                 {t.rows.map((r, ri) => (
                   <div key={r.label}>
                     <dt className="text-sm font-semibold">{r.label}</dt>
-                    <dd className={`mt-1 text-base text-muted ${ri === 0 ? "font-mono tabular-nums" : ""}`}>{r.values[ci]}</dd>
+                    <dd className={`mt-1 text-base text-muted ${ri === 0 ? "tabular-nums" : ""}`}>{r.values[ci]}</dd>
                   </div>
                 ))}
               </dl>
