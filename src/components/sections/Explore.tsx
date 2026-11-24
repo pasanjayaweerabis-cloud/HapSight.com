@@ -8,13 +8,12 @@ import { Still, STILLS } from "@/components/visuals/Still";
 import { useStageEnabled } from "@/components/visuals/StageSlot";
 import { useIsCompact } from "@/lib/useMediaQuery";
 import {
-  INTERNAL_PARTS,
+  ACTION_IDS,
   LAYER_EXPLODE,
   LAYER_IDS,
-  VIEW_IDS,
+  type ActionId,
   type ExploreSceneProps,
   type LayerId,
-  type ViewId,
 } from "@/three/exploreConfig";
 
 const loadScene = () => import("@/three/ExploreScene");
@@ -32,35 +31,44 @@ const iconBtn =
 
 /**
  * "Explore in 3D": the real device model on its own canvas. Drag to turn it, pinch or press the
- * zoom buttons, pick a view, a layer (assembled / covers off / exploded) or a part, and the camera
- * flies there while the other parts fade back. Without 3D (reduced motion, no WebGL) it shows the
- * still and the same part descriptions.
+ * zoom buttons. Click a part on the model (or pick it from the list) and just that area opens up
+ * while the camera flies in and the other parts fade back. The demo buttons play how a warning
+ * works (beams, an obstacle, the matching ear motor). Without 3D (reduced motion, no WebGL) it
+ * shows the still and the same part descriptions.
  */
 export function Explore() {
   const enabled = useStageEnabled();
   const compact = useIsCompact();
-  const [view, setView] = useState<ViewId>("angle");
+  const [action, setAction] = useState<ActionId | null>(null);
   const [layer, setLayer] = useState<LayerId>("assembled");
   const [focus, setFocus] = useState<LabelId | null>(null);
   const [zoom, setZoom] = useState<ExploreSceneProps["zoom"]>({ n: 0, dir: 1 });
   const [resetN, setResetN] = useState(0);
   /** The visitor turned or zoomed the camera by hand. */
   const [moved, setMoved] = useState(false);
-  const changed = moved || view !== "angle" || layer !== "assembled" || focus !== null;
+  const changed = moved || action !== null || layer !== "assembled" || focus !== null;
   /** Bumped on every change, so the reset button's pulse restarts each time. */
   const [pulse, setPulse] = useState(0);
   const bump = () => setPulse((n) => n + 1);
   const lastWheel = useRef(0);
 
+  /** Opens one part's area (the scene brings out just those parts); stops any demo. */
   const pickPart = (id: LabelId | null) => {
     bump();
+    setAction(null);
     setFocus(id);
-    if (id && INTERNAL_PARTS.includes(id) && layer === "assembled") setLayer("full");
   };
-  const pickView = (v: ViewId) => {
+  /** Demos run on the assembled glasses; pressing the playing demo again stops it. */
+  const pickAction = (a: ActionId) => {
     bump();
     setFocus(null);
-    setView(v);
+    setLayer("assembled");
+    setAction((cur) => (cur === a ? null : a));
+  };
+  const pickLayer = (l: LayerId) => {
+    bump();
+    setAction(null);
+    setLayer(l);
   };
   const zoomBy = (dir: 1 | -1) => {
     setMoved(true);
@@ -69,14 +77,34 @@ export function Explore() {
   };
   const reset = () => {
     setFocus(null);
-    setView("angle");
+    setAction(null);
     setLayer("assembled");
     setMoved(false);
     setResetN((n) => n + 1);
   };
 
   const detail = focus ? design.labels[focus] : null;
-  const sceneProps: ExploreSceneProps = { view, explode: LAYER_EXPLODE[layer], focus, zoom, resetN, compact };
+  const demo = action ? t.actions[action] : null;
+  const sceneProps: ExploreSceneProps = {
+    action,
+    explode: LAYER_EXPLODE[layer],
+    focus,
+    zoom,
+    resetN,
+    compact,
+    onPick: pickPart,
+  };
+
+  /** Demo buttons: on the 3D box from 640px up, at the top of the side panel on phones. */
+  const demoButtons = (className: string) => (
+    <div role="group" aria-label={t.actionsLabel} className={className}>
+      {ACTION_IDS.map((a) => (
+        <button key={a} type="button" aria-pressed={action === a} onClick={() => pickAction(a)} className={chip(action === a)}>
+          {t.actions[a].label}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <section id={t.id} aria-labelledby={`${t.id}-title`} className="stage stage-gradient py-20 sm:py-28">
@@ -115,13 +143,7 @@ export function Explore() {
 
             {enabled ? (
               <>
-                <div role="group" aria-label={t.viewsLabel} className="absolute left-3 top-3 flex flex-wrap gap-2 sm:left-4 sm:top-4">
-                  {VIEW_IDS.map((v) => (
-                    <button key={v} type="button" aria-pressed={!focus && view === v} onClick={() => pickView(v)} className={chip(!focus && view === v)}>
-                      {t.views[v]}
-                    </button>
-                  ))}
-                </div>
+                {demoButtons("absolute left-4 right-4 top-4 hidden flex-wrap gap-2 sm:flex")}
                 <p aria-hidden="true" className="pointer-events-none absolute bottom-4 left-4 hidden max-w-[calc(100%-17rem)] text-label text-stage-muted md:block">
                   {t.hint}
                 </p>
@@ -156,15 +178,19 @@ export function Explore() {
           </div>
 
           <div className="glass flex flex-col gap-6 rounded-card p-5 sm:p-6">
+            {/* phones: demo buttons first (they don't fit on the small 3D box) */}
+            {enabled ? (
+              <div className="order-first sm:hidden">
+                <h3 className="text-label font-semibold text-stage-muted">{t.actionsLabel}</h3>
+                {demoButtons("mt-3 flex flex-wrap gap-2")}
+              </div>
+            ) : null}
             {enabled ? (
               <div>
                 <h3 className="text-label font-semibold text-stage-muted">{t.layersLabel}</h3>
                 <div role="group" aria-label={t.layersLabel} className="mt-3 flex flex-wrap gap-2">
                   {LAYER_IDS.map((l) => (
-                    <button key={l} type="button" aria-pressed={layer === l} onClick={() => {
-                        bump();
-                        setLayer(l);
-                      }} className={chip(layer === l)}>
+                    <button key={l} type="button" aria-pressed={!action && layer === l} onClick={() => pickLayer(l)} className={chip(!action && layer === l)}>
                       {design.stages[l]}
                     </button>
                   ))}
@@ -188,10 +214,17 @@ export function Explore() {
               </div>
             </div>
 
-            <div aria-live="polite" className="mt-auto border-t border-stage-line pt-5">
-              <p className="text-card-sm font-semibold">{detail ? detail.name : t.allParts}</p>
-              {detail ? <p className="mt-1 text-label text-stage-accent">{detail.where}</p> : null}
-              <p className="mt-2 text-pretty text-stage-muted">{detail ? detail.description : t.allPartsDescription}</p>
+            {/* What is shown now (demo, part or whole device). Below 1024px it sits near the top of
+                the panel, so tapping a part on the model shows its text without scrolling. */}
+            <div
+              aria-live="polite"
+              className="order-first border-b border-stage-line pb-5 lg:order-none lg:mt-auto lg:border-b-0 lg:border-t lg:pb-0 lg:pt-5"
+            >
+              <p className="text-card-sm font-semibold">{demo ? demo.title : detail ? detail.name : t.allParts}</p>
+              {detail && !demo ? <p className="mt-1 text-label text-stage-accent">{detail.where}</p> : null}
+              <p className="mt-2 text-pretty text-stage-muted">
+                {demo ? demo.body : detail ? detail.description : t.allPartsDescription}
+              </p>
             </div>
           </div>
         </div>

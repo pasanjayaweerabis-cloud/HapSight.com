@@ -106,20 +106,36 @@ export const hero = {
     `${brand.name} looks like a pair of chunky, flat-topped glasses in matte charcoal plastic with clear lenses. The thick top bar of the frame has three small open windows: one at each outer corner and one in the middle, above the nose. Each window holds a tiny laser distance sensor; the two corner sensors are angled slightly outward. A soft rubber nose pad sits under the bridge. The left arm holds the controller and the two motor drivers. The right arm holds the battery and the USB-C charger, with the charging port at the back of the wide part of the arm and a small slide switch on top. Each arm ends in a curved ear tip with a soft rubber cap, and a small vibration motor inside rests behind the ear.`,
 } as const;
 
-/** Interactive 3D viewer right after the hero: turn, zoom, pick a view or a part. */
+/** Interactive 3D viewer right after the hero: turn, zoom, open a part, or play a short demo. */
 export const explore = {
   id: "explore",
   eyebrow: "Explore in 3D",
   title: "Turn it. Zoom in. Look inside.",
   intro:
-    "Drag the glasses to turn them. Scroll or pinch inside the box, or use the zoom buttons, to move closer. Pick a view or a part and the camera flies to it.",
-  hint: "Drag to turn · Scroll to zoom",
-  viewsLabel: "Views",
-  views: {
-    angle: "Angle",
-    front: "Front",
-    side: "Side",
-    top: "Top",
+    "Drag the glasses to turn them, and scroll or pinch to zoom. Click a part, or pick one from the list, to open it up and read what it does. The demos show how a warning reaches your ears.",
+  hint: "Drag to turn · Scroll to zoom · Click a part",
+  actionsLabel: "See it work",
+  actions: {
+    sensors: {
+      label: "Sensors on",
+      title: "Three sensors look ahead",
+      body: "Each sensor is designed to send out an invisible, eye-safe laser pulse and time how long it takes to bounce back. One looks left, one straight ahead and one right.",
+    },
+    left: {
+      label: "Obstacle left",
+      title: "Something on your left",
+      body: "The left sensor sees it, the controller works out how close it is, and the motor behind your left ear vibrates. The closer it gets, the faster the pulses.",
+    },
+    ahead: {
+      label: "Obstacle ahead",
+      title: "Something straight ahead",
+      body: "The front sensor sees it, so both motors vibrate together, one behind each ear. The pulses speed up as it gets closer.",
+    },
+    right: {
+      label: "Obstacle right",
+      title: "Something on your right",
+      body: "The right sensor sees it and the motor behind your right ear vibrates. The pulses speed up as it gets closer.",
+    },
   },
   layersLabel: "Layers",
   partsLabel: "Parts",

@@ -14,6 +14,8 @@ export interface DeviceProps {
   getExplode?: () => number;
   /** Optional per-part opacity 0..1 (highlight one part, dim or X-ray the rest). */
   getPartOpacity?: (id: string) => number;
+  /** Optional per-part explode, given the global value (open one area while the rest stays put). */
+  getPartExplode?: (id: string, global: number) => number;
   /** Optional 0..1 boost for the decorative orange strips. */
   getGlow?: () => number;
   quality?: "high" | "low";
@@ -48,13 +50,13 @@ function applyLook(list: OwnMaterial[], o: number, changed: boolean, glow: numbe
 }
 
 /** The whole pair of glasses, built from deviceConfig. */
-export function Device({ getExplode, getPartOpacity, getGlow, quality = "high", onParts }: DeviceProps) {
+export function Device({ getExplode, getPartOpacity, getPartExplode, getGlow, quality = "high", onParts }: DeviceProps) {
   const mats = useMemo(() => createMaterials(), []);
   const refs = useRef(new Map<string, THREE.Group>());
   const own = useRef(new Map<string, OwnMaterial[]>());
   const lastOpacity = useRef(new Map<string, number>());
   const tmp = useMemo(() => new THREE.Vector3(), []);
-  const last = useRef(-1);
+  const lastExplode = useRef(new Map<string, number>());
   const perPart = Boolean(getPartOpacity || getGlow);
 
   useLayoutEffect(() => {
@@ -106,14 +108,16 @@ export function Device({ getExplode, getPartOpacity, getGlow, quality = "high", 
     }
 
     const e = getExplode ? getExplode() : 0;
-    if (Math.abs(e - last.current) < 1e-4) return;
-    last.current = e;
     for (const part of PARTS) {
       const g = refs.current.get(part.id);
       if (!g) continue;
-      explodeOffset(part, e, tmp);
+      const pe = getPartExplode ? getPartExplode(part.id, e) : e;
+      // only touch parts whose explode changed (most frames nothing moves)
+      if (Math.abs(pe - (lastExplode.current.get(part.id) ?? -1)) < 1e-4) continue;
+      lastExplode.current.set(part.id, pe);
+      explodeOffset(part, pe, tmp);
       g.position.set(part.position[0] + tmp.x, part.position[1] + tmp.y, part.position[2] + tmp.z);
-      if (part.turn) explodeQuaternion(part, e, g.quaternion);
+      if (part.turn) explodeQuaternion(part, pe, g.quaternion);
     }
   });
 
