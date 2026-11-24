@@ -51,7 +51,7 @@ function ScrollExplode() {
   }, []);
 
   return (
-    <div ref={track} className={compact ? "h-[300svh]" : "h-[420svh]"}>
+    <div ref={track} className={compact ? "h-[240svh]" : "h-[320svh]"}>
       <div className="sticky top-[4.5rem] h-[calc(100svh-4.5rem)]">
         <div className="mx-auto h-full max-w-[max(80rem,92vw)] px-2 sm:px-8">
           <StageSlot id="design" className="size-full">
@@ -60,7 +60,7 @@ function ScrollExplode() {
         </div>
         <p
           aria-hidden="true"
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-stage-line bg-stage/80 px-4 py-2 text-sm font-medium text-stage-text backdrop-blur"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-stage-line bg-stage/80 px-4 py-2 text-label font-medium text-stage-text backdrop-blur"
         >
           {t.currentStageLabel}: {stage}
         </p>

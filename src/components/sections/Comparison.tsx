@@ -8,8 +8,8 @@ export function Comparison() {
       <Container>
         <SectionHeading id={t.id} title={t.title} />
 
-        {/* Desktop and tablet: a real table. */}
-        <Reveal index={0} className="mt-12 hidden overflow-hidden rounded-card border border-line bg-surface md:block">
+        {/* Laptop and up: a real table (below 1024px the columns get too narrow to read). */}
+        <Reveal index={0} className="mt-12 hidden overflow-hidden rounded-card border border-line bg-surface lg:block">
           <table className="w-full border-collapse text-left">
             <caption className="sr-only">{t.caption}</caption>
             <thead>
@@ -46,8 +46,8 @@ export function Comparison() {
           </table>
         </Reveal>
 
-        {/* Phones: one card per product, so nothing needs sideways scrolling at 200% zoom. */}
-        <Reveal index={0} className="mt-10 grid gap-5 md:hidden">
+        {/* Phones and tablets: one card per product, so nothing needs sideways scrolling at 200% zoom. */}
+        <Reveal index={0} className="mt-10 grid gap-5 lg:hidden">
           {t.columns.map((c, ci) => (
             <section
               key={c}
@@ -60,7 +60,7 @@ export function Comparison() {
               <dl className="mt-4 grid gap-4">
                 {t.rows.map((r, ri) => (
                   <div key={r.label}>
-                    <dt className="text-sm font-semibold">{r.label}</dt>
+                    <dt className="text-label font-semibold">{r.label}</dt>
                     <dd className={`mt-1 text-base text-muted ${ri === 0 ? "tabular-nums" : ""}`}>{r.values[ci]}</dd>
                   </div>
                 ))}
@@ -69,8 +69,8 @@ export function Comparison() {
           ))}
         </Reveal>
 
-        <p className="mt-6 text-sm text-muted">{t.footnote}</p>
-        <p className="mt-2 text-sm text-muted">
+        <p className="mt-6 max-w-measure text-label text-muted">{t.footnote}</p>
+        <p className="mt-2 max-w-measure text-label text-muted">
           {t.sourcesLabel}:{" "}
           {t.sources.map((src, i) => (
             <span key={src.href}>

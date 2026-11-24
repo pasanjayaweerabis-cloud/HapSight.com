@@ -12,7 +12,7 @@ type Side = (typeof t.sides)[number];
 function SideCard({ s, active }: { s: Side; active?: boolean }) {
   return (
     <div className={`glass card rounded-card p-7 transition-colors duration-300 ${active ? "border-stage-accent!" : ""}`}>
-      <h3 className="text-2xl font-semibold tracking-[-0.01em]">{s.title}</h3>
+      <h3 className="text-card font-semibold tracking-[-0.01em]">{s.title}</h3>
       <ul className="mt-4 grid list-disc gap-2 pl-5 text-base text-stage-text marker:text-stage-accent">
         {s.parts.map((p) => (
           <li key={p}>{p}</li>

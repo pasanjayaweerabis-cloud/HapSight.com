@@ -224,6 +224,26 @@
   --color-teal-light: var(--teal-light);
   --color-haptic: var(--haptic);
   --radius-card: var(--radius);
+
+  /* Shared type sizes (use these instead of picking text-xl/2xl/3xl per component).
+     Body is 1.125rem / 1.65 (see body). Section h2 and the hero h1 live in Section.tsx / Hero.tsx.
+       text-card     card and step headings (big cards, steps, the two arms)
+       text-card-sm  smaller card headings (feature, roadmap, team, list titles)
+       text-lead     section intros and lead paragraphs
+       text-label    the smallest reading text: labels, notes, footnotes (never below 16px) */
+  --text-card: 1.5rem;
+  --text-card--line-height: 1.25;
+  --text-card-sm: 1.25rem;
+  --text-card-sm--line-height: 1.35;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.55;
+  --text-label: 1rem;
+  --text-label--line-height: 1.5;
+
+  /* Reading width for paragraphs: about 65-70 characters per line. Em-based on purpose:
+     Atkinson's "0" is narrow, so 65ch came out near 95 characters. Use the max-w-measure class. */
+  --container-measure: 31em;
+
   --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, monospace;
 }
@@ -252,6 +272,13 @@ body {
   font-size: 1.125rem;
   line-height: 1.65;
   text-rendering: optimizeLegibility;
+}
+
+/* Light text on a dark page looks heavier than it is, so regular text is a touch lighter in dark
+   mode (Atkinson Hyperlegible Next is a variable font). Not in high contrast, which wants full
+   weight. Elements with their own weight (font-medium, font-semibold...) are unaffected. */
+html.dark:not(.hc) body {
+  font-weight: 380;
 }
 
 /* Visible, consistent focus everywhere. */
@@ -295,12 +322,12 @@ body {
   backdrop-filter: blur(14px);
 }
 
-/* Section kicker: small uppercase label with a short orange line before it. */
+/* Section kicker: small sentence-case label (16px, the label size) with a short orange line before it. */
 .kicker {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.01em;
 }

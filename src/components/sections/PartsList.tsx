@@ -12,7 +12,7 @@ export function PartsList() {
   return (
     <div className="mt-14 grid gap-10 lg:grid-cols-[2fr_1fr]">
       <div>
-        <h3 className="text-xl font-semibold">{t.listTitle}</h3>
+        <h3 className="text-card-sm font-semibold">{t.listTitle}</h3>
         <div className="mt-5 grid gap-6 md:grid-cols-2">
           {GROUP_ORDER.map((group, gi) => {
             const groupIds = groups[gi];
@@ -29,7 +29,7 @@ export function PartsList() {
                       >
                         {start + i}
                       </span>
-                      <span className="max-w-[65ch]">
+                      <span className="max-w-measure">
                         <span className="block font-semibold">{t.labels[id].name}</span>
                         <span className="block text-base text-stage-muted">{t.labels[id].where}</span>
                         <span className="mt-1.5 block text-base text-stage-text/90">{t.labels[id].description}</span>
@@ -43,7 +43,7 @@ export function PartsList() {
         </div>
       </div>
       <div>
-        <h3 className="text-xl font-semibold">{t.otherPartsTitle}</h3>
+        <h3 className="text-card-sm font-semibold">{t.otherPartsTitle}</h3>
         <ul className="mt-5 grid gap-3 text-base text-stage-muted">
           {t.otherParts.map((p) => (
             <li key={p}>{p}</li>

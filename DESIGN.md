@@ -38,11 +38,20 @@ Atkinson Hyperlegible Next (next/font, swap), one family, plus Atkinson Hyperleg
 code-like text. Root size is fluid (16px → 22px from 1440 to 2560 px wide) times
 `--font-scale` (1.2 with Large text). Body 1.125rem / 1.65.
 
-- h1: 2.75rem → 4.5rem, weight 600, leading 1.0, tracking −0.04em
+- h1: 2.75rem → 4.5rem, weight 600, leading 1.05, tracking −0.03em
 - h2: 2.125rem → 3rem, weight 600, leading 1.08, tracking −0.035em
-- Kicker: 0.9375rem, 600, sentence case, tracking 0.01em, with a 1.4rem rule before it
-- Hero sub: 1.125rem → 1.375rem, max 34ch; section intros max 62ch, muted
+- Shared sizes (Tailwind classes from `@theme` in globals.css), use these, not ad-hoc sizes:
+  `text-card` 1.5rem/1.25 (big cards, steps, arms), `text-card-sm` 1.25rem/1.35 (feature,
+  roadmap, team, list titles), `text-lead` 1.25rem/1.55 (section intros), `text-label`
+  1rem/1.5 (labels, notes, footnotes). Nothing a reader needs is below 16px.
+- Reading width: `max-w-measure` (31em, about 60–70 characters). Do not use `ch` widths:
+  Atkinson's narrow "0" makes 65ch about 95 characters.
+- Kicker: 1rem, 600, sentence case, tracking 0.01em, with a 1.4rem rule before it. No other
+  all-caps labels.
+- Hero sub: 1.125rem → 1.375rem, max 34ch (short on purpose)
+- Dark mode body weight 380 (not in high contrast)
 - Prices and other figures: normal font with `tabular-nums` (not monospace)
+- Touch targets: every button and link control at least 44×44px
 
 ## Space and layout
 

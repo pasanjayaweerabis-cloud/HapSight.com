@@ -49,14 +49,14 @@ function ScrollStory() {
             <li
               key={s.id}
               aria-current={active === i ? "step" : undefined}
-              className="flex min-h-[56svh] items-end pb-[4svh] lg:min-h-[64svh] lg:items-center lg:pb-0"
+              className="flex min-h-[46svh] items-end pb-[4svh] lg:min-h-[54svh] lg:items-center lg:pb-0"
             >
               <div
                 className={`card w-full rounded-card border p-6 transition-colors duration-300 sm:p-8 ${
                   active === i ? "glass border-stage-accent!" : "glass"
                 }`}
               >
-                <h3 className="text-2xl font-semibold sm:text-3xl">{s.title}</h3>
+                <h3 className="text-card font-semibold">{s.title}</h3>
                 <p className={`mt-3 text-lg ${active === i ? "text-stage-text" : "text-stage-muted"}`}>{s.body}</p>
               </div>
             </li>
@@ -78,7 +78,7 @@ function StaticStory() {
       <ol className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {t.steps.map((s) => (
           <li key={s.id} className="card rounded-card border border-stage-line p-6">
-            <h3 className="text-xl font-semibold">{s.title}</h3>
+            <h3 className="text-card-sm font-semibold">{s.title}</h3>
             <p className="mt-2 text-base text-stage-muted">{s.body}</p>
           </li>
         ))}

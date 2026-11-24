@@ -28,7 +28,7 @@ export function Demo() {
           </span>
           <div>
             <p className="text-xl font-semibold tracking-[-0.02em]">{t.placeholder}</p>
-            <p className="mt-1 max-w-[60ch] text-base text-stage-muted">{t.placeholderNote}</p>
+            <p className="mt-1 max-w-measure text-base text-stage-muted">{t.placeholderNote}</p>
           </div>
         </div>
       </Container>

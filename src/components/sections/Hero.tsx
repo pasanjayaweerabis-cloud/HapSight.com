@@ -15,7 +15,7 @@ export function Hero() {
           <p className="kicker text-stage-accent">{t.eyebrow}</p>
           <h1
             id="hero-title"
-            className="mt-4 text-balance text-[2.75rem] font-semibold leading-[1] tracking-[-0.04em] sm:text-6xl lg:text-7xl"
+            className="mt-4 text-balance text-[2.75rem] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-6xl lg:text-7xl"
           >
             {t.headline}
           </h1>
@@ -44,8 +44,8 @@ export function Hero() {
 
       <Container className="pb-16 sm:pb-20">
         <div className="max-w-4xl border-t border-stage-line pt-8">
-          <h2 className="text-lg font-semibold">{t.deviceDescriptionTitle}</h2>
-          <p className="mt-3 max-w-[65ch] text-base text-stage-muted sm:text-lg">{t.deviceDescription}</p>
+          <h2 className="text-card font-semibold tracking-[-0.01em]">{t.deviceDescriptionTitle}</h2>
+          <p className="mt-3 max-w-measure text-base text-stage-muted sm:text-lg">{t.deviceDescription}</p>
         </div>
       </Container>
     </section>

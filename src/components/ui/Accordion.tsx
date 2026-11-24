@@ -39,7 +39,7 @@ export function Accordion({ items }: { items: { title: string; body: readonly st
             </h3>
             <div id={panelId} role="region" aria-labelledby={btnId} hidden={!expanded} className="px-6 pb-7 sm:px-8">
               {item.body.map((p) => (
-                <p key={p} className="mt-3 max-w-[65ch] text-lg text-muted first:mt-0">
+                <p key={p} className="mt-3 max-w-measure text-lg text-muted first:mt-0">
                   {p}
                 </p>
               ))}
