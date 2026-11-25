@@ -21,6 +21,13 @@ alter table public.waitlist enable row level security;
 -- Belt and braces: remove the default table grants from the public API roles.
 revoke all on table public.waitlist from anon, authenticated;
 
+-- The server's secret key acts as service_role. Newer Supabase projects do not grant it table
+-- rights automatically, so allow it to add rows (insert only: the site never reads the list).
+grant insert on table public.waitlist to service_role;
+
+-- Tell the Data API about the new table straight away.
+notify pgrst, 'reload schema';
+
 -- Helper for the privacy promise "deleted no later than 12 months after sign-up".
 -- Run it by hand, or schedule it with the pg_cron extension (see README).
 create or replace function public.purge_old_waitlist_rows()
