@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { CameraControls, CameraControlsImpl, ContactShadows, Environment, Lightformer } from "@react-three/drei";
 import { design, type LabelId } from "@/content/site";
 import type { StageSceneProps } from "@/components/visuals/LazyStage";
@@ -10,20 +10,20 @@ import { Device } from "./Device";
 import { PARTS } from "./deviceConfig";
 import { pointAt } from "./explode";
 import type { V3 } from "./geometry";
-import type { ExploreSceneProps, ViewId } from "./exploreConfig";
+import type { ActionId, ExploreSceneProps } from "./exploreConfig";
+import { SensorCones } from "./effects/SensorCones";
+import { Obstacles } from "./effects/Obstacles";
+import { PulseRings } from "./effects/PulseRings";
+import { SignalDots } from "./effects/SignalDots";
 
 const FOV = 30;
 const ACTION = CameraControlsImpl.ACTION;
 
-/** Camera presets around the device (wearer faces +z, wearer's left = +x). */
-const VIEWS: Record<ViewId, { pos: V3; target: V3 }> = {
-  // from the wearer's front right, like the three-quarter render: sensors, right arm, switch
-  angle: { pos: [-2.75, 1.25, 2.95], target: [0, 0, -0.12] },
-  front: { pos: [0, 0.18, 4.3], target: [0, 0, -0.1] },
-  // the right arm side on: USB-C port and slide switch
-  side: { pos: [-4.4, 0.3, -0.15], target: [0, 0.06, -0.15] },
-  top: { pos: [0, 4.4, 0.35], target: [0, 0, -0.15] },
-};
+/** Camera spots (wearer faces +z, wearer's left = +x). */
+const HOME = { pos: [-2.75, 1.25, 2.95] as V3, target: [0, 0, -0.12] as V3 };
+/** Demos: from above and behind the wearer, so left is left and the beams run away from you. */
+/* Framed to hold the ear tips (pulse rings, nearest the camera) and the obstacles (furthest away). */
+const DEMO = { pos: [0, 4.75, -2.55] as V3, target: [0, -0.2, 0.8] as V3 };
 
 /** Extra parts that belong with a label (the label itself sits on one part only). */
 const EXTRA: Partial<Record<LabelId, string[]>> = {
@@ -36,6 +36,41 @@ function partsFor(label: LabelId): string[] {
   return EXTRA[label] ?? PARTS.filter((p) => p.label === label).map((p) => p.id);
 }
 
+/**
+ * Picking a part opens up just its area: these parts come out (explode 1) while the rest of the
+ * glasses stay as they are. A board inside an arm brings its cover and neighbours with it.
+ */
+const LEFT_BAY = ["templeCoverL", "controller", "driverA", "driverB"];
+const RIGHT_BAY = ["templeCoverR", "battery", "charger"];
+const REVEAL: Record<LabelId, string[]> = {
+  tofLeft: ["sensorL"],
+  tofFront: ["sensorFront"],
+  tofRight: ["sensorR"],
+  lenses: ["lensL", "lensR"],
+  controller: LEFT_BAY,
+  drivers: LEFT_BAY,
+  motorLeft: ["earCapL", "motorL"],
+  motorRight: ["earCapR", "motorR"],
+  battery: RIGHT_BAY,
+  charger: RIGHT_BAY,
+  frame: [],
+  wiring: [],
+};
+
+/** Clicking any mesh of the model picks the label for that area (unlabelled parts included). */
+const PICK: Record<string, LabelId> = {
+  ...Object.fromEntries(PARTS.filter((p) => p.label).map((p) => [p.id, p.label as LabelId])),
+  lensR: "lenses",
+  driverA: "drivers",
+  templeShellL: "controller",
+  templeCoverL: "controller",
+  templeShellR: "battery",
+  templeCoverR: "battery",
+  earCapL: "motorLeft",
+  earCapR: "motorRight",
+  nosePad: "frame",
+};
+
 /** Direction the camera looks at a part from, by where the part sits. */
 const FOCUS_DIR: Record<string, V3> = {
   front: [0, 0.32, 1],
@@ -44,19 +79,38 @@ const FOCUS_DIR: Record<string, V3> = {
   whole: [-0.9, 0.45, 1],
 };
 
-const tmp = new THREE.Vector3();
+/** What each demo lights up: beams, which beam sees something, obstacles and motors (L, R). */
+const DEMO_FX: Record<ActionId, { hits: V3; motors: [number, number]; signals: number }> = {
+  sensors: { hits: [0, 0, 0], motors: [0, 0], signals: 0 },
+  left: { hits: [1, 0, 0], motors: [1, 0], signals: 1 },
+  ahead: { hits: [0, 1, 0], motors: [1, 1], signals: 1 },
+  right: { hits: [0, 0, 1], motors: [0, 1], signals: 0 },
+};
 
-function Rig({ view, explode, focus, zoom, resetN, compact, onReady }: ExploreSceneProps & { onReady: () => void }) {
+const tmp = new THREE.Vector3();
+const ease = (cur: number, to: number, k: number) => cur + (to - cur) * k;
+
+function Rig({ action, explode, focus, zoom, resetN, compact, onPick, onReady }: ExploreSceneProps & { onReady: () => void }) {
   const controls = useRef<CameraControlsImpl>(null);
   const live = useRef(explode);
   const target = useRef(explode);
   const dim = useRef(0);
   const focusIds = useRef<Set<string>>(new Set());
+  /** Per-part "opened" amount (0..1), eased towards 1 for the picked area. */
+  const opened = useRef(new Map<string, number>());
+  const revealIds = useRef<Set<string>>(new Set());
+  /** Demo effects, eased so they fade in and out instead of popping. */
+  const fx = useRef({ cones: 0, hits: [0, 0, 0] as [number, number, number], motors: [0, 0] as [number, number], signals: 0, t: 0 });
   const ready = useRef(false);
+  const onPickRef = useRef(onPick);
   const { size } = useThree();
 
   useEffect(() => {
+    onPickRef.current = onPick;
+  }, [onPick]);
+  useEffect(() => {
     focusIds.current = new Set(focus ? partsFor(focus) : []);
+    revealIds.current = new Set(focus ? REVEAL[focus] : []);
   }, [focus]);
   useEffect(() => {
     target.current = explode;
@@ -64,13 +118,30 @@ function Rig({ view, explode, focus, zoom, resetN, compact, onReady }: ExploreSc
 
   useFrame((_, dt) => {
     const k = 1 - Math.exp(-dt * 3.2);
-    live.current += (target.current - live.current) * k;
-    dim.current += ((focus ? 1 : 0) - dim.current) * k;
+    live.current = ease(live.current, target.current, k);
+    dim.current = ease(dim.current, focus ? 1 : 0, k);
+    for (const p of PARTS) {
+      const cur = opened.current.get(p.id) ?? 0;
+      const to = revealIds.current.has(p.id) ? 1 : 0;
+      if (cur !== to) opened.current.set(p.id, Math.abs(to - cur) < 1e-3 ? to : ease(cur, to, k));
+    }
+    const f = fx.current;
+    const demo = action ? DEMO_FX[action] : null;
+    f.t += dt;
+    f.cones = ease(f.cones, demo ? 1 : 0, k);
+    for (let i = 0; i < 3; i++) f.hits[i] = ease(f.hits[i], demo ? demo.hits[i] : 0, k);
+    for (let i = 0; i < 2; i++) f.motors[i] = ease(f.motors[i], demo ? demo.motors[i] : 0, k);
+    f.signals = ease(f.signals, demo ? demo.signals : 0, k);
     if (!ready.current) {
       ready.current = true;
       onReady();
     }
   });
+
+  /** The obstacle drifts closer and back (about 8 s a round), and the pulses speed up as it nears. */
+  const closeness = () => 0.5 - 0.5 * Math.cos(fx.current.t * 0.8);
+  const obstacleDistance = () => 1.6 - 0.65 * closeness();
+  const pulseRate = () => 1.4 + 2.6 * closeness();
 
   // mouse: left turns, right pans, wheel zooms (only while the pointer is over the viewer;
   // camera-controls stops the page from scrolling then). Trackpad pinch arrives as ctrl+wheel.
@@ -86,37 +157,57 @@ function Rig({ view, explode, focus, zoom, resetN, compact, onReady }: ExploreSc
     c.touches.three = ACTION.NONE;
   }, []);
 
-  // fly to the chosen view or part
+  // fly to the picked part, the demo spot or home
   useEffect(() => {
     const c = controls.current;
     if (!c) return;
     const aspect = size.width / Math.max(1, size.height);
-    const fit = Math.max(1, 1.45 / aspect) * (1 + 0.42 * explode);
     if (focus) {
       const ids = partsFor(focus);
+      const reveal = new Set(REVEAL[focus]);
       const centre = new THREE.Vector3();
       for (const id of ids) {
         const p = PARTS.find((x) => x.id === id);
-        if (p) centre.add(pointAt(p, [0, 0, 0], explode, tmp));
+        // aim at where the part ends up once its area is open
+        if (p) centre.add(pointAt(p, [0, 0, 0], reveal.has(id) ? 1 : explode, tmp));
       }
       centre.divideScalar(Math.max(1, ids.length));
-      const d = FOCUS_DIR[design.labels[focus].group];
-      const dir = new THREE.Vector3(...d).normalize();
+      const dir = new THREE.Vector3(...FOCUS_DIR[design.labels[focus].group]).normalize();
       const wide = focus === "frame" || focus === "lenses" || focus === "wiring";
-      const dist = (wide ? 3.6 : 1.55) * Math.max(1, 1.3 / aspect);
+      const opens = reveal.size > 0 && !wide;
+      const dist = (wide ? 3.6 : opens ? 1.9 : 1.55) * Math.max(1, 1.3 / aspect);
       const pos = centre.clone().addScaledVector(dir, dist);
       void c.setLookAt(pos.x, pos.y, pos.z, centre.x, centre.y, centre.z, true);
       return;
     }
-    const v = VIEWS[view];
+    const v = action ? DEMO : HOME;
+    const fit = Math.max(1, 1.45 / aspect) * (action ? 1 : 1 + 0.42 * explode);
     const t = new THREE.Vector3(...v.target);
     const pos = new THREE.Vector3(...v.pos).sub(t).multiplyScalar(fit).add(t);
     void c.setLookAt(pos.x, pos.y, pos.z, t.x, t.y, t.z, true);
-  }, [view, focus, explode, resetN, size.width, size.height]);
+  }, [action, focus, explode, resetN, size.width, size.height]);
 
   useEffect(() => {
     if (zoom.n > 0) void controls.current?.dolly(zoom.dir * 0.7, true);
   }, [zoom]);
+
+  // click or tap a part (a drag that turns the glasses is not a click)
+  const pick = (e: ThreeEvent<MouseEvent>) => {
+    if (e.delta > 6) return;
+    e.stopPropagation();
+    for (let o: THREE.Object3D | null = e.object; o; o = o.parent) {
+      const label = PICK[o.name];
+      if (label) {
+        onPickRef.current?.(label);
+        return;
+      }
+    }
+  };
+  // hand cursor over the model (set on the canvas itself: its grab cursor class would win otherwise)
+  const setCursor = (e: ThreeEvent<PointerEvent>, c: string) => {
+    const el = e.nativeEvent.target as HTMLElement | null;
+    if (el) el.style.cursor = c;
+  };
 
   return (
     <>
@@ -129,12 +220,27 @@ function Rig({ view, explode, focus, zoom, resetN, compact, onReady }: ExploreSc
         smoothTime={0.5}
         draggingSmoothTime={0.12}
       />
-      <Device
-        quality={compact ? "low" : "high"}
-        getExplode={() => live.current}
-        getGlow={() => 0.35}
-        getPartOpacity={(id) => (focusIds.current.size === 0 || focusIds.current.has(id) ? 1 : 1 - 0.82 * dim.current)}
-      />
+      <group
+        onClick={pick}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setCursor(e, "pointer");
+        }}
+        onPointerOut={(e) => setCursor(e, "")}
+      >
+        <Device
+          quality={compact ? "low" : "high"}
+          getExplode={() => live.current}
+          getPartExplode={(id, e) => Math.max(e, opened.current.get(id) ?? 0)}
+          getGlow={() => 0.35}
+          getPartOpacity={(id) => (focusIds.current.size === 0 || focusIds.current.has(id) ? 1 : 1 - 0.82 * dim.current)}
+        />
+      </group>
+      <SensorCones getOpacity={() => fx.current.cones} getHighlight={() => fx.current.hits} />
+      <Obstacles getVisible={(i) => fx.current.hits[i]} getDistance={obstacleDistance} />
+      <PulseRings side="left" getStrength={() => fx.current.motors[0]} getRate={pulseRate} animate />
+      <PulseRings side="right" getStrength={() => fx.current.motors[1]} getRate={pulseRate} animate />
+      <SignalDots getAmount={() => fx.current.signals} animate />
       {compact ? null : (
         <ContactShadows position={[0, -0.36, -0.15]} scale={4.5} blur={2.4} far={1.4} opacity={0.55} resolution={256} color="#000814" />
       )}
