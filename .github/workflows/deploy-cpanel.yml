@@ -59,20 +59,31 @@ jobs:
             mkdir -p ~/hapsight
             tar -xzf ~/hapsight-upload/site.tgz -C ~/hapsight
             rm -rf ~/hapsight-upload
+            # Next.js saves rendered pages in .next/server/route-cache (and .next/cache) at run
+            # time. Unpacking over the old folder never cleared them, so after PR #44 the app kept
+            # serving pages saved from the previous build. Clear them so it renders the new build.
+            rm -rf ~/hapsight/.next/server/route-cache ~/hapsight/.next/cache
             mkdir -p ~/hapsight/tmp
             touch ~/hapsight/tmp/restart.txt
-            # restart.txt alone does not always restart the app: after PR #44 the old Node
-            # process kept serving the previous build. Restart it through cPanel's Node.js
-            # selector; if that is not available, stop the old process so the web server
-            # starts a fresh one (with the new build) on the next request.
-            if command -v cloudlinux-selector >/dev/null 2>&1 \
-              && cloudlinux-selector restart --json --interpreter nodejs --app-root hapsight; then
-              echo "App restarted with cloudlinux-selector"
-            else
-              echo "cloudlinux-selector restart not available, stopping the old Node process"
-              pkill -u "$(id -u)" -f "hapsight/server.js" || true
-              pkill -u "$(id -u)" -f "lsnode:.*hapsight" || true
+            # Restart through cPanel's Node.js selector. It can print an error and still exit 0,
+            # so only trust it when it reports success; otherwise stop the old process so the
+            # web server starts a fresh one on the next request.
+            out=""
+            if command -v cloudlinux-selector >/dev/null 2>&1; then
+              out=$(cloudlinux-selector restart --json --interpreter nodejs --app-root hapsight 2>&1 || true)
+              echo "cloudlinux-selector: $out"
             fi
+            case "$out" in
+              *'"result": "success"'*) echo "App restarted with cloudlinux-selector" ;;
+              *)
+                echo "Selector restart did not confirm success, stopping the old Node process"
+                pkill -u "$(id -u)" -f "hapsight/server.js" || true
+                pkill -u "$(id -u)" -f "lsnode:.*hapsight" || true
+                ;;
+            esac
+            # the old process may have saved a page again while we restarted: clear once more
+            sleep 3
+            rm -rf ~/hapsight/.next/server/route-cache
 
       # Wake the restarted app (so the first visitor doesn't wait) and log what the site serves.
       - name: Check the live site
